@@ -8,47 +8,91 @@
 <meta name="apple-mobile-web-app-title" content="Phoenix Classes"/>
 <title>Phoenix Classes</title>
 <style>
+:root{
+  --bg:#0a0d14;--card:#111827;--border:#1f2937;--text:#f1f5f9;--muted:#6b7280;
+  --accent:#f97316;--accent2:#ea580c;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--yellow:#eab308;
+}
+.light{--bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:#0f1117;font-family:Arial,sans-serif;color:#f1f5f9;font-size:14px;overflow-x:hidden;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#181c27;border-top:1px solid #252a38;display:flex;z-index:100;height:58px;}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#64748b;font-size:10px;gap:2px;padding:6px 0;}
-.bn-item.active{color:#f97316;}
-.bn-icon{font-size:20px;line-height:1;}
-.main{padding:16px 14px 72px 14px;}
-.page-title{font-size:20px;font-weight:800;margin-bottom:4px;}
-.page-sub{font-size:11px;color:#64748b;margin-bottom:16px;}
-.card{background:#181c27;border:1px solid #252a38;border-radius:12px;padding:14px;margin-bottom:14px;}
+body{background:var(--bg);font-family:Arial,sans-serif;color:var(--text);font-size:14px;overflow-x:hidden;transition:background .3s,color .3s;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;height:60px;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:9px;gap:2px;padding:4px 0;}
+.bn-item.active{color:var(--accent);}
+.bn-icon{font-size:18px;}
+.main{padding:16px 14px 76px;}
+.app-header{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:16px;padding:18px;margin-bottom:16px;position:relative;overflow:hidden;}
+.app-header::before{content:'🔥';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:44px;opacity:.2;}
+.app-header-title{font-size:19px;font-weight:800;color:#fff;}
+.app-header-sub{font-size:11px;color:#fed7aa;margin-top:2px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;}
+.card-title{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.stat-card{background:#181c27;border:1px solid #252a38;border-radius:12px;padding:12px;}
-.stat-num{font-size:22px;font-weight:800;}
-.stat-label{font-size:10px;color:#64748b;margin-top:2px;font-weight:600;}
-label{font-size:11px;font-weight:600;color:#64748b;margin-bottom:5px;display:block;text-transform:uppercase;}
-input,select{width:100%;background:#1e2333;border:1px solid #252a38;border-radius:8px;color:#f1f5f9;padding:9px 10px;font-size:14px;outline:none;box-sizing:border-box;font-family:Arial,sans-serif;}
-input:focus,select:focus{border-color:#f97316;}
-.btn{background:#f97316;color:#fff;border:none;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:Arial,sans-serif;}
-.btn-blue{background:#3b82f6!important;}
-.btn-green{background:#22c55e!important;}
-.btn-red{background:#ef4444!important;}
-.btn-gray{background:#2a3040!important;}
-.btn-purple{background:#8b5cf6!important;}
-.btn-sm{color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
-.chip{display:inline-block;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #252a38;background:#1e2333;color:#94a3b8;margin:3px;}
-.chip.on{background:#f97316;color:#fff;border-color:#f97316;}
-.badge{border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;display:inline-block;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;}
+.stat-num{font-size:22px;font-weight:800;line-height:1;}
+.stat-label{font-size:9px;color:var(--muted);margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.3px;}
+input,select,textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:9px 12px;font-size:13px;outline:none;box-sizing:border-box;font-family:Arial,sans-serif;}
+input:focus,select:focus{border-color:var(--accent);}
+.btn{color:#fff;border:none;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:Arial,sans-serif;}
+.btn-orange{background:linear-gradient(135deg,#f97316,#ea580c);}
+.btn-blue{background:linear-gradient(135deg,#3b82f6,#2563eb);}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);}
+.btn-red{background:linear-gradient(135deg,#ef4444,#dc2626);}
+.btn-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
+.btn-gray{background:var(--border);color:var(--muted);}
+.btn-sm{color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
+.chip{display:inline-block;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--muted);margin:2px;}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+.badge{border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;display:inline-block;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
-th{text-align:left;padding:8px;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;border-bottom:1px solid #252a38;}
-td{padding:9px 8px;border-bottom:1px solid rgba(37,42,56,0.4);vertical-align:middle;}
-.empty{color:#64748b;text-align:center;padding:24px;font-size:12px;}
+th{text-align:left;padding:8px 7px;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);letter-spacing:.3px;}
+td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;opacity:.9;}
+.empty{color:var(--muted);text-align:center;padding:24px;font-size:12px;}
 .mb{margin-bottom:10px;}
-.stitle{font-weight:700;margin-bottom:12px;font-size:13px;color:#f97316;}
-.titem{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;background:#1e2333;border:1px solid #252a38;}
-.titem.on{background:rgba(249,115,22,0.1);border-color:#f97316;}
-.backup-box{background:linear-gradient(135deg,#1e2333,#252a38);border:1px solid #f97316;border-radius:12px;padding:16px;margin-bottom:14px;}
-.backup-title{font-size:14px;font-weight:800;color:#f97316;margin-bottom:4px;}
-.backup-sub{font-size:11px;color:#94a3b8;margin-bottom:12px;}
-.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;display:none;}
-.toast.err{background:#ef4444;}
+.titem{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:7px;background:var(--bg);border:1.5px solid var(--border);}
+.titem.on{border-color:var(--accent);background:rgba(249,115,22,.07);}
+.toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:700;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.toast.err{background:var(--red);}
+/* Top bar */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.topbar-title{font-size:16px;font-weight:800;color:var(--accent);}
+.topbar-actions{display:flex;gap:8px;}
+.icon-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:7px 10px;cursor:pointer;font-size:16px;color:var(--text);}
+/* Theme chips */
+.theme-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;display:inline-block;margin:3px;}
+.theme-dot.on{border-color:var(--text);}
+/* Photo */
+.stu-photo{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid var(--border);}
+.stu-photo-placeholder{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
+/* Chart */
+.bar-wrap{margin-bottom:8px;}
+.bar-label{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;}
+.bar-bg{background:var(--border);border-radius:20px;height:10px;overflow:hidden;}
+.bar-fill{height:10px;border-radius:20px;transition:width .5s;}
+/* Report card */
+.report-header{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;padding:16px;margin-bottom:14px;color:#fff;}
+.grade-big{font-size:48px;font-weight:800;line-height:1;}
+/* Timetable */
+.day-header{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:10px;padding:8px 12px;font-weight:800;font-size:13px;margin-bottom:8px;}
+.period-row{display:flex;gap:8px;margin-bottom:6px;align-items:center;}
+.period-time{font-size:11px;color:var(--muted);width:70px;flex-shrink:0;}
+.period-sub{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:600;}
+/* Reminder */
+.reminder-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.whatsapp-btn{background:#25d366;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
+/* Settings */
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
+.setting-label{font-size:13px;font-weight:600;}
+.setting-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+/* Toggle */
+.toggle{position:relative;width:44px;height:24px;cursor:pointer;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--border);border-radius:24px;transition:.3s;}
+.toggle-slider:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:var(--accent);}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px);}
 </style>
 </head>
 <body>
@@ -59,225 +103,494 @@ td{padding:9px 8px;border-bottom:1px solid rgba(37,42,56,0.4);vertical-align:mid
   <div class="bn-item" onclick="go('attendance')" id="nav-attendance"><div class="bn-icon">📋</div><span>Attend</span></div>
   <div class="bn-item" onclick="go('marks')" id="nav-marks"><div class="bn-icon">📊</div><span>Marks</span></div>
   <div class="bn-item" onclick="go('fees')" id="nav-fees"><div class="bn-icon">💰</div><span>Fees</span></div>
+  <div class="bn-item" onclick="go('more')" id="nav-more"><div class="bn-icon">⚙️</div><span>More</span></div>
 </div>
 <div class="toast" id="toast"></div>
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)"/>
+<input type="file" id="photoFile" accept="image/*" style="display:none" onchange="uploadPhoto(this)"/>
 
 <script>
-// ── Storage ──────────────────────────────────────────────────────
-var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{rate:500,data:{}}};
-function dbS(){try{localStorage.setItem('pxDB',JSON.stringify(DB));}catch(ex){}}
-function dbL(){try{var s=localStorage.getItem('pxDB');if(s)DB=JSON.parse(s);}catch(ex){}}
+// ── DEFAULTS ─────────────────────────────────────────────────────
+var DB={
+  students:[],attendance:{},marks:{tests:[],data:{}},
+  fees:{yearlyFee:3000,inst1:1000,inst2:1000,inst3:1000,data:{}},
+  timetable:{},settings:{theme:'orange',darkMode:true},photos:{}
+};
+function dbS(){try{localStorage.setItem('pxDB2',JSON.stringify(DB));}catch(e){}}
+function dbL(){
+  try{
+    var s=localStorage.getItem('pxDB2');
+    if(s){DB=JSON.parse(s);}
+    // migrate old data
+    if(!DB.timetable)DB.timetable={};
+    if(!DB.settings)DB.settings={theme:'orange',darkMode:true};
+    if(!DB.photos)DB.photos={};
+    if(!DB.fees.inst1){DB.fees={yearlyFee:DB.fees.rate*3||3000,inst1:DB.fees.rate||1000,inst2:DB.fees.rate||1000,inst3:DB.fees.rate||1000,data:{}};}
+  }catch(e){}
+}
 
-// ── Export / Import ──────────────────────────────────────────────
+// ── THEME ─────────────────────────────────────────────────────────
+var THEMES={
+  orange:{a:'#f97316',b:'#ea580c'},
+  blue:{a:'#3b82f6',b:'#2563eb'},
+  green:{a:'#22c55e',b:'#16a34a'},
+  purple:{a:'#8b5cf6',b:'#7c3aed'},
+  red:{a:'#ef4444',b:'#dc2626'}
+};
+function applyTheme(){
+  var t=THEMES[DB.settings.theme]||THEMES.orange;
+  document.documentElement.style.setProperty('--accent',t.a);
+  document.documentElement.style.setProperty('--accent2',t.b);
+  if(DB.settings.darkMode){document.body.classList.remove('light');}
+  else{document.body.classList.add('light');}
+}
+
+// ── STORAGE ───────────────────────────────────────────────────────
 function exportData(){
   try{
-    var json=JSON.stringify(DB,null,2);
-    var blob=new Blob([json],{type:'application/json'});
+    var blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
     var d=new Date();
-    a.href=url;
-    a.download='PhoenixClasses_Backup_'+d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear()+'.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast('✅ Backup file download zali!',false);
-  }catch(ex){toast('❌ Error: '+ex.message,true);}
+    a.href=url;a.download='PhoenixClasses_'+d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear()+'.json';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);toast('Backup downloaded successfully!',false);
+  }catch(e){toast('Error: '+e.message,true);}
 }
-function importData(input){
-  var file=input.files[0];
-  if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
+function importData(inp){
+  var file=inp.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(ev){
     try{
-      var data=JSON.parse(e.target.result);
-      if(!data.students||!data.fees){toast('❌ Chukichi file!',true);return;}
-      DB=data;dbS();render();
-      toast('✅ Data restore zala! '+DB.students.length+' students.',false);
-    }catch(ex){toast('❌ File read error!',true);}
+      var d=JSON.parse(ev.target.result);
+      if(!d.students){toast('Invalid backup file!',true);return;}
+      DB=d;
+      if(!DB.timetable)DB.timetable={};
+      if(!DB.settings)DB.settings={theme:'orange',darkMode:true};
+      if(!DB.photos)DB.photos={};
+      dbS();applyTheme();render();
+      toast('Data restored! '+DB.students.length+' students loaded.',false);
+    }catch(e){toast('File read error!',true);}
   };
-  reader.readAsText(file);
-  input.value='';
+  r.readAsText(file);inp.value='';
 }
 function toast(msg,err){
   var t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast'+(err?' err':'');
-  t.style.display='block';
+  t.textContent=msg;t.className='toast'+(err?' err':'');t.style.display='block';
   setTimeout(function(){t.style.display='none';},3000);
 }
 
-var CL=['Class 8','Class 9','Class 10'],SB=['Maths','Science'],MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-var pg='dashboard',selT=null,mEn={},aCl='Class 8',aDt='',fCl='All',fMn=0,fYr=2026,sF='All',sSr='';
-function initDate(){var d=new Date();aDt=d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();fMn=d.getMonth();fYr=d.getFullYear();}
+// ── PHOTO ──────────────────────────────────────────────────────────
+var photoUploadId=null;
+function triggerPhoto(id){photoUploadId=id;document.getElementById('photoFile').click();}
+function uploadPhoto(inp){
+  var file=inp.files[0];if(!file||!photoUploadId)return;
+  var r=new FileReader();
+  r.onload=function(ev){DB.photos[photoUploadId]=ev.target.result;dbS();render();toast('Photo updated!',false);};
+  r.readAsDataURL(file);inp.value='';
+}
+function photoEl(id,name){
+  var src=DB.photos[id];
+  if(src)return '<img src="'+src+'" class="stu-photo" onclick="triggerPhoto('+id+')" style="cursor:pointer"/>';
+  var initial=(name||'?')[0].toUpperCase();
+  return '<div class="stu-photo-placeholder" onclick="triggerPhoto('+id+')" style="cursor:pointer">'+initial+'</div>';
+}
+
+var CL=['Class 8','Class 9','Class 10'],SB=['Maths','Science'],SB_BOTH='Both';
+var DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var PERIODS=['9:00','10:00','11:00','12:00','1:00','2:00','3:00','4:00'];
+var pg='dashboard',selT=null,mEn={},aCl='Class 8',aDt='',fCl='All',fYr=2026,sF='All',sSr='',selStu=null;
+function initDate(){var d=new Date();aDt=d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();fYr=d.getFullYear();}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function bdg(t,c){return '<span class="badge" style="background:'+c+'22;color:'+c+'">'+t+'</span>';}
 function stCard(n,l,c){return '<div class="stat-card" style="border-top:3px solid '+c+'"><div class="stat-num" style="color:'+c+'">'+n+'</div><div class="stat-label">'+l+'</div></div>';}
 function cps(arr,cur,fn){return arr.map(function(a){return '<span class="chip '+(a===cur?'on':'')+'" onclick="'+fn+'(\''+a+'\')">'+a+'</span>';}).join('');}
+function bar(label,val,max,color){
+  var pct=max>0?Math.round((val/max)*100):0;
+  return '<div class="bar-wrap"><div class="bar-label"><span>'+label+'</span><span style="color:'+color+';font-weight:700">'+val+'/'+max+' ('+pct+'%)</span></div>'+
+    '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';
+}
 
-// ── BACKUP CARD ──────────────────────────────────────────────────
-function backupCard(){
-  var d=new Date();
-  return '<div class="backup-box">'+
-    '<div class="backup-title">☁️ Data Backup & Restore</div>'+
-    '<div class="backup-sub">Cache clear झाला तरी data safe राहील — रोज backup घ्या!</div>'+
-    '<div class="grid2" style="margin-bottom:0">'+
-    '<button class="btn btn-green" style="margin-top:0" onclick="exportData()">📥 Backup घ्या</button>'+
-    '<button class="btn btn-purple" style="margin-top:0" onclick="document.getElementById(\'importFile\').click()">📤 Restore करा</button>'+
+// ── TOPBAR ──────────────────────────────────────────────────────
+function topbar(title){
+  return '<div class="topbar">'+
+    '<div class="topbar-title">'+title+'</div>'+
+    '<div class="topbar-actions">'+
+    '<span class="icon-btn" onclick="DB.settings.darkMode=!DB.settings.darkMode;dbS();applyTheme();render()">'+(DB.settings.darkMode?'☀️':'🌙')+'</span>'+
+    '<span class="icon-btn" onclick="go(\'more\')">⚙️</span>'+
     '</div></div>';
 }
 
-// ── DASHBOARD ────────────────────────────────────────────────────
+// ── DASHBOARD ───────────────────────────────────────────────────
 function pgHome(){
-  var cm=fMn,cy=fYr,tp=0;
-  for(var i=0;i<CL.length;i++){var r=DB.attendance[aDt+'_'+CL[i]]||{};for(var k in r){if(r[k]==='P')tp++;}}
-  var fp=DB.students.filter(function(s){return(DB.fees.data||{})[s.id+'_'+cy+'_'+cm];}).length;
+  var tp=0,total=0;
+  for(var i=0;i<CL.length;i++){var r=DB.attendance[aDt+'_'+CL[i]]||{};for(var k in r){total++;if(r[k]==='P')tp++;}}
+  var fd=DB.fees.data||{};
+  var i1=DB.fees.inst1||1000,i2=DB.fees.inst2||1000,i3=DB.fees.inst3||1000;
+  var p1=DB.students.filter(function(s){return fd[s.id+'_'+fYr+'_inst1'];}).length;
+  var p2=DB.students.filter(function(s){return fd[s.id+'_'+fYr+'_inst2'];}).length;
+  var p3=DB.students.filter(function(s){return fd[s.id+'_'+fYr+'_inst3'];}).length;
+  var totalC=(p1*i1)+(p2*i2)+(p3*i3);
+  var attPct=total>0?Math.round((tp/total)*100):0;
+  // pending reminders
+  var pending=DB.students.filter(function(s){return !fd[s.id+'_'+fYr+'_inst1']||!fd[s.id+'_'+fYr+'_inst2']||!fd[s.id+'_'+fYr+'_inst3'];}).length;
   var rows='';
   for(var i=0;i<CL.length;i++){
     var c=CL[i];
-    var m=DB.students.filter(function(s){return s.cls===c&&s.subject==='Maths';}).length;
-    var sc=DB.students.filter(function(s){return s.cls===c&&s.subject==='Science';}).length;
-    rows+='<tr><td style="font-weight:700">'+c+'</td><td>'+bdg(m,'#3b82f6')+'</td><td>'+bdg(sc,'#22c55e')+'</td><td style="font-weight:700;color:#f97316">'+(m+sc)+'</td></tr>';
+    var m=DB.students.filter(function(s){return s.cls===c&&(s.subject==='Maths'||s.subject==='Both');}).length;
+    var sc=DB.students.filter(function(s){return s.cls===c&&(s.subject==='Science'||s.subject==='Both');}).length;
+    var tot=DB.students.filter(function(s){return s.cls===c;}).length;
+    rows+='<tr><td style="font-weight:700">'+c+'</td><td>'+bdg(m,'#3b82f6')+'</td><td>'+bdg(sc,'#22c55e')+'</td><td style="font-weight:800;color:var(--accent)">'+tot+'</td></tr>';
   }
-  return '<div class="page-title">🔥 Phoenix Classes</div><div class="page-sub">Maharashtra Board · Class 8 to 10</div>'+
-    backupCard()+
-    '<div class="grid2">'+stCard(DB.students.length,'Total Students','#f97316')+stCard(tp,'Present Today','#22c55e')+stCard(fp+'/'+DB.students.length,'Fee Paid','#eab308')+stCard(DB.marks.tests.length,'Tests','#3b82f6')+'</div>'+
-    '<div class="card"><div class="stitle">📌 Class Summary</div><table><thead><tr><th>Class</th><th>Maths</th><th>Science</th><th>Total</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  return topbar('Phoenix Classes')+
+    '<div class="app-header"><div class="app-header-title">Phoenix Classes 🔥</div><div class="app-header-sub">Maharashtra Board · Class 8–10 · Maths & Science</div></div>'+
+    '<div class="grid2">'+stCard(DB.students.length,'Total Students','#f97316')+stCard(tp+'/'+total,'Present Today','#22c55e')+stCard('₹'+totalC,'Fee Collected','#eab308')+stCard(pending,'Fee Pending','#ef4444')+'</div>'+
+    '<div class="card"><div class="card-title">📈 Today\'s Attendance</div>'+
+    bar('Attendance',tp,total>0?total:1,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">💰 Fee Collection '+fYr+'</div>'+
+    bar('Installment 1',p1,DB.students.length,'#3b82f6')+
+    bar('Installment 2',p2,DB.students.length,'#8b5cf6')+
+    bar('Installment 3',p3,DB.students.length,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">📌 Class Summary</div><table><thead><tr><th>Class</th><th>Maths</th><th>Science</th><th>Total</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '<div class="card" style="background:linear-gradient(135deg,#1a2234,#111827);border-color:var(--accent)">'+
+    '<div class="card-title">☁️ Data Backup</div>'+
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:10px">Download backup daily to keep data safe.</div>'+
+    '<div class="grid2" style="margin-bottom:0">'+
+    '<button class="btn btn-green" style="margin-top:0" onclick="exportData()">📥 Backup</button>'+
+    '<button class="btn btn-purple" style="margin-top:0" onclick="document.getElementById(\'importFile\').click()">📤 Restore</button>'+
+    '</div></div>';
 }
 
 // ── STUDENTS ────────────────────────────────────────────────────
 function pgStu(){
+  if(selStu!==null){return pgReport(selStu);}
   var fl=DB.students.filter(function(s){return(sF==='All'||s.cls===sF)&&s.name.toLowerCase().indexOf(sSr.toLowerCase())>=0;});
-  var rows=fl.length===0?'<tr><td colspan="5" class="empty">No students yet.</td></tr>':
-    fl.map(function(s,i){return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td><td>'+bdg(s.cls,'#3b82f6')+'</td><td>'+bdg(s.subject,'#22c55e')+'</td><td><button class="btn-sm btn-red" onclick="dStu('+s.id+')">✕</button></td></tr>';}).join('');
-  return '<div class="page-title">👨‍🎓 Students</div><div class="page-sub">Manage all students</div>'+
+  var rows=fl.length===0?'<tr><td colspan="5" class="empty">No students found.</td></tr>':
+    fl.map(function(s,i){
+      return '<tr>'+
+        '<td>'+photoEl(s.id,s.name)+'</td>'+
+        '<td style="font-weight:700;cursor:pointer" onclick="selStu='+s.id+';render()">'+esc(s.name)+'<br><span style="font-size:10px;color:var(--muted)">'+s.cls+'</span></td>'+
+        '<td>'+bdg(s.subject==='Both'?'Both':'#'+s.subject.charAt(0),'#3b82f6')+'<br>'+bdg(s.cls,'#22c55e')+'</td>'+
+        '<td><button class="btn-sm btn-blue" onclick="selStu='+s.id+';render()">Report</button></td>'+
+        '<td><button class="btn-sm btn-red" onclick="dStu('+s.id+')">✕</button></td>'+
+        '</tr>';
+    }).join('');
+  return topbar('Students')+
     '<div class="grid3">'+stCard(DB.students.length,'Total','#f97316')+stCard(DB.students.filter(function(s){return s.cls==='Class 8';}).length,'Class 8','#3b82f6')+stCard(DB.students.filter(function(s){return s.cls==='Class 9';}).length,'Class 9','#22c55e')+'</div>'+
-    '<div class="card"><div class="stitle">➕ Add Student</div>'+
-    '<div class="mb"><label>Student Name</label><input id="sn" placeholder="Full name"/></div>'+
+    '<div class="card"><div class="card-title">➕ Add New Student</div>'+
+    '<div class="mb"><label>Full Name</label><input id="sn" placeholder="Enter student full name"/></div>'+
     '<div class="grid2 mb"><div><label>Class</label><select id="sc">'+CL.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
-    '<div><label>Subject</label><select id="ss">'+SB.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div></div>'+
-    '<div class="mb"><label>Parent Phone</label><input id="sp" type="tel" placeholder="Phone number"/></div>'+
-    '<button class="btn" onclick="aStu()">➕ Add Student</button></div>'+
+    '<div><label>Subject</label><select id="ss"><option>Maths</option><option>Science</option><option>Both</option></select></div></div>'+
+    '<div class="mb"><label>Parent Phone</label><input id="sp" type="tel" placeholder="10-digit phone number"/></div>'+
+    '<button class="btn btn-orange" onclick="aStu()">➕ Add Student</button></div>'+
     '<div class="mb">'+cps(['All'].concat(CL),sF,'setSF')+'</div>'+
-    '<div class="mb"><input placeholder="🔍 Search..." oninput="sSr=this.value;render()" value="'+esc(sSr)+'"/></div>'+
-    '<div class="card"><table><thead><tr><th>#</th><th>Name</th><th>Class</th><th>Sub</th><th>Del</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    '<div class="mb"><input placeholder="🔍 Search student..." oninput="sSr=this.value;render()" value="'+esc(sSr)+'"/></div>'+
+    '<div class="card"><div class="card-title">All Students — Tap name for Report Card</div>'+
+    '<table><thead><tr><th>Photo</th><th>Name</th><th>Details</th><th>Report</th><th>Del</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 function aStu(){
   var n=document.getElementById('sn'),c=document.getElementById('sc'),s=document.getElementById('ss'),p=document.getElementById('sp');
-  if(!n||!n.value.trim()){alert('Student name enter kara!');return;}
+  if(!n||!n.value.trim()){toast('Please enter student name!',true);return;}
   DB.students.push({id:Date.now(),name:n.value.trim(),cls:c.value,subject:s.value,phone:p?p.value:''});
-  dbS();render();toast('✅ Student add zala!',false);
+  dbS();render();toast('Student added successfully!',false);
 }
-function dStu(id){if(!confirm('Remove?'))return;DB.students=DB.students.filter(function(s){return s.id!==id;});dbS();render();}
+function dStu(id){if(!confirm('Remove this student?'))return;DB.students=DB.students.filter(function(s){return s.id!==id;});delete DB.photos[id];dbS();render();toast('Student removed.',false);}
 function setSF(v){sF=v;render();}
+
+// ── REPORT CARD ──────────────────────────────────────────────────
+function pgReport(id){
+  var stu=null;for(var i=0;i<DB.students.length;i++){if(DB.students[i].id===id){stu=DB.students[i];break;}}
+  if(!stu)return'<div class="empty">Student not found</div>';
+  var tests=DB.marks.tests||[];
+  var md=DB.marks.data||{};
+  var stuTests=tests.filter(function(t){return t.cls===stu.cls&&(t.subject===stu.subject||stu.subject==='Both'||t.subject===stu.subject);});
+  var totalMarks=0,obtMarks=0,testCount=0;
+  var testRows=stuTests.length===0?'<tr><td colspan="4" class="empty">No tests recorded yet.</td></tr>':
+    stuTests.map(function(t){
+      var val=Number((md[t.id]||{})[id]||0);
+      var pct=val?(val/t.maxMarks)*100:0;
+      var g=!val?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+      var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'var(--muted)';
+      if(val){totalMarks+=t.maxMarks;obtMarks+=val;testCount++;}
+      return '<tr><td>'+esc(t.testName)+'</td><td>'+t.subject+'</td><td>'+val+'/'+t.maxMarks+'</td><td>'+bdg(g,gc)+'</td></tr>';
+    }).join('');
+  var overallPct=totalMarks>0?Math.round((obtMarks/totalMarks)*100):0;
+  var overallGrade=overallPct>=75?'A':overallPct>=60?'B':overallPct>=40?'C':testCount>0?'D':'—';
+  var gc2=overallGrade==='A'?'#22c55e':overallGrade==='B'?'#3b82f6':overallGrade==='C'?'#eab308':'#ef4444';
+  // attendance
+  var attDays=0,attPresent=0;
+  for(var k in DB.attendance){if(k.indexOf('_'+stu.cls)>=0){var rec=DB.attendance[k];if(rec[id]){attDays++;if(rec[id]==='P')attPresent++;}}}
+  var attPct=attDays>0?Math.round((attPresent/attDays)*100):0;
+  // fee
+  var fd=DB.fees.data||{};
+  var p1=!!fd[id+'_'+fYr+'_inst1'],p2=!!fd[id+'_'+fYr+'_inst2'],p3=!!fd[id+'_'+fYr+'_inst3'];
+  var paidAmt=(p1?DB.fees.inst1:0)+(p2?DB.fees.inst2:0)+(p3?DB.fees.inst3:0);
+  var totalFee=(DB.fees.inst1||0)+(DB.fees.inst2||0)+(DB.fees.inst3||0);
+  // whatsapp msg
+  var waMsg='Hello! This is a report for *'+stu.name+'* from Phoenix Classes.%0A%0A';
+  waMsg+='*Class:* '+stu.cls+'%0A*Subject:* '+stu.subject+'%0A%0A';
+  waMsg+='*Academic Performance:*%0AOverall Grade: '+overallGrade+' ('+overallPct+'%)%0A%0A';
+  waMsg+='*Attendance:* '+attPresent+'/'+attDays+' days ('+attPct+'%)%0A%0A';
+  waMsg+='*Fee Status '+fYr+':*%0AInstallment 1: '+(p1?'✅ Paid':'❌ Pending')+'%0AInstallment 2: '+(p2?'✅ Paid':'❌ Pending')+'%0AInstallment 3: '+(p3?'✅ Paid':'❌ Pending');
+  var waLink='https://wa.me/91'+stu.phone+'?text='+waMsg;
+  return '<button class="btn btn-gray" style="width:auto;padding:8px 14px;margin-bottom:14px" onclick="selStu=null;render()">← Back to Students</button>'+
+    '<div class="report-header">'+
+    '<div style="display:flex;gap:14px;align-items:center">'+
+    '<div>'+photoEl(stu.id,stu.name)+'</div>'+
+    '<div><div style="font-size:17px;font-weight:800">'+esc(stu.name)+'</div>'+
+    '<div style="font-size:11px;color:#fed7aa;margin-top:2px">'+stu.cls+' · '+stu.subject+' · Phoenix Classes</div></div>'+
+    '<div style="margin-left:auto;text-align:center"><div class="grade-big">'+overallGrade+'</div><div style="font-size:10px;color:#fed7aa">Overall</div></div>'+
+    '</div></div>'+
+    '<div class="grid3">'+stCard(overallPct+'%','Avg Score',gc2)+stCard(attPct+'%','Attendance','#22c55e')+stCard('₹'+paidAmt,'Fee Paid','#eab308')+'</div>'+
+    '<div class="card"><div class="card-title">📊 Test Performance</div>'+
+    bar('Overall Score',obtMarks,totalMarks||1,gc2)+
+    '<table><thead><tr><th>Test</th><th>Subject</th><th>Marks</th><th>Grade</th></tr></thead><tbody>'+testRows+'</tbody></table></div>'+
+    '<div class="card"><div class="card-title">📋 Attendance Summary</div>'+
+    bar('Attendance',attPresent,attDays||1,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">💰 Fee Status '+fYr+'</div>'+
+    '<div class="grid3" style="margin-bottom:0">'+
+    '<div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;border:1px solid '+(p1?'#22c55e':'#ef4444')+'">'+
+    '<div style="font-size:18px">'+(p1?'✅':'❌')+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">Inst. 1<br>₹'+DB.fees.inst1+'</div></div>'+
+    '<div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;border:1px solid '+(p2?'#22c55e':'#ef4444')+'">'+
+    '<div style="font-size:18px">'+(p2?'✅':'❌')+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">Inst. 2<br>₹'+DB.fees.inst2+'</div></div>'+
+    '<div style="text-align:center;padding:10px;background:var(--bg);border-radius:10px;border:1px solid '+(p3?'#22c55e':'#ef4444')+'">'+
+    '<div style="font-size:18px">'+(p3?'✅':'❌')+'</div><div style="font-size:10px;color:var(--muted);margin-top:3px">Inst. 3<br>₹'+DB.fees.inst3+'</div></div>'+
+    '</div></div>'+
+    (stu.phone?'<button class="btn" style="background:#25d366;margin-top:4px" onclick="window.open(\''+waLink+'\',\'_blank\')">📱 Send Report on WhatsApp</button>':'<div style="color:var(--muted);font-size:12px;text-align:center;margin-top:8px">Add phone number to enable WhatsApp</div>');
+}
 
 // ── ATTENDANCE ──────────────────────────────────────────────────
 function pgAtt(){
   var cs=DB.students.filter(function(s){return s.cls===aCl;});
   var key=aDt+'_'+aCl,dr=DB.attendance[key]||{},pr=0,ab=0;
   for(var k in dr){if(dr[k]==='P')pr++;else ab++;}
-  var rows=cs.length===0?'<tr><td colspan="4" class="empty">'+aCl+' madhe students nahi.</td></tr>':
+  var pct=cs.length>0?Math.round((pr/cs.length)*100):0;
+  var rows=cs.length===0?'<tr><td colspan="4" class="empty">No students in '+aCl+'.</td></tr>':
     cs.map(function(s,i){
       var st2=dr[s.id];
-      return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td>'+
-        '<td>'+(st2==='P'?bdg('Present','#22c55e'):st2==='A'?bdg('Absent','#ef4444'):bdg('—','#64748b'))+'</td>'+
+      return '<tr>'+
+        '<td>'+photoEl(s.id,s.name)+'</td>'+
+        '<td style="font-weight:700">'+esc(s.name)+'</td>'+
+        '<td>'+(st2==='P'?bdg('Present','#22c55e'):st2==='A'?bdg('Absent','#ef4444'):bdg('—','var(--muted)'))+'</td>'+
         '<td><button class="btn-sm '+(st2==='P'?'btn-green':'btn-gray')+'" style="margin-right:4px" onclick="mAtt('+s.id+',\'P\')">P</button>'+
         '<button class="btn-sm '+(st2==='A'?'btn-red':'btn-gray')+'" onclick="mAtt('+s.id+',\'A\')">A</button></td></tr>';
     }).join('');
-  return '<div class="page-title">📋 Attendance</div><div class="page-sub">Daily attendance mark kara</div>'+
+  return topbar('Attendance')+
     '<div class="grid3">'+stCard(cs.length,'Students','#f97316')+stCard(pr,'Present','#22c55e')+stCard(ab,'Absent','#ef4444')+'</div>'+
-    '<div class="mb"><label>Date</label><input type="date" value="'+aDt+'" onchange="aDt=this.value;render()"/></div>'+
+    '<div class="card"><div class="card-title">📈 Today\'s Progress</div>'+bar('Attendance',pr,cs.length||1,'#22c55e')+'</div>'+
+    '<div class="mb"><label>Select Date</label><input type="date" value="'+aDt+'" onchange="aDt=this.value;render()"/></div>'+
     '<div class="mb">'+cps(CL,aCl,'setAC')+'</div>'+
-    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
-    '<span style="font-weight:700">'+aCl+'</span>'+
-    '<span><button class="btn-sm btn-green" style="margin-right:4px" onclick="mAll(\'P\')">✓ All P</button><button class="btn-sm btn-red" onclick="mAll(\'A\')">✗ All A</button></span></div>'+
-    '<table><thead><tr><th>#</th><th>Name</th><th>Status</th><th>Mark</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+    '<div class="card">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+    '<div style="font-weight:800">'+aCl+' — '+aDt+'</div>'+
+    '<div><button class="btn-sm btn-green" style="margin-right:5px" onclick="mAll(\'P\')">✓ All Present</button><button class="btn-sm btn-red" onclick="mAll(\'A\')">✗ All Absent</button></div></div>'+
+    '<table><thead><tr><th></th><th>Name</th><th>Status</th><th>Mark</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
-function mAtt(id,s){var k=aDt+'_'+aCl;if(!DB.attendance[k])DB.attendance[k]={};DB.attendance[k][id]=s;dbS();render();}
-function mAll(s){var k=aDt+'_'+aCl;DB.attendance[k]={};DB.students.filter(function(x){return x.cls===aCl;}).forEach(function(x){DB.attendance[k][x.id]=s;});dbS();render();}
+function mAtt(id,s){var k=aDt+'_'+aCl;if(!DB.attendance[k])DB.attendance[k]={};DB.attendance[k][id]=s;dbS();render();toast(s==='P'?'Marked Present ✓':'Marked Absent ✗',s==='A');}
+function mAll(s){var k=aDt+'_'+aCl;DB.attendance[k]={};DB.students.filter(function(x){return x.cls===aCl;}).forEach(function(x){DB.attendance[k][x.id]=s;});dbS();render();toast(s==='P'?'All marked Present!':'All marked Absent!',false);}
 function setAC(c){aCl=c;render();}
 
 // ── MARKS ────────────────────────────────────────────────────────
 function pgMrk(){
   var tests=DB.marks.tests||[],md=DB.marks.data||{};
-  var tlist=tests.length===0?'<div class="empty">No tests yet.</div>':
+  var tlist=tests.length===0?'<div class="empty">No tests yet. Create your first test above.</div>':
     tests.map(function(t){
-      var sl=DB.students.filter(function(s){return s.cls===t.cls&&s.subject===t.subject;});
+      var sl=DB.students.filter(function(s){return s.cls===t.cls&&(s.subject===t.subject||s.subject==='Both');});
       var vals=sl.map(function(s){return Number((md[t.id]||{})[s.id]||0);}).filter(function(v){return v>0;});
       var avg=vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1):'—';
       return '<div class="titem '+(selT===t.id?'on':'')+'" onclick="selTest('+t.id+')">'+
-        '<div style="font-weight:700;font-size:13px">'+esc(t.testName)+'</div>'+
-        '<div style="font-size:11px;color:#64748b;margin-top:3px">'+t.cls+' · '+t.subject+' · Avg:'+avg+'/'+t.maxMarks+'</div></div>';
+        '<div style="font-weight:800;font-size:13px">'+esc(t.testName)+'</div>'+
+        '<div style="font-size:11px;color:var(--muted);margin-top:3px">'+t.cls+' · '+t.subject+' · '+t.date+' · Avg: '+avg+'/'+t.maxMarks+'</div></div>';
     }).join('');
   var stObj=null;for(var i=0;i<tests.length;i++){if(tests[i].id===selT){stObj=tests[i];break;}}
-  var ts=stObj?DB.students.filter(function(s){return s.cls===stObj.cls&&s.subject===stObj.subject;}):[];
-  var mp='<div class="empty">Test select kara</div>';
+  var ts=stObj?DB.students.filter(function(s){return s.cls===stObj.cls&&(s.subject===stObj.subject||s.subject==='Both');}):[];
+  var mp='<div class="empty">Select a test to enter marks</div>';
   if(stObj){
-    var rows=ts.length===0?'<tr><td colspan="4" class="empty">No students</td></tr>':
+    var rows=ts.length===0?'<tr><td colspan="4" class="empty">No students in this class/subject.</td></tr>':
       ts.map(function(s,i){
         var val=mEn[s.id]||'';
         var pct=val?(Number(val)/stObj.maxMarks)*100:null;
         var g=pct===null?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
-        var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'#64748b';
-        return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td>'+
-          '<td><input type="number" style="width:65px" min="0" max="'+stObj.maxMarks+'" value="'+esc(val)+'" onchange="mEn['+s.id+']=this.value"/></td>'+
+        var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'var(--muted)';
+        return '<tr><td>'+photoEl(s.id,s.name)+'</td><td style="font-weight:700">'+esc(s.name)+'</td>'+
+          '<td><input type="number" style="width:65px" min="0" max="'+stObj.maxMarks+'" value="'+esc(val)+'" onchange="mEn['+s.id+']=this.value" placeholder="0"/></td>'+
           '<td>'+bdg(g,gc)+'</td></tr>';
       }).join('');
-    mp='<div style="font-weight:700;font-size:14px;margin-bottom:4px">'+esc(stObj.testName)+'</div>'+
-      '<div style="color:#64748b;font-size:11px;margin-bottom:10px">'+stObj.cls+' · '+stObj.subject+' · Max:'+stObj.maxMarks+'</div>'+
-      '<table><thead><tr><th>#</th><th>Student</th><th>Marks</th><th>Grade</th></tr></thead><tbody>'+rows+'</tbody></table>'+
-      (ts.length>0?'<button class="btn btn-green" onclick="saveMrk()">💾 Save Marks</button>':'');
+    mp='<div style="font-weight:800;font-size:15px;margin-bottom:4px">'+esc(stObj.testName)+'</div>'+
+      '<div style="color:var(--muted);font-size:11px;margin-bottom:12px">'+stObj.cls+' · '+stObj.subject+' · Max: '+stObj.maxMarks+'</div>'+
+      '<table><thead><tr><th></th><th>Student</th><th>Marks/'+stObj.maxMarks+'</th><th>Grade</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      (ts.length>0?'<button class="btn btn-green" onclick="saveMrk()">💾 Save All Marks</button>':'');
   }
-  return '<div class="page-title">📊 Marks</div><div class="page-sub">Test marks record kara</div>'+
-    '<div class="card"><div class="stitle">➕ New Test</div>'+
-    '<div class="mb"><label>Test Name</label><input id="tn" placeholder="e.g. Unit Test 1"/></div>'+
+  return topbar('Marks & Results')+
+    '<div class="card"><div class="card-title">➕ Create New Test</div>'+
+    '<div class="mb"><label>Test Name</label><input id="tn" placeholder="e.g. Unit Test 1, Half Yearly Exam"/></div>'+
     '<div class="grid2 mb"><div><label>Class</label><select id="tc">'+CL.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
-    '<div><label>Subject</label><select id="tsu">'+SB.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div></div>'+
+    '<div><label>Subject</label><select id="tsu"><option>Maths</option><option>Science</option><option>Both</option></select></div></div>'+
     '<div class="grid2 mb"><div><label>Max Marks</label><input type="number" id="tm" value="100"/></div>'+
-    '<div><label>Date</label><input type="date" id="td" value="'+aDt+'"/></div></div>'+
-    '<button class="btn" onclick="addT()">Create Test</button></div>'+
-    '<div class="card"><div class="stitle">📝 All Tests</div>'+tlist+'</div>'+
+    '<div><label>Test Date</label><input type="date" id="td" value="'+aDt+'"/></div></div>'+
+    '<button class="btn btn-orange" onclick="addT()">Create Test</button></div>'+
+    '<div class="card"><div class="card-title">📝 All Tests</div>'+tlist+'</div>'+
     '<div class="card">'+mp+'</div>';
 }
 function addT(){
-  var tn=document.getElementById('tn');if(!tn||!tn.value.trim()){alert('Test name enter kara!');return;}
+  var tn=document.getElementById('tn');if(!tn||!tn.value.trim()){toast('Please enter test name!',true);return;}
   var t={id:Date.now(),testName:tn.value.trim(),cls:document.getElementById('tc').value,subject:document.getElementById('tsu').value,maxMarks:+document.getElementById('tm').value||100,date:document.getElementById('td').value};
-  DB.marks.tests.push(t);dbS();selT=t.id;mEn={};render();
+  DB.marks.tests.push(t);dbS();selT=t.id;mEn={};render();toast('Test created!',false);
 }
 function selTest(id){selT=id;mEn={};var d=(DB.marks.data||{})[id]||{};for(var k in d)mEn[k]=d[k];render();}
-function saveMrk(){if(!DB.marks.data)DB.marks.data={};var cp={};for(var k in mEn)cp[k]=mEn[k];DB.marks.data[selT]=cp;dbS();toast('✅ Marks save zale!',false);render();}
+function saveMrk(){if(!DB.marks.data)DB.marks.data={};var cp={};for(var k in mEn)cp[k]=mEn[k];DB.marks.data[selT]=cp;dbS();toast('Marks saved successfully!',false);render();}
 
 // ── FEES ────────────────────────────────────────────────────────
 function pgFee(){
   var fd=DB.fees.data||{};
   var fl=DB.students.filter(function(s){return fCl==='All'||s.cls===fCl;});
-  var pc=fl.filter(function(s){return fd[s.id+'_'+fYr+'_'+fMn];}).length;
-  var mo=MN.map(function(m,i){return '<option value="'+i+'"'+(i===fMn?' selected':'')+'>'+m+'</option>';}).join('');
-  var rows=fl.length===0?'<tr><td colspan="5" class="empty">No students</td></tr>':
+  var i1=DB.fees.inst1||1000,i2=DB.fees.inst2||1000,i3=DB.fees.inst3||1000;
+  var p1=fl.filter(function(s){return fd[s.id+'_'+fYr+'_inst1'];}).length;
+  var p2=fl.filter(function(s){return fd[s.id+'_'+fYr+'_inst2'];}).length;
+  var p3=fl.filter(function(s){return fd[s.id+'_'+fYr+'_inst3'];}).length;
+  var totalC=(p1*i1)+(p2*i2)+(p3*i3);
+  // pending list
+  var pendingStudents=fl.filter(function(s){return !fd[s.id+'_'+fYr+'_inst1']||!fd[s.id+'_'+fYr+'_inst2']||!fd[s.id+'_'+fYr+'_inst3'];});
+  var reminders=pendingStudents.map(function(s){
+    var inst=(!fd[s.id+'_'+fYr+'_inst1']?'I1 ':'')+(!fd[s.id+'_'+fYr+'_inst2']?'I2 ':'')+(!fd[s.id+'_'+fYr+'_inst3']?'I3':'');
+    var due=(!fd[s.id+'_'+fYr+'_inst1']?i1:0)+(!fd[s.id+'_'+fYr+'_inst2']?i2:0)+(!fd[s.id+'_'+fYr+'_inst3']?i3:0);
+    var waMsg='Hello! This is a fee reminder for *'+s.name+'* from Phoenix Classes.%0A%0APending Installments: *'+inst.trim()+'*%0AAmount Due: *₹'+due+'*%0A%0APlease pay at the earliest. Thank you!';
+    var waLink='https://wa.me/91'+s.phone+'?text='+waMsg;
+    return '<div class="reminder-item">'+
+      '<div>'+
+      '<div style="font-weight:700">'+esc(s.name)+'</div>'+
+      '<div style="font-size:11px;color:var(--muted)">'+s.cls+' · Pending: '+inst.trim()+' · ₹'+due+'</div>'+
+      '</div>'+
+      (s.phone?'<button class="whatsapp-btn" onclick="window.open(\''+waLink+'\',\'_blank\')">📱 WhatsApp</button>':'<span style="font-size:11px;color:var(--muted)">No phone</span>')+
+      '</div>';
+  }).join('');
+  var rows=fl.length===0?'<tr><td colspan="6" class="empty">No students found.</td></tr>':
     fl.map(function(s,i){
-      var paid=!!fd[s.id+'_'+fYr+'_'+fMn];
-      return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td><td>'+bdg(s.cls,'#3b82f6')+'</td>'+
-        '<td>'+(paid?bdg('✓ Paid','#22c55e'):bdg('Pending','#ef4444'))+'</td>'+
-        '<td><button class="btn-sm '+(paid?'btn-red':'btn-green')+'" onclick="tFee('+s.id+')">'+(paid?'Unpaid':'Paid')+'</button></td></tr>';
+      var paid1=!!fd[s.id+'_'+fYr+'_inst1'],paid2=!!fd[s.id+'_'+fYr+'_inst2'],paid3=!!fd[s.id+'_'+fYr+'_inst3'];
+      return '<tr>'+
+        '<td>'+photoEl(s.id,s.name)+'</td>'+
+        '<td style="font-weight:700">'+esc(s.name)+'<br><span style="font-size:10px;color:var(--muted)">'+s.cls+'</span></td>'+
+        '<td><button class="btn-sm '+(paid1?'btn-green':'btn-gray')+'" onclick="tInst('+s.id+',\'inst1\')">'+(paid1?'✓':'')+'I1</button></td>'+
+        '<td><button class="btn-sm '+(paid2?'btn-green':'btn-gray')+'" onclick="tInst('+s.id+',\'inst2\')">'+(paid2?'✓':'')+'I2</button></td>'+
+        '<td><button class="btn-sm '+(paid3?'btn-green':'btn-gray')+'" onclick="tInst('+s.id+',\'inst3\')">'+(paid3?'✓':'')+'I3</button></td>'+
+        '<td>'+(paid1&&paid2&&paid3?bdg('Full Paid','#22c55e'):(paid1||paid2||paid3)?bdg('Partial','#eab308'):bdg('Pending','#ef4444'))+'</td>'+
+        '</tr>';
     }).join('');
-  return '<div class="page-title">💰 Fees</div><div class="page-sub">Monthly fee tracker</div>'+
-    '<div class="grid3">'+stCard(pc,'Paid','#22c55e')+stCard(fl.length-pc,'Pending','#ef4444')+stCard('₹'+(pc*(DB.fees.rate||500)),'Collected','#eab308')+'</div>'+
-    '<div class="card"><div class="mb"><label>Monthly Fee (₹)</label><input type="number" id="fr" value="'+(DB.fees.rate||500)+'"/></div>'+
-    '<button class="btn btn-blue" onclick="uRate()">Update Fee Amount</button></div>'+
-    '<div class="card"><div class="grid2 mb"><div><label>Month</label><select onchange="fMn=+this.value;render()">'+mo+'</select></div>'+
-    '<div><label>Year</label><input type="number" value="'+fYr+'" onchange="fYr=+this.value;render()"/></div></div>'+
-    '<div class="mb">'+cps(['All'].concat(CL),fCl,'setFC')+'</div>'+
-    '<table><thead><tr><th>#</th><th>Name</th><th>Class</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  return topbar('Fee Management')+
+    '<div class="grid3">'+stCard('₹'+totalC,'Collected','#22c55e')+stCard(pendingStudents.length,'Pending','#ef4444')+stCard(p1+'+'+p2+'+'+p3,'Inst. Paid','#3b82f6')+'</div>'+
+    '<div class="card"><div class="card-title">📈 Collection Progress '+fYr+'</div>'+
+    bar('Installment 1 — ₹'+i1,p1,fl.length||1,'#3b82f6')+
+    bar('Installment 2 — ₹'+i2,p2,fl.length||1,'#8b5cf6')+
+    bar('Installment 3 — ₹'+i3,p3,fl.length||1,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">⚙️ Fee Structure</div>'+
+    '<div class="grid3 mb">'+
+    '<div><label>Inst. 1 (₹)</label><input type="number" id="fi1" value="'+i1+'"/></div>'+
+    '<div><label>Inst. 2 (₹)</label><input type="number" id="fi2" value="'+i2+'"/></div>'+
+    '<div><label>Inst. 3 (₹)</label><input type="number" id="fi3" value="'+i3+'"/></div>'+
+    '</div>'+
+    '<button class="btn btn-blue" onclick="uFeeStruct()">Update Fee Structure</button></div>'+
+    '<div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap">'+
+    '<div><label>Year</label><input type="number" style="width:110px" value="'+fYr+'" onchange="fYr=+this.value;render()"/></div>'+
+    '<div>'+cps(['All'].concat(CL),fCl,'setFC')+'</div></div>'+
+    (pendingStudents.length>0?'<div class="card"><div class="card-title">🔔 Fee Reminder — '+pendingStudents.length+' Pending</div>'+reminders+'</div>':'')+
+    '<div class="card"><div class="card-title">Student Fee Status</div>'+
+    '<table><thead><tr><th></th><th>Student</th><th>I1<br>₹'+i1+'</th><th>I2<br>₹'+i2+'</th><th>I3<br>₹'+i3+'</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
-function tFee(sid){var k=sid+'_'+fYr+'_'+fMn;if(!DB.fees.data)DB.fees.data={};DB.fees.data[k]=!DB.fees.data[k];dbS();render();}
+function tInst(sid,inst){
+  var k=sid+'_'+fYr+'_'+inst;
+  if(!DB.fees.data)DB.fees.data={};
+  DB.fees.data[k]=!DB.fees.data[k];
+  dbS();render();toast(DB.fees.data[k]?'Installment marked Paid! ✅':'Marked as Unpaid.',!DB.fees.data[k]);
+}
 function setFC(c){fCl=c;render();}
-function uRate(){var r=document.getElementById('fr');if(!r||!+r.value){alert('Valid amount enter kara');return;}DB.fees.rate=+r.value;dbS();toast('✅ Fee updated: ₹'+DB.fees.rate,false);render();}
+function uFeeStruct(){
+  var i1=+document.getElementById('fi1').value,i2=+document.getElementById('fi2').value,i3=+document.getElementById('fi3').value;
+  if(!i1||!i2||!i3){toast('Enter valid amounts!',true);return;}
+  DB.fees.inst1=i1;DB.fees.inst2=i2;DB.fees.inst3=i3;DB.fees.yearlyFee=i1+i2+i3;
+  dbS();toast('Fee structure updated! Total: ₹'+(i1+i2+i3),false);render();
+}
+
+// ── MORE (Timetable + Settings) ──────────────────────────────────
+var moreTab='timetable';
+var ttDay='Monday';
+function pgMore(){
+  var tabBtns='<div style="display:flex;gap:8px;margin-bottom:16px">'+
+    '<button class="btn '+(moreTab==='timetable'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1" onclick="moreTab=\'timetable\';render()">📅 Timetable</button>'+
+    '<button class="btn '+(moreTab==='settings'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1" onclick="moreTab=\'settings\';render()">⚙️ Settings</button>'+
+    '</div>';
+  return topbar('More')+(moreTab==='timetable'?pgTimetable():pgSettings())+tabBtns;
+}
+
+function pgTimetable(){
+  var tt=DB.timetable[ttDay]||{};
+  var dayBtns=DAYS.map(function(d){return '<span class="chip '+(ttDay===d?'on':'')+'" onclick="ttDay=\''+d+'\';render()">'+d.slice(0,3)+'</span>';}).join('');
+  var periods=PERIODS.map(function(p,i){
+    var val=tt[p]||'';
+    return '<div class="period-row">'+
+      '<div class="period-time">'+p+' AM</div>'+
+      '<input class="period-sub" id="tt_'+i+'" placeholder="Subject / Free" value="'+esc(val)+'"/>'+
+      '</div>';
+  }).join('');
+  var saved='';
+  for(var d in DB.timetable){
+    var dayTT=DB.timetable[d];
+    var entries=[];
+    for(var p in dayTT){if(dayTT[p])entries.push(p+': '+dayTT[p]);}
+    if(entries.length>0){
+      saved+='<div style="margin-bottom:10px"><div class="day-header">'+d+'</div>'+
+        entries.map(function(e){return '<div style="font-size:12px;padding:4px 8px">'+e+'</div>';}).join('')+'</div>';
+    }
+  }
+  return '<div class="card"><div class="card-title">📅 Timetable</div>'+
+    '<div class="mb">'+dayBtns+'</div>'+
+    '<div class="day-header">'+ttDay+'</div>'+
+    periods+
+    '<button class="btn btn-orange" onclick="saveTT()">Save '+ttDay+'\'s Schedule</button></div>'+
+    (saved?'<div class="card"><div class="card-title">📆 Full Timetable</div>'+saved+'</div>':'');
+}
+function saveTT(){
+  if(!DB.timetable[ttDay])DB.timetable[ttDay]={};
+  PERIODS.forEach(function(p,i){
+    var el=document.getElementById('tt_'+i);
+    if(el)DB.timetable[ttDay][p]=el.value;
+  });
+  dbS();toast(ttDay+'\'s timetable saved!',false);render();
+}
+
+function pgSettings(){
+  var themeColors=[{id:'orange',c:'#f97316'},{id:'blue',c:'#3b82f6'},{id:'green',c:'#22c55e'},{id:'purple',c:'#8b5cf6'},{id:'red',c:'#ef4444'}];
+  var themeDots=themeColors.map(function(t){
+    return '<span class="theme-dot '+(DB.settings.theme===t.id?'on':'')+'" style="background:'+t.c+'" onclick="setTheme(\''+t.id+'\')"></span>';
+  }).join('');
+  return '<div class="card"><div class="card-title">⚙️ App Settings</div>'+
+    '<div class="setting-row">'+
+    '<div><div class="setting-label">Dark Mode</div><div style="font-size:11px;color:var(--muted)">Toggle light/dark theme</div></div>'+
+    '<label class="toggle"><input type="checkbox" '+(DB.settings.darkMode?'checked':'')+' onchange="DB.settings.darkMode=this.checked;dbS();applyTheme();render()"/><span class="toggle-slider"></span></label>'+
+    '</div>'+
+    '<div class="setting-row">'+
+    '<div><div class="setting-label">App Color Theme</div><div style="font-size:11px;color:var(--muted)">Choose your favourite color</div></div>'+
+    '<div>'+themeDots+'</div>'+
+    '</div>'+
+    '</div>'+
+    '<div class="card"><div class="card-title">☁️ Data Management</div>'+
+    '<button class="btn btn-green" onclick="exportData()">📥 Download Backup</button>'+
+    '<button class="btn btn-purple" onclick="document.getElementById(\'importFile\').click()">📤 Restore from Backup</button>'+
+    '<button class="btn btn-red" onclick="clearAll()">🗑️ Clear All Data</button>'+
+    '</div>'+
+    '<div class="card"><div class="card-title">ℹ️ About</div>'+
+    '<div style="font-size:12px;color:var(--muted);line-height:1.7">'+
+    '<b style="color:var(--text)">Phoenix Classes App</b><br>'+
+    'Maharashtra Board · Class 8–10<br>'+
+    'Maths & Science · Free Forever<br><br>'+
+    'Built with ❤️ for Phoenix Classes'+
+    '</div></div>';
+}
+function setTheme(t){DB.settings.theme=t;dbS();applyTheme();render();toast('Theme updated!',false);}
+function clearAll(){if(!confirm('⚠️ This will delete ALL data. Are you sure?'))return;if(!confirm('Last warning! Delete everything?'))return;localStorage.removeItem('pxDB2');DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{yearlyFee:3000,inst1:1000,inst2:1000,inst3:1000,data:{}},timetable:{},settings:{theme:'orange',darkMode:true},photos:{}};render();toast('All data cleared.',true);}
 
 // ── ROUTER ───────────────────────────────────────────────────────
 function go(p){
-  pg=p;
+  pg=p;selStu=null;
   var items=document.querySelectorAll('.bn-item');
   for(var i=0;i<items.length;i++)items[i].classList.remove('active');
   var nav=document.getElementById('nav-'+p);
@@ -292,11 +605,13 @@ function render(){
     else if(pg==='attendance')el.innerHTML=pgAtt();
     else if(pg==='marks')el.innerHTML=pgMrk();
     else if(pg==='fees')el.innerHTML=pgFee();
+    else if(pg==='more')el.innerHTML=pgMore();
+    window.scrollTo(0,0);
   }catch(ex){
-    document.getElementById('app').innerHTML='<div class="card" style="color:#ef4444;padding:20px">Error: '+ex.message+'<br><button class="btn" onclick="render()" style="margin-top:10px">Retry</button></div>';
+    document.getElementById('app').innerHTML='<div class="card" style="color:#ef4444;padding:20px"><b>Error:</b> '+ex.message+'<br><button class="btn btn-orange" onclick="render()" style="margin-top:10px">Retry</button></div>';
   }
 }
-window.onload=function(){dbL();initDate();render();};
+window.onload=function(){dbL();initDate();applyTheme();render();};
 </script>
 </body>
 </html>

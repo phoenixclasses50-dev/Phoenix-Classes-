@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#f97316"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Phoenix Classes"/>
+<title>Phoenix Classes</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:#0f1117;font-family:Arial,sans-serif;color:#f1f5f9;font-size:14px;overflow-x:hidden;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#181c27;border-top:1px solid #252a38;display:flex;z-index:100;height:58px;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#64748b;font-size:10px;gap:2px;padding:6px 0;}
+.bn-item.active{color:#f97316;}
+.bn-icon{font-size:20px;line-height:1;}
+.main{padding:16px 14px 72px 14px;}
+.page-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.page-sub{font-size:11px;color:#64748b;margin-bottom:16px;}
+.card{background:#181c27;border:1px solid #252a38;border-radius:12px;padding:14px;margin-bottom:14px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.stat-card{background:#181c27;border:1px solid #252a38;border-radius:12px;padding:12px;}
+.stat-num{font-size:22px;font-weight:800;}
+.stat-label{font-size:10px;color:#64748b;margin-top:2px;font-weight:600;}
+label{font-size:11px;font-weight:600;color:#64748b;margin-bottom:5px;display:block;text-transform:uppercase;}
+input,select{width:100%;background:#1e2333;border:1px solid #252a38;border-radius:8px;color:#f1f5f9;padding:9px 10px;font-size:14px;outline:none;box-sizing:border-box;font-family:Arial,sans-serif;}
+input:focus,select:focus{border-color:#f97316;}
+.btn{background:#f97316;color:#fff;border:none;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:Arial,sans-serif;}
+.btn-blue{background:#3b82f6!important;}
+.btn-green{background:#22c55e!important;}
+.btn-red{background:#ef4444!important;}
+.btn-gray{background:#2a3040!important;}
+.btn-purple{background:#8b5cf6!important;}
+.btn-sm{color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;}
+.chip{display:inline-block;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #252a38;background:#1e2333;color:#94a3b8;margin:3px;}
+.chip.on{background:#f97316;color:#fff;border-color:#f97316;}
+.badge{border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;display:inline-block;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:8px;font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;border-bottom:1px solid #252a38;}
+td{padding:9px 8px;border-bottom:1px solid rgba(37,42,56,0.4);vertical-align:middle;}
+.empty{color:#64748b;text-align:center;padding:24px;font-size:12px;}
+.mb{margin-bottom:10px;}
+.stitle{font-weight:700;margin-bottom:12px;font-size:13px;color:#f97316;}
+.titem{padding:12px;border-radius:10px;cursor:pointer;margin-bottom:8px;background:#1e2333;border:1px solid #252a38;}
+.titem.on{background:rgba(249,115,22,0.1);border-color:#f97316;}
+.backup-box{background:linear-gradient(135deg,#1e2333,#252a38);border:1px solid #f97316;border-radius:12px;padding:16px;margin-bottom:14px;}
+.backup-title{font-size:14px;font-weight:800;color:#f97316;margin-bottom:4px;}
+.backup-sub{font-size:11px;color:#94a3b8;margin-bottom:12px;}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;display:none;}
+.toast.err{background:#ef4444;}
+</style>
+</head>
+<body>
+<div class="main" id="app">Loading...</div>
+<div class="bottom-nav">
+  <div class="bn-item active" onclick="go('dashboard')" id="nav-dashboard"><div class="bn-icon">🏠</div><span>Home</span></div>
+  <div class="bn-item" onclick="go('students')" id="nav-students"><div class="bn-icon">👨‍🎓</div><span>Students</span></div>
+  <div class="bn-item" onclick="go('attendance')" id="nav-attendance"><div class="bn-icon">📋</div><span>Attend</span></div>
+  <div class="bn-item" onclick="go('marks')" id="nav-marks"><div class="bn-icon">📊</div><span>Marks</span></div>
+  <div class="bn-item" onclick="go('fees')" id="nav-fees"><div class="bn-icon">💰</div><span>Fees</span></div>
+</div>
+<div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)"/>
+
+<script>
+// ── Storage ──────────────────────────────────────────────────────
+var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{rate:500,data:{}}};
+function dbS(){try{localStorage.setItem('pxDB',JSON.stringify(DB));}catch(ex){}}
+function dbL(){try{var s=localStorage.getItem('pxDB');if(s)DB=JSON.parse(s);}catch(ex){}}
+
+// ── Export / Import ──────────────────────────────────────────────
+function exportData(){
+  try{
+    var json=JSON.stringify(DB,null,2);
+    var blob=new Blob([json],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    var d=new Date();
+    a.href=url;
+    a.download='PhoenixClasses_Backup_'+d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear()+'.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('✅ Backup file download zali!',false);
+  }catch(ex){toast('❌ Error: '+ex.message,true);}
+}
+function importData(input){
+  var file=input.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(!data.students||!data.fees){toast('❌ Chukichi file!',true);return;}
+      DB=data;dbS();render();
+      toast('✅ Data restore zala! '+DB.students.length+' students.',false);
+    }catch(ex){toast('❌ File read error!',true);}
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+function toast(msg,err){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(err?' err':'');
+  t.style.display='block';
+  setTimeout(function(){t.style.display='none';},3000);
+}
+
+var CL=['Class 8','Class 9','Class 10'],SB=['Maths','Science'],MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var pg='dashboard',selT=null,mEn={},aCl='Class 8',aDt='',fCl='All',fMn=0,fYr=2026,sF='All',sSr='';
+function initDate(){var d=new Date();aDt=d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();fMn=d.getMonth();fYr=d.getFullYear();}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function bdg(t,c){return '<span class="badge" style="background:'+c+'22;color:'+c+'">'+t+'</span>';}
+function stCard(n,l,c){return '<div class="stat-card" style="border-top:3px solid '+c+'"><div class="stat-num" style="color:'+c+'">'+n+'</div><div class="stat-label">'+l+'</div></div>';}
+function cps(arr,cur,fn){return arr.map(function(a){return '<span class="chip '+(a===cur?'on':'')+'" onclick="'+fn+'(\''+a+'\')">'+a+'</span>';}).join('');}
+
+// ── BACKUP CARD ──────────────────────────────────────────────────
+function backupCard(){
+  var d=new Date();
+  return '<div class="backup-box">'+
+    '<div class="backup-title">☁️ Data Backup & Restore</div>'+
+    '<div class="backup-sub">Cache clear झाला तरी data safe राहील — रोज backup घ्या!</div>'+
+    '<div class="grid2" style="margin-bottom:0">'+
+    '<button class="btn btn-green" style="margin-top:0" onclick="exportData()">📥 Backup घ्या</button>'+
+    '<button class="btn btn-purple" style="margin-top:0" onclick="document.getElementById(\'importFile\').click()">📤 Restore करा</button>'+
+    '</div></div>';
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────────
+function pgHome(){
+  var cm=fMn,cy=fYr,tp=0;
+  for(var i=0;i<CL.length;i++){var r=DB.attendance[aDt+'_'+CL[i]]||{};for(var k in r){if(r[k]==='P')tp++;}}
+  var fp=DB.students.filter(function(s){return(DB.fees.data||{})[s.id+'_'+cy+'_'+cm];}).length;
+  var rows='';
+  for(var i=0;i<CL.length;i++){
+    var c=CL[i];
+    var m=DB.students.filter(function(s){return s.cls===c&&s.subject==='Maths';}).length;
+    var sc=DB.students.filter(function(s){return s.cls===c&&s.subject==='Science';}).length;
+    rows+='<tr><td style="font-weight:700">'+c+'</td><td>'+bdg(m,'#3b82f6')+'</td><td>'+bdg(sc,'#22c55e')+'</td><td style="font-weight:700;color:#f97316">'+(m+sc)+'</td></tr>';
+  }
+  return '<div class="page-title">🔥 Phoenix Classes</div><div class="page-sub">Maharashtra Board · Class 8 to 10</div>'+
+    backupCard()+
+    '<div class="grid2">'+stCard(DB.students.length,'Total Students','#f97316')+stCard(tp,'Present Today','#22c55e')+stCard(fp+'/'+DB.students.length,'Fee Paid','#eab308')+stCard(DB.marks.tests.length,'Tests','#3b82f6')+'</div>'+
+    '<div class="card"><div class="stitle">📌 Class Summary</div><table><thead><tr><th>Class</th><th>Maths</th><th>Science</th><th>Total</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+// ── STUDENTS ────────────────────────────────────────────────────
+function pgStu(){
+  var fl=DB.students.filter(function(s){return(sF==='All'||s.cls===sF)&&s.name.toLowerCase().indexOf(sSr.toLowerCase())>=0;});
+  var rows=fl.length===0?'<tr><td colspan="5" class="empty">No students yet.</td></tr>':
+    fl.map(function(s,i){return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td><td>'+bdg(s.cls,'#3b82f6')+'</td><td>'+bdg(s.subject,'#22c55e')+'</td><td><button class="btn-sm btn-red" onclick="dStu('+s.id+')">✕</button></td></tr>';}).join('');
+  return '<div class="page-title">👨‍🎓 Students</div><div class="page-sub">Manage all students</div>'+
+    '<div class="grid3">'+stCard(DB.students.length,'Total','#f97316')+stCard(DB.students.filter(function(s){return s.cls==='Class 8';}).length,'Class 8','#3b82f6')+stCard(DB.students.filter(function(s){return s.cls==='Class 9';}).length,'Class 9','#22c55e')+'</div>'+
+    '<div class="card"><div class="stitle">➕ Add Student</div>'+
+    '<div class="mb"><label>Student Name</label><input id="sn" placeholder="Full name"/></div>'+
+    '<div class="grid2 mb"><div><label>Class</label><select id="sc">'+CL.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Subject</label><select id="ss">'+SB.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="mb"><label>Parent Phone</label><input id="sp" type="tel" placeholder="Phone number"/></div>'+
+    '<button class="btn" onclick="aStu()">➕ Add Student</button></div>'+
+    '<div class="mb">'+cps(['All'].concat(CL),sF,'setSF')+'</div>'+
+    '<div class="mb"><input placeholder="🔍 Search..." oninput="sSr=this.value;render()" value="'+esc(sSr)+'"/></div>'+
+    '<div class="card"><table><thead><tr><th>#</th><th>Name</th><th>Class</th><th>Sub</th><th>Del</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function aStu(){
+  var n=document.getElementById('sn'),c=document.getElementById('sc'),s=document.getElementById('ss'),p=document.getElementById('sp');
+  if(!n||!n.value.trim()){alert('Student name enter kara!');return;}
+  DB.students.push({id:Date.now(),name:n.value.trim(),cls:c.value,subject:s.value,phone:p?p.value:''});
+  dbS();render();toast('✅ Student add zala!',false);
+}
+function dStu(id){if(!confirm('Remove?'))return;DB.students=DB.students.filter(function(s){return s.id!==id;});dbS();render();}
+function setSF(v){sF=v;render();}
+
+// ── ATTENDANCE ──────────────────────────────────────────────────
+function pgAtt(){
+  var cs=DB.students.filter(function(s){return s.cls===aCl;});
+  var key=aDt+'_'+aCl,dr=DB.attendance[key]||{},pr=0,ab=0;
+  for(var k in dr){if(dr[k]==='P')pr++;else ab++;}
+  var rows=cs.length===0?'<tr><td colspan="4" class="empty">'+aCl+' madhe students nahi.</td></tr>':
+    cs.map(function(s,i){
+      var st2=dr[s.id];
+      return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td>'+
+        '<td>'+(st2==='P'?bdg('Present','#22c55e'):st2==='A'?bdg('Absent','#ef4444'):bdg('—','#64748b'))+'</td>'+
+        '<td><button class="btn-sm '+(st2==='P'?'btn-green':'btn-gray')+'" style="margin-right:4px" onclick="mAtt('+s.id+',\'P\')">P</button>'+
+        '<button class="btn-sm '+(st2==='A'?'btn-red':'btn-gray')+'" onclick="mAtt('+s.id+',\'A\')">A</button></td></tr>';
+    }).join('');
+  return '<div class="page-title">📋 Attendance</div><div class="page-sub">Daily attendance mark kara</div>'+
+    '<div class="grid3">'+stCard(cs.length,'Students','#f97316')+stCard(pr,'Present','#22c55e')+stCard(ab,'Absent','#ef4444')+'</div>'+
+    '<div class="mb"><label>Date</label><input type="date" value="'+aDt+'" onchange="aDt=this.value;render()"/></div>'+
+    '<div class="mb">'+cps(CL,aCl,'setAC')+'</div>'+
+    '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+    '<span style="font-weight:700">'+aCl+'</span>'+
+    '<span><button class="btn-sm btn-green" style="margin-right:4px" onclick="mAll(\'P\')">✓ All P</button><button class="btn-sm btn-red" onclick="mAll(\'A\')">✗ All A</button></span></div>'+
+    '<table><thead><tr><th>#</th><th>Name</th><th>Status</th><th>Mark</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function mAtt(id,s){var k=aDt+'_'+aCl;if(!DB.attendance[k])DB.attendance[k]={};DB.attendance[k][id]=s;dbS();render();}
+function mAll(s){var k=aDt+'_'+aCl;DB.attendance[k]={};DB.students.filter(function(x){return x.cls===aCl;}).forEach(function(x){DB.attendance[k][x.id]=s;});dbS();render();}
+function setAC(c){aCl=c;render();}
+
+// ── MARKS ────────────────────────────────────────────────────────
+function pgMrk(){
+  var tests=DB.marks.tests||[],md=DB.marks.data||{};
+  var tlist=tests.length===0?'<div class="empty">No tests yet.</div>':
+    tests.map(function(t){
+      var sl=DB.students.filter(function(s){return s.cls===t.cls&&s.subject===t.subject;});
+      var vals=sl.map(function(s){return Number((md[t.id]||{})[s.id]||0);}).filter(function(v){return v>0;});
+      var avg=vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1):'—';
+      return '<div class="titem '+(selT===t.id?'on':'')+'" onclick="selTest('+t.id+')">'+
+        '<div style="font-weight:700;font-size:13px">'+esc(t.testName)+'</div>'+
+        '<div style="font-size:11px;color:#64748b;margin-top:3px">'+t.cls+' · '+t.subject+' · Avg:'+avg+'/'+t.maxMarks+'</div></div>';
+    }).join('');
+  var stObj=null;for(var i=0;i<tests.length;i++){if(tests[i].id===selT){stObj=tests[i];break;}}
+  var ts=stObj?DB.students.filter(function(s){return s.cls===stObj.cls&&s.subject===stObj.subject;}):[];
+  var mp='<div class="empty">Test select kara</div>';
+  if(stObj){
+    var rows=ts.length===0?'<tr><td colspan="4" class="empty">No students</td></tr>':
+      ts.map(function(s,i){
+        var val=mEn[s.id]||'';
+        var pct=val?(Number(val)/stObj.maxMarks)*100:null;
+        var g=pct===null?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+        var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'#64748b';
+        return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td>'+
+          '<td><input type="number" style="width:65px" min="0" max="'+stObj.maxMarks+'" value="'+esc(val)+'" onchange="mEn['+s.id+']=this.value"/></td>'+
+          '<td>'+bdg(g,gc)+'</td></tr>';
+      }).join('');
+    mp='<div style="font-weight:700;font-size:14px;margin-bottom:4px">'+esc(stObj.testName)+'</div>'+
+      '<div style="color:#64748b;font-size:11px;margin-bottom:10px">'+stObj.cls+' · '+stObj.subject+' · Max:'+stObj.maxMarks+'</div>'+
+      '<table><thead><tr><th>#</th><th>Student</th><th>Marks</th><th>Grade</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      (ts.length>0?'<button class="btn btn-green" onclick="saveMrk()">💾 Save Marks</button>':'');
+  }
+  return '<div class="page-title">📊 Marks</div><div class="page-sub">Test marks record kara</div>'+
+    '<div class="card"><div class="stitle">➕ New Test</div>'+
+    '<div class="mb"><label>Test Name</label><input id="tn" placeholder="e.g. Unit Test 1"/></div>'+
+    '<div class="grid2 mb"><div><label>Class</label><select id="tc">'+CL.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Subject</label><select id="tsu">'+SB.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="grid2 mb"><div><label>Max Marks</label><input type="number" id="tm" value="100"/></div>'+
+    '<div><label>Date</label><input type="date" id="td" value="'+aDt+'"/></div></div>'+
+    '<button class="btn" onclick="addT()">Create Test</button></div>'+
+    '<div class="card"><div class="stitle">📝 All Tests</div>'+tlist+'</div>'+
+    '<div class="card">'+mp+'</div>';
+}
+function addT(){
+  var tn=document.getElementById('tn');if(!tn||!tn.value.trim()){alert('Test name enter kara!');return;}
+  var t={id:Date.now(),testName:tn.value.trim(),cls:document.getElementById('tc').value,subject:document.getElementById('tsu').value,maxMarks:+document.getElementById('tm').value||100,date:document.getElementById('td').value};
+  DB.marks.tests.push(t);dbS();selT=t.id;mEn={};render();
+}
+function selTest(id){selT=id;mEn={};var d=(DB.marks.data||{})[id]||{};for(var k in d)mEn[k]=d[k];render();}
+function saveMrk(){if(!DB.marks.data)DB.marks.data={};var cp={};for(var k in mEn)cp[k]=mEn[k];DB.marks.data[selT]=cp;dbS();toast('✅ Marks save zale!',false);render();}
+
+// ── FEES ────────────────────────────────────────────────────────
+function pgFee(){
+  var fd=DB.fees.data||{};
+  var fl=DB.students.filter(function(s){return fCl==='All'||s.cls===fCl;});
+  var pc=fl.filter(function(s){return fd[s.id+'_'+fYr+'_'+fMn];}).length;
+  var mo=MN.map(function(m,i){return '<option value="'+i+'"'+(i===fMn?' selected':'')+'>'+m+'</option>';}).join('');
+  var rows=fl.length===0?'<tr><td colspan="5" class="empty">No students</td></tr>':
+    fl.map(function(s,i){
+      var paid=!!fd[s.id+'_'+fYr+'_'+fMn];
+      return '<tr><td style="color:#64748b">'+(i+1)+'</td><td style="font-weight:600">'+esc(s.name)+'</td><td>'+bdg(s.cls,'#3b82f6')+'</td>'+
+        '<td>'+(paid?bdg('✓ Paid','#22c55e'):bdg('Pending','#ef4444'))+'</td>'+
+        '<td><button class="btn-sm '+(paid?'btn-red':'btn-green')+'" onclick="tFee('+s.id+')">'+(paid?'Unpaid':'Paid')+'</button></td></tr>';
+    }).join('');
+  return '<div class="page-title">💰 Fees</div><div class="page-sub">Monthly fee tracker</div>'+
+    '<div class="grid3">'+stCard(pc,'Paid','#22c55e')+stCard(fl.length-pc,'Pending','#ef4444')+stCard('₹'+(pc*(DB.fees.rate||500)),'Collected','#eab308')+'</div>'+
+    '<div class="card"><div class="mb"><label>Monthly Fee (₹)</label><input type="number" id="fr" value="'+(DB.fees.rate||500)+'"/></div>'+
+    '<button class="btn btn-blue" onclick="uRate()">Update Fee Amount</button></div>'+
+    '<div class="card"><div class="grid2 mb"><div><label>Month</label><select onchange="fMn=+this.value;render()">'+mo+'</select></div>'+
+    '<div><label>Year</label><input type="number" value="'+fYr+'" onchange="fYr=+this.value;render()"/></div></div>'+
+    '<div class="mb">'+cps(['All'].concat(CL),fCl,'setFC')+'</div>'+
+    '<table><thead><tr><th>#</th><th>Name</th><th>Class</th><th>Status</th><th>Action</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+function tFee(sid){var k=sid+'_'+fYr+'_'+fMn;if(!DB.fees.data)DB.fees.data={};DB.fees.data[k]=!DB.fees.data[k];dbS();render();}
+function setFC(c){fCl=c;render();}
+function uRate(){var r=document.getElementById('fr');if(!r||!+r.value){alert('Valid amount enter kara');return;}DB.fees.rate=+r.value;dbS();toast('✅ Fee updated: ₹'+DB.fees.rate,false);render();}
+
+// ── ROUTER ───────────────────────────────────────────────────────
+function go(p){
+  pg=p;
+  var items=document.querySelectorAll('.bn-item');
+  for(var i=0;i<items.length;i++)items[i].classList.remove('active');
+  var nav=document.getElementById('nav-'+p);
+  if(nav)nav.classList.add('active');
+  render();
+}
+function render(){
+  try{
+    var el=document.getElementById('app');if(!el)return;
+    if(pg==='dashboard')el.innerHTML=pgHome();
+    else if(pg==='students')el.innerHTML=pgStu();
+    else if(pg==='attendance')el.innerHTML=pgAtt();
+    else if(pg==='marks')el.innerHTML=pgMrk();
+    else if(pg==='fees')el.innerHTML=pgFee();
+  }catch(ex){
+    document.getElementById('app').innerHTML='<div class="card" style="color:#ef4444;padding:20px">Error: '+ex.message+'<br><button class="btn" onclick="render()" style="margin-top:10px">Retry</button></div>';
+  }
+}
+window.onload=function(){dbL();initDate();render();};
+</script>
+</body>
+</html>

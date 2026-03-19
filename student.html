@@ -263,7 +263,7 @@ function pgFees(){
         '<div style="font-size:10px;color:var(--muted)">'+fmtDate(p.date)+(p.note?' · '+esc(p.note):'')+'</div></div>'+
         bdg('Paid','#22c55e')+'</div>';
     }).join('');
-  return '<div class="grid3">'+sc('₹'+yearlyFee,'Total Fee','#3b82f6')+sc('₹'+totalPaid,'Paid','#22c55e')+sc(balance<=0?'₹0':'₹'+balance,balance<=0?'Cleared','Balance',balance<=0?'#22c55e':'#ef4444')+'</div>'+
+  return '<div class="grid3">'+sc('₹'+yearlyFee,'Total Fee','#3b82f6')+sc('₹'+totalPaid,'Paid','#22c55e')+sc(balance<=0?'₹0':'₹'+balance,balance<=0?'Cleared':'Balance',balance<=0?'#22c55e':'#ef4444')+'</div>'+
     '<div class="card"><div class="card-title">📈 Payment Progress</div>'+bar('Fee Paid',totalPaid,yearlyFee||1,'#22c55e')+'</div>'+
     '<div class="card"><div class="card-title">💳 Payment History</div>'+payRows+'</div>';
 }

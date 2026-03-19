@@ -353,6 +353,82 @@ function getTotalPending(){
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────
+// ── UPI PAYMENT ──────────────────────────────────────────────────
+var UPI_ID='9503949009@ybl';
+var UPI_NAME='Phoenix Classes';
+
+function upiLink(amount,studentName){
+  var note='Fee payment - '+studentName+' - Phoenix Classes';
+  return 'upi://pay?pa='+UPI_ID+'&pn='+encodeURIComponent(UPI_NAME)+'&am='+amount+'&cu=INR&tn='+encodeURIComponent(note);
+}
+
+// ── BADGES ───────────────────────────────────────────────────────
+function getBadges(sid,cls){
+  var badges=[];
+  var pays=DB.fees.payments[sid]||[];
+  var totalPaid=getTotalPaid(sid);
+  var yearlyFee=getYearlyFee(cls);
+  // Fee clear badge
+  if(yearlyFee>0&&totalPaid>=yearlyFee)badges.push({icon:'💰',label:'Fee Clear',color:'#22c55e'});
+  // Attendance badges
+  var attD=0,attP=0;
+  for(var k in DB.attendance){if(k.indexOf('_'+cls)>=0){var r=DB.attendance[k];if(r[sid]){attD++;if(r[sid]==='P')attP++;}}}
+  var attPct=attD>0?Math.round((attP/attD)*100):0;
+  if(attPct===100&&attD>0)badges.push({icon:'📅',label:'Perfect Attendance',color:'#3b82f6'});
+  if(attPct>=90&&attD>0)badges.push({icon:'🌟',label:'Star Attendance',color:'#6366f1'});
+  // Academic badges
+  var tests=(DB.marks.tests||[]).filter(function(t){return t.cls===cls;});
+  var md=DB.marks.data||{};
+  var totM=0,obtM=0,passCount=0;
+  tests.forEach(function(t){var v=Number((md[t.id]||{})[sid]||0);if(v){totM+=t.maxMarks;obtM+=v;if((v/t.maxMarks)*100>=40)passCount++;}});
+  var avgPct=totM>0?Math.round((obtM/totM)*100):0;
+  if(avgPct>=75)badges.push({icon:'🥇',label:'Top Scorer',color:'#f59e0b'});
+  else if(avgPct>=60)badges.push({icon:'🥈',label:'Good Performer',color:'#94a3b8'});
+  if(passCount>=3)badges.push({icon:'🔥',label:'Consistent',color:'#f97316'});
+  // Star student badge
+  if(DB.starStudent&&String(DB.starStudent.id)===String(sid))badges.push({icon:'⭐',label:'Star Student',color:'#eab308'});
+  return badges;
+}
+
+function badgeHtml(badges){
+  if(!badges.length)return '';
+  return '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">'+
+    badges.map(function(b){return '<span style="background:'+b.color+'22;color:'+b.color+';border:1px solid '+b.color+'44;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">'+b.icon+' '+b.label+'</span>';}).join('')+'</div>';
+}
+
+// ── ATTENDANCE ALERT ─────────────────────────────────────────────
+function getAttPct(sid,cls){
+  var attD=0,attP=0;
+  for(var k in DB.attendance){if(k.indexOf('_'+cls)>=0){var r=DB.attendance[k];if(r[sid]){attD++;if(r[sid]==='P')attP++;}}}
+  return attD>0?Math.round((attP/attD)*100):null;
+}
+
+function alertStudents(){
+  return DB.students.filter(function(s){
+    var pct=getAttPct(s.id,s.cls);
+    return pct!==null&&pct<75;
+  });
+}
+
+// ── MINI BAR CHART ───────────────────────────────────────────────
+function miniChart(sid,cls){
+  var tests=(DB.marks.tests||[]).filter(function(t){return t.cls===cls;}).slice(-6);
+  if(!tests.length)return '<div style="color:var(--muted);font-size:11px;text-align:center;padding:12px">No test data yet</div>';
+  var md=DB.marks.data||{};
+  var bars=tests.map(function(t){
+    var v=Number((md[t.id]||{})[sid]||0);
+    var pct=v?Math.round((v/t.maxMarks)*100):0;
+    var color=pct>=75?'#22c55e':pct>=60?'#3b82f6':pct>=40?'#eab308':'#ef4444';
+    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">'+
+      '<div style="font-size:9px;color:var(--muted);font-weight:700">'+pct+'%</div>'+
+      '<div style="width:100%;background:var(--border);border-radius:4px;height:60px;display:flex;align-items:flex-end">'+
+      '<div style="width:100%;height:'+Math.max(pct,3)+'%;background:'+color+';border-radius:4px;transition:height .3s"></div></div>'+
+      '<div style="font-size:9px;color:var(--muted);text-align:center;max-width:40px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">'+esc(t.testName.split(' ')[0])+'</div>'+
+      '</div>';
+  }).join('');
+  return '<div style="display:flex;gap:6px;align-items:flex-end;padding:4px 0">'+bars+'</div>';
+}
+
 function pgHome(){
   var tp=0,total=0;
   for(var i=0;i<CL.length;i++){var r=DB.attendance[aDt+'_'+CL[i]]||{};for(var k in r){total++;if(r[k]==='P')tp++;}}
@@ -364,8 +440,25 @@ function pgHome(){
     var collected=DB.students.filter(function(s){return s.cls===c;}).reduce(function(sum,s){return sum+getTotalPaid(s.id);},0);
     rows+='<tr><td style="font-weight:700">'+c+'</td><td style="font-weight:700;color:var(--accent)">'+cnt+'</td><td>₹'+fee+'</td><td style="color:var(--green);font-weight:700">₹'+collected+'</td></tr>';
   }
+  // Attendance alerts
+  var alerts=alertStudents();
+  var alertHtml='';
+  if(alerts.length>0){
+    alertHtml='<div class="card" style="border-color:#ef4444;background:rgba(239,68,68,0.05)">'+
+      '<div class="card-title" style="color:#ef4444">🎯 Attendance Alert — '+alerts.length+' Students Below 75%</div>'+
+      alerts.map(function(s){
+        var pct=getAttPct(s.id,s.cls);
+        var waMsg='Dear Parent,\n\nAttendance Alert for *'+s.name+'* ('+s.cls+')\n\nCurrent Attendance: *'+pct+'%*\nMinimum Required: 75%\n\nPlease ensure regular attendance.\n\nRegards,\nPhoenix Classes';
+        return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">'+
+          '<div><div style="font-weight:700;font-size:13px">'+esc(s.name)+'</div>'+
+          '<div style="font-size:11px;color:var(--muted)">'+s.cls+' · Attendance: <span style="color:#ef4444;font-weight:800">'+pct+'%</span></div></div>'+
+          (s.phone?'<button class="btn-sm" style="background:#25d366;flex-shrink:0" onclick="waOpen(\''+s.phone+'\',\''+waMsg.replace(/'/g,"\\'").replace(/\n/g,'\\n')+'\')">📱 Alert</button>':'<span style="font-size:11px;color:var(--muted)">No phone</span>')+
+          '</div>';
+      }).join('')+'</div>';
+  }
   return topbar('Phoenix Classes')+
     '<div class="app-header"><div style="display:flex;align-items:center;gap:12px">'+logoSVG+'<div><div class="app-header-title">Phoenix Classes</div><div class="app-header-sub">Maharashtra Board · Class 8–10</div><div style="font-size:10px;color:#fed7aa;letter-spacing:2px;margin-top:2px">Learn · Think · Grow</div></div></div></div>'+
+    alertHtml+
     '<div class="grid2">'+sc(DB.students.length,'Total Students','#f97316')+sc(tp+'/'+total,'Present Today','#22c55e')+sc('₹'+getTotalCollected(),'Fee Collected','#eab308')+sc('₹'+getTotalPending(),'Fee Pending','#ef4444')+'</div>'+
     '<div class="card"><div class="card-title">📈 Today\'s Attendance</div>'+bar('Attendance',tp,total||1,'#22c55e')+'</div>'+
     '<div class="card"><div class="card-title">📌 Class-wise Summary</div>'+
@@ -383,9 +476,10 @@ function pgStu(){
   var rows=fl.length===0?'<tr><td colspan="5" class="empty">No students found.</td></tr>':
     fl.map(function(s,i){
       var paid=getTotalPaid(s.id),total=getYearlyFee(s.cls),bal=total-paid;
+      var badges=getBadges(s.id,s.cls);
       return '<tr>'+
         '<td>'+photoEl(s.id,s.name)+'</td>'+
-        '<td style="font-weight:700;cursor:pointer;color:var(--accent)" onclick="selStu='+s.id+';render()">'+esc(s.name)+'<br><span style="font-size:10px;color:var(--muted)">'+s.cls+'</span></td>'+
+        '<td style="font-weight:700;cursor:pointer;color:var(--accent)" onclick="selStu='+s.id+';render()">'+esc(s.name)+'<br><span style="font-size:10px;color:var(--muted)">'+s.cls+'</span>'+badgeHtml(badges)+'</td>'+
         '<td>'+bdg(s.subject,'#3b82f6')+'</td>'+
         '<td>'+(bal<=0?bdg('Full Paid','#22c55e'):bdg('₹'+bal+' Due','#ef4444'))+'</td>'+
         '<td><button class="btn-sm btn-red" onclick="dStu('+s.id+')">✕</button></td>'+
@@ -462,6 +556,7 @@ function pgReport(id){
     '<div style="margin-left:auto;text-align:center"><div style="font-size:40px;font-weight:800;color:#fff;line-height:1">'+ovG+'</div><div style="font-size:10px;color:#fed7aa">Grade</div></div>'+
     '</div></div>'+
     '<div class="grid3">'+sc(ovPct+'%','Avg Score',gc2)+sc(attPct+'%','Attendance','#22c55e')+sc(balance<=0?'Paid':'₹'+balance,balance<=0?'Fee Clear':'Balance','#eab308')+'</div>'+
+    '<div class="card"><div class="card-title">📊 Performance Graph</div>'+miniChart(id,stu.cls)+'</div>'+
     '<div class="card"><div class="card-title">📊 Test Performance</div>'+bar('Score',obtM,totM||1,gc2)+
     '<table><thead><tr><th>Test</th><th>Sub</th><th>Marks</th><th>Grade</th></tr></thead><tbody>'+tRows+'</tbody></table></div>'+
     '<div class="card"><div class="card-title">💰 Fee Details — '+stu.cls+'</div>'+
@@ -598,6 +693,7 @@ function pgFeeCollect(){
         '<div class="mb"><label>Date</label><input type="date" id="pay-date" value="'+aDt+'"/></div>'+
         '<div class="mb"><label>Note (Optional)</label><input id="pay-note" placeholder="e.g. Installment 1, Cash"/></div>'+
         '<button class="btn btn-green" onclick="savePay()">✅ Save Payment & Send Receipt</button>'+
+        '<button class="btn" style="background:#5f259f;margin-top:6px" onclick="window.open(upiLink(+document.getElementById(\'pay-amt\').value||0,\''+esc(ps.name)+'\'),\'_blank\')">📱 Open UPI Payment</button>'+
         '<button class="btn btn-gray" style="margin-top:8px" onclick="payModalId=undefined;render()">Cancel</button>'+
         '</div></div>';
     }

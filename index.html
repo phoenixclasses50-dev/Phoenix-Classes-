@@ -95,38 +95,55 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 
 <script>
 // ── GOOGLE SHEETS API ────────────────────────────────────────────
-var API_URL='https://script.google.com/macros/s/AKfycbzOKPrsv-O1eM_X7GmVmZGNkDkqYHgqhpWYUtUmddm4aDGGAaF3w5OkhIlQ7lGoEC3b/exec';
+var API_URL='https://script.google.com/macros/s/AKfycbysvVzq3sp8v3-0_c5MlMxMr2YQ_2fiREzMor731zHDvAock6I76U7q_HUCC2GspDs7/exec';
 
 function syncToSheets(){
   showSyncBar('☁️ Saving to Google Sheets...',false);
   try{
-    // Use hidden form POST to bypass CORS
-    var form=document.createElement('form');
-    form.method='POST';
-    form.action=API_URL;
-    form.target='hidden_iframe';
-    form.style.display='none';
-    var input=document.createElement('input');
-    input.type='hidden';
-    input.name='data';
-    var payload={action:'save',payload:{
-      students:DB.students,
-      attendance:DB.attendance,
-      marks:DB.marks,
-      fees:DB.fees
-    }};
-    input.value=JSON.stringify(payload);
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-    setTimeout(function(){showSyncBar('✅ Saved to Google Sheets!',false);},1500);
-  }catch(e){showSyncBar('❌ Save error: '+e.message,true);}
+    var payload={
+      action:'save',
+      payload:{
+        students:DB.students,
+        attendance:DB.attendance,
+        marks:DB.marks,
+        fees:DB.fees
+      }
+    };
+    var encoded=encodeURIComponent(JSON.stringify(payload));
+    var cbName='saveCb'+Date.now();
+    var script=document.createElement('script');
+    var done=false;
+    window[cbName]=function(d){
+      done=true;
+      delete window[cbName];
+      try{document.head.removeChild(script);}catch(e){}
+      if(d&&d.status==='ok'){
+        showSyncBar('✅ Saved to Google Sheets!',false);
+      } else {
+        showSyncBar('⚠️ Saved locally only.',false);
+      }
+    };
+    script.src=API_URL+'?action=save&callback='+cbName+'&data='+encoded+'&t='+Date.now();
+    script.onerror=function(){
+      if(!done){
+        delete window[cbName];
+        showSyncBar('⚠️ Saved locally. Sheet sync failed.',false);
+      }
+    };
+    setTimeout(function(){
+      if(!done){
+        delete window[cbName];
+        try{document.head.removeChild(script);}catch(e){}
+        showSyncBar('⚠️ Saved locally. Sheet timeout.',false);
+      }
+    },20000);
+    document.head.appendChild(script);
+  }catch(e){showSyncBar('❌ Error: '+e.message,true);}
 }
 
 function loadFromSheets(){
   showSyncBar('☁️ Loading from Google Sheets...',false);
-  var cbName='gsCb'+Date.now();
+  var cbName='loadCb'+Date.now();
   var script=document.createElement('script');
   var done=false;
   window[cbName]=function(d){
@@ -146,16 +163,22 @@ function loadFromSheets(){
         }
         dbS();render();
         showSyncBar('✅ Loaded! '+DB.students.length+' students.',false);
-      }else{showSyncBar('⚠️ Sheet is empty.',false);}
+      }else{
+        showSyncBar('⚠️ No data in Sheets yet.',false);
+      }
     }catch(e){showSyncBar('❌ Parse error: '+e.message,true);}
   };
-  script.src=API_URL+'?callback='+cbName+'&t='+Date.now();
+  script.src=API_URL+'?action=load&callback='+cbName+'&t='+Date.now();
   script.onerror=function(){
-    if(!done){delete window[cbName];showSyncBar('❌ Load failed. Check internet.',true);}
+    if(!done){delete window[cbName];showSyncBar('❌ Load failed.',true);}
   };
   setTimeout(function(){
-    if(!done){delete window[cbName];try{document.head.removeChild(script);}catch(e){}showSyncBar('❌ Timeout. Try again.',true);}
-  },15000);
+    if(!done){
+      delete window[cbName];
+      try{document.head.removeChild(script);}catch(e){}
+      showSyncBar('❌ Timeout. Try again.',true);
+    }
+  },20000);
   document.head.appendChild(script);
 }
 

@@ -593,13 +593,13 @@ function delPay(sid,idx){
   if(!confirm('Delete this payment?'))return;
   if(!DB.fees.payments[sid])return;
   DB.fees.payments[sid].splice(idx,1);
-  dbS();render();toast('Payment deleted!',false);
+  dbSWithSync();render();toast('Payment deleted!',false);
 }
 function delAtt(date,cls){
   if(!confirm('Delete attendance for '+cls+' on '+date+'?'))return;
   var key=date+'_'+cls;
   delete DB.attendance[key];
-  dbS();render();toast('Attendance deleted!',false);
+  dbSWithSync();render();toast('Attendance deleted!',false);
 }
 function savePay(){
   var amt=document.getElementById('pay-amt');
@@ -609,12 +609,10 @@ function savePay(){
   if(!DB.fees.payments[payModalId])DB.fees.payments[payModalId]=[];
   var payment={date:dt?dt.value:aDt,amount:+amt.value,note:note?note.value:''};
   DB.fees.payments[payModalId].push(payment);
-  dbS();
-  // find student
+  dbSWithSync();
   var ps=null;for(var i=0;i<DB.students.length;i++){if(DB.students[i].id===payModalId){ps=DB.students[i];break;}}
   payModalId=undefined;
   toast('Payment of ₹'+payment.amount+' saved!',false);
-  // WhatsApp receipt
   if(ps&&ps.phone){
     var bal=getBalance(ps.id,ps.cls);
     var msg='Dear Parent,\n\n✅ *Payment Receipt*\nPhoenix Classes\n\n'+
@@ -673,7 +671,7 @@ function saveFeeStructure(){
     var el=document.getElementById('fee_'+c.replace(' ','_'));
     if(el&&+el.value)DB.fees.classFee[c]=+el.value;
   });
-  dbS();toast('Fee structure saved!',false);render();
+  dbSWithSync();toast('Fee structure saved!',false);render();
 }
 function setFC(c){fCl=c;render();}
 

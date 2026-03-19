@@ -79,6 +79,7 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 </head>
 <body>
 <div class="main" id="app">Loading...</div>
+<iframe name="hidden_iframe" style="display:none"></iframe>
 <div class="bottom-nav">
   <div class="bn-item active" onclick="go('dashboard')" id="nav-dashboard"><div class="bn-icon">🏠</div><span>Home</span></div>
   <div class="bn-item" onclick="go('students')" id="nav-students"><div class="bn-icon">👨‍🎓</div><span>Students</span></div>
@@ -95,85 +96,67 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 <script>
 // ── GOOGLE SHEETS API ────────────────────────────────────────────
 var API_URL='https://script.google.com/macros/s/AKfycbzOKPrsv-O1eM_X7GmVmZGNkDkqYHgqhpWYUtUmddm4aDGGAaF3w5OkhIlQ7lGoEC3b/exec';
-var syncStatus='idle';
 
 function syncToSheets(){
-  if(syncStatus==='syncing')return;
-  syncStatus='syncing';
   showSyncBar('☁️ Saving to Google Sheets...',false);
-  var payload={action:'save',payload:{
-    students:DB.students,
-    attendance:DB.attendance,
-    marks:DB.marks,
-    fees:DB.fees
-  }};
-  // Use no-cors fetch for POST
-  fetch(API_URL,{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  })
-  .then(function(){
-    syncStatus='done';
-    showSyncBar('✅ Saved to Google Sheets!',false);
-  })
-  .catch(function(e){
-    syncStatus='error';
-    showSyncBar('❌ Sync failed: '+e.message,true);
-  });
+  try{
+    // Use hidden form POST to bypass CORS
+    var form=document.createElement('form');
+    form.method='POST';
+    form.action=API_URL;
+    form.target='hidden_iframe';
+    form.style.display='none';
+    var input=document.createElement('input');
+    input.type='hidden';
+    input.name='data';
+    var payload={action:'save',payload:{
+      students:DB.students,
+      attendance:DB.attendance,
+      marks:DB.marks,
+      fees:DB.fees
+    }};
+    input.value=JSON.stringify(payload);
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    setTimeout(function(){showSyncBar('✅ Saved to Google Sheets!',false);},1500);
+  }catch(e){showSyncBar('❌ Save error: '+e.message,true);}
 }
 
 function loadFromSheets(){
   showSyncBar('☁️ Loading from Google Sheets...',false);
-  // Use JSONP to avoid CORS on GET
+  var cbName='gsCb'+Date.now();
   var script=document.createElement('script');
-  var cbName='gsCb_'+Date.now();
+  var done=false;
   window[cbName]=function(d){
+    done=true;
     delete window[cbName];
-    document.body.removeChild(script);
+    try{document.head.removeChild(script);}catch(e){}
     try{
       if(d&&d.status==='ok'&&d.data){
-        var loaded=d.data;
-        if(loaded.students&&loaded.students.length>0)DB.students=loaded.students;
-        if(loaded.attendance&&Object.keys(loaded.attendance).length>0)DB.attendance=loaded.attendance;
-        if(loaded.marks&&loaded.marks.tests&&loaded.marks.tests.length>0)DB.marks=loaded.marks;
-        if(loaded.fees){
-          if(!loaded.fees.classFee)loaded.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
-          if(!loaded.fees.payments)loaded.fees.payments={};
-          DB.fees=loaded.fees;
+        var ld=d.data;
+        if(ld.students&&ld.students.length>0)DB.students=ld.students;
+        if(ld.attendance&&Object.keys(ld.attendance).length>0)DB.attendance=ld.attendance;
+        if(ld.marks&&ld.marks.tests&&ld.marks.tests.length>0)DB.marks=ld.marks;
+        if(ld.fees){
+          if(!ld.fees.classFee)ld.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
+          if(!ld.fees.payments)ld.fees.payments={};
+          DB.fees=ld.fees;
         }
         dbS();render();
         showSyncBar('✅ Loaded! '+DB.students.length+' students.',false);
-      } else {
-        showSyncBar('⚠️ No data in Sheets yet.',false);
-      }
-    }catch(e){showSyncBar('❌ Load error: '+e.message,true);}
+      }else{showSyncBar('⚠️ Sheet is empty.',false);}
+    }catch(e){showSyncBar('❌ Parse error: '+e.message,true);}
   };
   script.src=API_URL+'?callback='+cbName+'&t='+Date.now();
   script.onerror=function(){
-    delete window[cbName];
-    // Fallback to regular fetch
-    fetch(API_URL+'?t='+Date.now())
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(d&&d.status==='ok'&&d.data){
-        var loaded=d.data;
-        if(loaded.students&&loaded.students.length>0)DB.students=loaded.students;
-        if(loaded.attendance&&Object.keys(loaded.attendance).length>0)DB.attendance=loaded.attendance;
-        if(loaded.marks&&loaded.marks.tests&&loaded.marks.tests.length>0)DB.marks=loaded.marks;
-        if(loaded.fees){
-          if(!loaded.fees.classFee)loaded.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
-          if(!loaded.fees.payments)loaded.fees.payments={};
-          DB.fees=loaded.fees;
-        }
-        dbS();render();
-        showSyncBar('✅ Loaded! '+DB.students.length+' students.',false);
-      }
-    })
-    .catch(function(e){showSyncBar('❌ Load failed: '+e.message,true);});
+    if(!done){delete window[cbName];showSyncBar('❌ Load failed. Check internet.',true);}
   };
-  document.body.appendChild(script);
+  setTimeout(function(){
+    if(!done){delete window[cbName];try{document.head.removeChild(script);}catch(e){}showSyncBar('❌ Timeout. Try again.',true);}
+  },15000);
+  document.head.appendChild(script);
 }
 
 function showSyncBar(msg,err){

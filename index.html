@@ -95,7 +95,7 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 
 <script>
 // ── GOOGLE SHEETS API ────────────────────────────────────────────
-var API_URL='https://script.google.com/macros/s/AKfycbysvVzq3sp8v3-0_c5MlMxMr2YQ_2fiREzMor731zHDvAock6I76U7q_HUCC2GspDs7/exec';
+var API_URL='https://script.google.com/macros/s/AKfycbw_n1ucp7EZWpEZTgG50qcp7s_BucHGiDMigwGKbPO2Tzut3mQAPlkAc8YN0WIUxzpD/exec';
 
 function syncToSheets(){
   showSyncBar('☁️ Saving to Google Sheets...',false);
@@ -106,7 +106,8 @@ function syncToSheets(){
         students:DB.students,
         attendance:DB.attendance,
         marks:DB.marks,
-        fees:DB.fees
+        fees:DB.fees,
+        notices:DB.notices||[]
       }
     };
     var encoded=encodeURIComponent(JSON.stringify(payload));
@@ -162,6 +163,7 @@ function loadFromSheets(){
           if(!ld.fees.payments)ld.fees.payments={};
           DB.fees=ld.fees;
         }
+        if(ld.notices)DB.notices=ld.notices;else if(!DB.notices)DB.notices=[];
         dbS();render();
         showSyncBar('✅ Synced! '+DB.students.length+' students.',false);
       }else{
@@ -203,7 +205,7 @@ var DB={
     classFee:{'Class 8':3000,'Class 9':3500,'Class 10':4000},
     payments:{} // payments[studentId] = [{date, amount, note}]
   },
-  timetable:{},settings:{theme:'orange',darkMode:true},photos:{}
+  timetable:{},settings:{theme:'orange',darkMode:true},photos:{},notices:[]
 };
 function dbS(){try{localStorage.setItem('pxDB3',JSON.stringify(DB));}catch(e){}}
 function dbL(){
@@ -213,6 +215,7 @@ function dbL(){
     if(!DB.timetable)DB.timetable={};
     if(!DB.settings)DB.settings={theme:'orange',darkMode:true};
     if(!DB.photos)DB.photos={};
+    if(!DB.notices)DB.notices=[];
     if(!DB.fees.classFee)DB.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
     if(!DB.fees.payments)DB.fees.payments={};
   }catch(e){}
@@ -769,10 +772,64 @@ function sendResults(){
 // ── MORE ──────────────────────────────────────────────────────────
 function pgMore(){
   return topbar('More')+
-    '<div style="display:flex;gap:8px;margin-bottom:14px">'+
-    '<button class="btn '+(moreTab==='timetable'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1" onclick="moreTab=\'timetable\';render()">📅 Timetable</button>'+
-    '<button class="btn '+(moreTab==='settings'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1" onclick="moreTab=\'settings\';render()">⚙️ Settings</button>'+
-    '</div>'+(moreTab==='timetable'?pgTimetable():pgSettings());
+    '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">'+
+    '<button class="btn '+(moreTab==='notices'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'notices\';render()">📢 Notices</button>'+
+    '<button class="btn '+(moreTab==='timetable'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'timetable\';render()">📅 Timetable</button>'+
+    '<button class="btn '+(moreTab==='settings'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'settings\';render()">⚙️ Settings</button>'+
+    '</div>'+(moreTab==='notices'?pgNotices():moreTab==='timetable'?pgTimetable():pgSettings());
+}
+
+function pgNotices(){
+  var notices=DB.notices||[];
+  var noticeList=notices.length===0?'<div class="empty">No notices yet. Add one above.</div>':
+    notices.slice().reverse().map(function(n,ri){
+      var realIdx=notices.length-1-ri;
+      return '<div style="background:var(--bg);border-left:3px solid var(--accent);border-radius:10px;padding:12px;margin-bottom:8px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+        '<div><div style="font-weight:800;font-size:13px">'+esc(n.title)+'</div>'+
+        '<div style="font-size:10px;color:var(--muted);margin-top:2px">📅 '+n.date+' · '+(n.cls==='All'?'All Students':n.cls)+'</div>'+
+        '<div style="font-size:12px;color:#94a3b8;margin-top:6px;line-height:1.5">'+esc(n.message)+'</div></div>'+
+        '<button class="btn-sm btn-red" style="flex-shrink:0;margin-left:8px" onclick="delNotice('+realIdx+')">✕</button>'+
+        '</div></div>';
+    }).join('');
+  return '<div class="card"><div class="card-title">➕ Add Notice</div>'+
+    '<div class="mb"><label>Title</label><input id="ntitle" placeholder="e.g. Test Tomorrow, Holiday Notice"/></div>'+
+    '<div class="mb"><label>Message</label><textarea id="nmsg" rows="3" placeholder="Write notice details here..." style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:10px;font-size:13px;font-family:Arial,sans-serif;outline:none;resize:none;box-sizing:border-box"></textarea></div>'+
+    '<div class="grid2 mb"><div><label>For Class</label><select id="ncls">'+
+    '<option value="All">All Students</option>'+
+    CL.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+
+    '</select></div>'+
+    '<div><label>Date</label><input type="date" id="ndate" value="'+aDt+'"/></div></div>'+
+    '<button class="btn btn-orange" onclick="addNotice()">📢 Post Notice</button></div>'+
+    '<div class="card"><div class="card-title">📋 All Notices ('+notices.length+')</div>'+noticeList+'</div>';
+}
+
+function addNotice(){
+  var title=document.getElementById('ntitle');
+  var msg=document.getElementById('nmsg');
+  var cls=document.getElementById('ncls');
+  var date=document.getElementById('ndate');
+  if(!title||!title.value.trim()){toast('Enter notice title!',true);return;}
+  if(!msg||!msg.value.trim()){toast('Enter notice message!',true);return;}
+  if(!DB.notices)DB.notices=[];
+  DB.notices.push({
+    id:Date.now(),
+    title:title.value.trim(),
+    message:msg.value.trim(),
+    cls:cls?cls.value:'All',
+    date:date?date.value:aDt
+  });
+  dbSWithSync();
+  toast('Notice posted successfully!',false);
+  render();
+}
+
+function delNotice(idx){
+  if(!confirm('Delete this notice?'))return;
+  DB.notices.splice(idx,1);
+  dbSWithSync();
+  toast('Notice deleted.',false);
+  render();
 }
 function pgTimetable(){
   var tt=DB.timetable[ttDay]||{};

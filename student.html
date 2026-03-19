@@ -67,7 +67,7 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 <div class="toast" id="toast"></div>
 
 <script>
-var API_URL='https://script.google.com/macros/s/AKfycbysvVzq3sp8v3-0_c5MlMxMr2YQ_2fiREzMor731zHDvAock6I76U7q_HUCC2GspDs7/exec';
+var API_URL='https://script.google.com/macros/s/AKfycbw_n1ucp7EZWpEZTgG50qcp7s_BucHGiDMigwGKbPO2Tzut3mQAPlkAc8YN0WIUxzpD/exec';
 
 // ── State ─────────────────────────────────────────────────────────
 var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[]};
@@ -269,17 +269,20 @@ function pgFees(){
 }
 
 function pgNotices(){
-  var notices=DB.notices||[];
+  var s=currentStudent;
+  var notices=(DB.notices||[]).filter(function(n){
+    return n.cls==='All'||n.cls===s.cls;
+  });
   if(notices.length===0){
     return '<div class="card"><div class="empty" style="padding:40px">📢<br><br>No notices yet.<br>Check back later!</div></div>';
   }
   var items=notices.slice().reverse().map(function(n){
-    return '<div class="notice-item">'+
-      '<div class="notice-title">'+esc(n.title)+'</div>'+
-      '<div class="notice-date">📅 '+fmtDate(n.date)+(n.cls&&n.cls!=='All'?' · '+n.cls:'')+'</div>'+
-      '<div class="notice-msg">'+esc(n.message)+'</div></div>';
+    return '<div style="background:#1e2333;border-left:3px solid var(--accent);border-radius:10px;padding:12px;margin-bottom:8px">'+
+      '<div style="font-weight:800;font-size:13px">'+esc(n.title)+'</div>'+
+      '<div style="font-size:10px;color:var(--muted);margin-top:2px">📅 '+fmtDate(n.date)+' · '+(n.cls==='All'?'All Students':n.cls)+'</div>'+
+      '<div style="font-size:12px;color:#94a3b8;margin-top:6px;line-height:1.5">'+esc(n.message)+'</div></div>';
   }).join('');
-  return '<div class="card"><div class="card-title">📢 Notices & Announcements</div>'+items+'</div>';
+  return '<div class="card"><div class="card-title">📢 Notices & Announcements ('+notices.length+')</div>'+items+'</div>';
 }
 
 // ── Render App ────────────────────────────────────────────────────

@@ -153,18 +153,19 @@ function loadFromSheets(){
     try{
       if(d&&d.status==='ok'&&d.data){
         var ld=d.data;
-        if(ld.students&&ld.students.length>0)DB.students=ld.students;
-        if(ld.attendance&&Object.keys(ld.attendance).length>0)DB.attendance=ld.attendance;
-        if(ld.marks&&ld.marks.tests&&ld.marks.tests.length>0)DB.marks=ld.marks;
+        // Always replace local data with Sheets data
+        DB.students=ld.students||[];
+        DB.attendance=ld.attendance||{};
+        DB.marks=ld.marks||{tests:[],data:{}};
         if(ld.fees){
           if(!ld.fees.classFee)ld.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
           if(!ld.fees.payments)ld.fees.payments={};
           DB.fees=ld.fees;
         }
         dbS();render();
-        showSyncBar('✅ Loaded! '+DB.students.length+' students.',false);
+        showSyncBar('✅ Synced! '+DB.students.length+' students.',false);
       }else{
-        showSyncBar('⚠️ No data in Sheets yet.',false);
+        showSyncBar('⚠️ No data in Sheets.',false);
       }
     }catch(e){showSyncBar('❌ Parse error: '+e.message,true);}
   };

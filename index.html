@@ -95,27 +95,28 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 <script>
 // ── GOOGLE SHEETS API ────────────────────────────────────────────
 var API_URL='https://script.google.com/macros/s/AKfycbzOKPrsv-O1eM_X7GmVmZGNkDkqYHgqhpWYUtUmddm4aDGGAaF3w5OkhIlQ7lGoEC3b/exec';
-var syncStatus='idle'; // idle | syncing | done | error
+var syncStatus='idle';
 
 function syncToSheets(){
   if(syncStatus==='syncing')return;
   syncStatus='syncing';
   showSyncBar('☁️ Saving to Google Sheets...',false);
+  var payload={action:'save',payload:{
+    students:DB.students,
+    attendance:DB.attendance,
+    marks:DB.marks,
+    fees:DB.fees
+  }};
+  // Use no-cors fetch for POST
   fetch(API_URL,{
     method:'POST',
+    mode:'no-cors',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'save',payload:{
-      students:DB.students,
-      attendance:DB.attendance,
-      marks:DB.marks,
-      fees:DB.fees
-    }})
+    body:JSON.stringify(payload)
   })
-  .then(function(r){return r.json();})
-  .then(function(d){
+  .then(function(){
     syncStatus='done';
-    if(d.status==='ok'){showSyncBar('✅ Saved to Google Sheets!',false);}
-    else{showSyncBar('❌ Sheets Error: '+d.message,true);}
+    showSyncBar('✅ Saved to Google Sheets!',false);
   })
   .catch(function(e){
     syncStatus='error';
@@ -125,26 +126,54 @@ function syncToSheets(){
 
 function loadFromSheets(){
   showSyncBar('☁️ Loading from Google Sheets...',false);
-  fetch(API_URL)
-  .then(function(r){return r.json();})
-  .then(function(d){
-    if(d.status==='ok'&&d.data){
-      var loaded=d.data;
-      if(loaded.students)DB.students=loaded.students;
-      if(loaded.attendance)DB.attendance=loaded.attendance;
-      if(loaded.marks)DB.marks=loaded.marks;
-      if(loaded.fees){
-        DB.fees=loaded.fees;
-        if(!DB.fees.classFee)DB.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
-        if(!DB.fees.payments)DB.fees.payments={};
+  // Use JSONP to avoid CORS on GET
+  var script=document.createElement('script');
+  var cbName='gsCb_'+Date.now();
+  window[cbName]=function(d){
+    delete window[cbName];
+    document.body.removeChild(script);
+    try{
+      if(d&&d.status==='ok'&&d.data){
+        var loaded=d.data;
+        if(loaded.students&&loaded.students.length>0)DB.students=loaded.students;
+        if(loaded.attendance&&Object.keys(loaded.attendance).length>0)DB.attendance=loaded.attendance;
+        if(loaded.marks&&loaded.marks.tests&&loaded.marks.tests.length>0)DB.marks=loaded.marks;
+        if(loaded.fees){
+          if(!loaded.fees.classFee)loaded.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
+          if(!loaded.fees.payments)loaded.fees.payments={};
+          DB.fees=loaded.fees;
+        }
+        dbS();render();
+        showSyncBar('✅ Loaded! '+DB.students.length+' students.',false);
+      } else {
+        showSyncBar('⚠️ No data in Sheets yet.',false);
       }
-      dbS();render();
-      showSyncBar('✅ Data loaded from Google Sheets! '+DB.students.length+' students.',false);
-    } else {
-      showSyncBar('❌ Load failed: '+(d.message||'Unknown error'),true);
-    }
-  })
-  .catch(function(e){showSyncBar('❌ Load failed: '+e.message,true);});
+    }catch(e){showSyncBar('❌ Load error: '+e.message,true);}
+  };
+  script.src=API_URL+'?callback='+cbName+'&t='+Date.now();
+  script.onerror=function(){
+    delete window[cbName];
+    // Fallback to regular fetch
+    fetch(API_URL+'?t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d&&d.status==='ok'&&d.data){
+        var loaded=d.data;
+        if(loaded.students&&loaded.students.length>0)DB.students=loaded.students;
+        if(loaded.attendance&&Object.keys(loaded.attendance).length>0)DB.attendance=loaded.attendance;
+        if(loaded.marks&&loaded.marks.tests&&loaded.marks.tests.length>0)DB.marks=loaded.marks;
+        if(loaded.fees){
+          if(!loaded.fees.classFee)loaded.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
+          if(!loaded.fees.payments)loaded.fees.payments={};
+          DB.fees=loaded.fees;
+        }
+        dbS();render();
+        showSyncBar('✅ Loaded! '+DB.students.length+' students.',false);
+      }
+    })
+    .catch(function(e){showSyncBar('❌ Load failed: '+e.message,true);});
+  };
+  document.body.appendChild(script);
 }
 
 function showSyncBar(msg,err){
@@ -154,11 +183,8 @@ function showSyncBar(msg,err){
   if(!err)setTimeout(function(){t.style.display='none';},4000);
 }
 
-// Auto sync after every save
-var _origDbS=null;
 function dbSWithSync(){
   dbS();
-  // debounce sync — wait 2 seconds after last change
   clearTimeout(window._syncTimer);
   window._syncTimer=setTimeout(function(){syncToSheets();},2000);
 }

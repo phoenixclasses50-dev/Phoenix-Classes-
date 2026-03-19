@@ -804,19 +804,21 @@ function setTheme(t){DB.settings.theme=t;dbS();applyTheme();render();toast('Them
 function clearAll(){
   if(!confirm('Delete ALL data?'))return;
   if(!confirm('Are you sure? This cannot be undone!'))return;
+  // Reset everything
+  DB.students=[];
+  DB.attendance={};
+  DB.marks={tests:[],data:{}};
+  DB.fees={classFee:{'Class 8':3000,'Class 9':3500,'Class 10':4000},payments:{}};
+  DB.photos={};
+  DB.timetable={};
+  // Save to local storage
   localStorage.removeItem('pxDB3');
-  DB={
-    students:[],
-    attendance:{},
-    marks:{tests:[],data:{}},
-    fees:{classFee:{'Class 8':3000,'Class 9':3500,'Class 10':4000},payments:{}},
-    timetable:{},
-    settings:{theme:DB.settings.theme||'orange',darkMode:DB.settings.darkMode!==undefined?DB.settings.darkMode:true},
-    photos:{}
-  };
   dbS();
-  toast('All data cleared!',false);
+  // Immediately sync to Sheets — don't wait
+  clearTimeout(window._syncTimer);
+  syncToSheets();
   render();
+  toast('All data cleared and synced!',false);
 }
 
 // ── ROUTER ────────────────────────────────────────────────────────
@@ -846,11 +848,8 @@ window.onload=function(){
   initDate();
   applyTheme();
   render();
-  // Always load fresh data from Google Sheets on startup
-  setTimeout(function(){
-    showSyncBar('☁️ Syncing with Google Sheets...',false);
-    loadFromSheets();
-  },500);
+  // Load from Google Sheets on startup — Sheets is the master
+  setTimeout(function(){loadFromSheets();},800);
 };
 </script>
 </body>

@@ -107,7 +107,10 @@ function syncToSheets(){
         attendance:DB.attendance,
         marks:DB.marks,
         fees:DB.fees,
-        notices:DB.notices||[]
+        notices:DB.notices||[],
+        schedule:DB.schedule||[],
+        starStudent:DB.starStudent||null,
+        remarks:DB.remarks||{}
       }
     };
     var encoded=encodeURIComponent(JSON.stringify(payload));
@@ -168,6 +171,9 @@ function loadFromSheets(){
         } else if(!DB.notices){
           DB.notices=[];
         }
+        if(ld.schedule)DB.schedule=ld.schedule;
+        if(ld.starStudent!==undefined)DB.starStudent=ld.starStudent;
+        if(ld.remarks)DB.remarks=ld.remarks;
         dbS();render();
         showSyncBar('✅ Synced! '+DB.students.length+' students.',false);
       }else{
@@ -209,7 +215,7 @@ var DB={
     classFee:{'Class 8':3000,'Class 9':3500,'Class 10':4000},
     payments:{} // payments[studentId] = [{date, amount, note}]
   },
-  timetable:{},settings:{theme:'orange',darkMode:true},photos:{},notices:[]
+  timetable:{},settings:{theme:'orange',darkMode:true},photos:{},notices:[],schedule:[],starStudent:null,remarks:{}
 };
 function dbS(){try{localStorage.setItem('pxDB3',JSON.stringify(DB));}catch(e){}}
 function dbL(){
@@ -220,6 +226,9 @@ function dbL(){
     if(!DB.settings)DB.settings={theme:'orange',darkMode:true};
     if(!DB.photos)DB.photos={};
     if(!DB.notices)DB.notices=[];
+    if(!DB.schedule)DB.schedule=[];
+    if(!DB.starStudent)DB.starStudent=null;
+    if(!DB.remarks)DB.remarks={};
     if(!DB.fees.classFee)DB.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
     if(!DB.fees.payments)DB.fees.payments={};
   }catch(e){}
@@ -778,9 +787,11 @@ function pgMore(){
   return topbar('More')+
     '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">'+
     '<button class="btn '+(moreTab==='notices'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'notices\';render()">📢 Notices</button>'+
-    '<button class="btn '+(moreTab==='timetable'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'timetable\';render()">📅 Timetable</button>'+
+    '<button class="btn '+(moreTab==='schedule'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'schedule\';render()">📅 Schedule</button>'+
+    '<button class="btn '+(moreTab==='star'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'star\';render()">⭐ Star</button>'+
+    '<button class="btn '+(moreTab==='timetable'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'timetable\';render()">📅 Time</button>'+
     '<button class="btn '+(moreTab==='settings'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'settings\';render()">⚙️ Settings</button>'+
-    '</div>'+(moreTab==='notices'?pgNotices():moreTab==='timetable'?pgTimetable():pgSettings());
+    '</div>'+(moreTab==='notices'?pgNotices():moreTab==='schedule'?pgScheduleMgr():moreTab==='star'?pgStarStudent():moreTab==='timetable'?pgTimetable():pgSettings());
 }
 
 function pgNotices(){
@@ -834,6 +845,89 @@ function delNotice(idx){
   dbSWithSync();
   toast('Notice deleted.',false);
   render();
+}
+function pgScheduleMgr(){
+  var schedule=DB.schedule||[];
+  var today=new Date().toISOString().slice(0,10);
+  var upcoming=schedule.filter(function(s){return s.date>=today;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var past=schedule.filter(function(s){return s.date<today;}).sort(function(a,b){return b.date.localeCompare(a.date);});
+  var list=upcoming.length===0?'<div class="empty">No upcoming tests scheduled.</div>':
+    upcoming.map(function(s,i){
+      return '<div style="padding:10px;background:var(--bg);border-radius:10px;margin-bottom:6px;border-left:3px solid var(--accent)">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center">'+
+        '<div><div style="font-weight:800;font-size:13px">'+esc(s.title)+'</div>'+
+        '<div style="font-size:11px;color:var(--muted)">'+s.cls+' · '+s.subject+' · '+fmtDate(s.date)+'</div>'+
+        (s.notes?'<div style="font-size:11px;color:var(--muted)">📝 '+esc(s.notes)+'</div>':'')+'</div>'+
+        '<button class="btn-sm btn-red" onclick="delSchedule('+i+')">✕</button></div></div>';
+    }).join('');
+  return '<div class="card"><div class="card-title">➕ Add Test Schedule</div>'+
+    '<div class="mb"><label>Test/Event Title</label><input id="sc-title" placeholder="e.g. Unit Test 1, Half Yearly Exam"/></div>'+
+    '<div class="grid2 mb"><div><label>Class</label><select id="sc-cls">'+
+    ['All'].concat(CL).map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Subject</label><select id="sc-sub">'+
+    ['All'].concat(SB).map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="grid2 mb"><div><label>Date</label><input type="date" id="sc-date" value="'+aDt+'"/></div>'+
+    '<div><label>Notes (Optional)</label><input id="sc-notes" placeholder="Chapters, tips..."/></div></div>'+
+    '<button class="btn btn-orange" onclick="addSchedule()">📅 Add to Schedule</button></div>'+
+    '<div class="card"><div class="card-title">📅 Upcoming ('+upcoming.length+')</div>'+list+'</div>'+
+    (past.length>0?'<div class="card"><div class="card-title">✅ Past Tests</div>'+
+    past.slice(0,5).map(function(s){return '<div style="padding:8px 0;border-bottom:1px solid var(--border)">'+
+      '<div style="font-weight:600;font-size:12px">'+esc(s.title)+'</div>'+
+      '<div style="font-size:10px;color:var(--muted)">'+s.cls+' · '+s.subject+' · '+fmtDate(s.date)+'</div></div>';}).join('')+'</div>':'');
+}
+function addSchedule(){
+  var title=document.getElementById('sc-title');
+  if(!title||!title.value.trim()){toast('Enter test title!',true);return;}
+  if(!DB.schedule)DB.schedule=[];
+  DB.schedule.push({id:Date.now(),title:title.value.trim(),cls:document.getElementById('sc-cls').value,subject:document.getElementById('sc-sub').value,date:document.getElementById('sc-date').value,notes:document.getElementById('sc-notes').value});
+  dbSWithSync();toast('Test added to schedule!',false);render();
+}
+function delSchedule(idx){
+  if(!confirm('Delete this schedule?'))return;
+  DB.schedule.splice(idx,1);dbSWithSync();toast('Deleted.',false);render();
+}
+
+function pgStarStudent(){
+  var current=DB.starStudent;
+  var stuOptions=DB.students.map(function(s){return '<option value="'+s.id+'"'+(current&&String(current.id)===String(s.id)?' selected':'')+'>'+esc(s.name)+' ('+s.cls+')</option>';}).join('');
+  var currentHtml=current?
+    '<div style="background:linear-gradient(135deg,#eab308,#f59e0b);border-radius:12px;padding:16px;margin-bottom:14px;display:flex;gap:12px;align-items:center">'+
+    '<div style="font-size:36px">⭐</div>'+
+    '<div><div style="font-size:15px;font-weight:800;color:#fff">'+esc(current.name)+'</div>'+
+    '<div style="font-size:12px;color:#fef3c7">'+current.cls+' · Star Student</div>'+
+    '<div style="font-size:11px;color:#fef3c7;margin-top:3px">'+esc(current.reason||'')+'</div></div></div>':
+    '<div class="empty">No star student selected yet.</div>';
+  // Feedback list
+  var feedbacks=DB.feedback||[];
+  var fbHtml=feedbacks.length===0?'<div class="empty">No feedback yet.</div>':
+    feedbacks.slice().reverse().slice(0,10).map(function(f){
+      var stars='⭐'.repeat(+f.rating||5);
+      return '<div style="padding:10px;background:var(--bg);border-radius:10px;margin-bottom:8px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'+
+        '<div style="font-weight:700;font-size:13px">'+esc(f.studentName)+'</div>'+
+        '<div style="font-size:12px">'+stars+'</div></div>'+
+        '<div style="font-size:12px;color:var(--muted)">'+esc(f.cls)+' · '+fmtDate(f.date)+'</div>'+
+        '<div style="font-size:12px;margin-top:4px;color:var(--text)">'+esc(f.message)+'</div></div>';
+    }).join('');
+  return '<div class="card"><div class="card-title">⭐ Star Student of the Month</div>'+
+    currentHtml+
+    '<div class="mb"><label>Select Student</label><select id="star-stu">'+stuOptions+'</select></div>'+
+    '<div class="mb"><label>Reason</label><input id="star-reason" placeholder="e.g. Best attendance, Top scorer..." value="'+esc(current&&current.reason?current.reason:'')+'"/></div>'+
+    '<button class="btn btn-orange" onclick="setStarStudent()">⭐ Set Star Student</button>'+
+    '<button class="btn btn-gray" style="margin-top:6px" onclick="clearStarStudent()">Clear Star Student</button></div>'+
+    '<div class="card"><div class="card-title">💬 Student Feedback ('+feedbacks.length+')</div>'+fbHtml+'</div>';
+}
+function setStarStudent(){
+  var sel=document.getElementById('star-stu');
+  var reason=document.getElementById('star-reason');
+  var sid=+sel.value;
+  var stu=null;for(var i=0;i<DB.students.length;i++){if(DB.students[i].id===sid){stu=DB.students[i];break;}}
+  if(!stu){toast('Select a student!',true);return;}
+  DB.starStudent={id:stu.id,name:stu.name,cls:stu.cls,reason:reason?reason.value:''};
+  dbSWithSync();toast('⭐ '+stu.name+' is now Star Student!',false);render();
+}
+function clearStarStudent(){
+  DB.starStudent=null;dbSWithSync();toast('Star Student cleared.',false);render();
 }
 function pgTimetable(){
   var tt=DB.timetable[ttDay]||{};

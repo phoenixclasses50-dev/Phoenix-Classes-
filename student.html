@@ -11,34 +11,27 @@
 :root{--bg:#0a0d14;--card:#111827;--border:#1f2937;--text:#f1f5f9;--muted:#6b7280;--accent:#f97316;--accent2:#ea580c;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--yellow:#eab308;}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{background:var(--bg);font-family:Arial,sans-serif;color:var(--text);font-size:14px;min-height:100vh;}
-.center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
-.logo{font-size:48px;margin-bottom:12px;}
-.title{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:4px;text-align:center;}
-.sub{font-size:13px;color:var(--muted);margin-bottom:32px;text-align:center;}
-.login-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:380px;}
-.login-title{font-size:16px;font-weight:800;margin-bottom:4px;}
-.login-sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.3px;}
-input,select{width:100%;background:#1a2234;border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:11px 14px;font-size:14px;outline:none;box-sizing:border-box;font-family:Arial,sans-serif;}
-input:focus{border-color:var(--accent);}
-.btn{color:#fff;border:none;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f97316,#ea580c);}
-.btn-gray{background:#1f2937;color:var(--muted);}
-.error{background:rgba(239,68,68,.1);border:1px solid #ef4444;border-radius:10px;padding:10px 14px;font-size:12px;color:#ef4444;margin-top:10px;display:none;}
-/* Dashboard */
-.main{padding:16px 14px 80px;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;height:58px;}
+.main{padding:20px 16px 80px;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;height:60px;}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:9px;gap:2px;}
 .bn-item.active{color:var(--accent);}
-.bn-icon{font-size:20px;}
-.app-header{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:16px;padding:18px;margin-bottom:16px;position:relative;overflow:hidden;}
-.app-header::before{content:'🔥';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:44px;opacity:.2;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;}
+.bn-icon{font-size:18px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;}
 .card-title{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;}
 .stat-num{font-size:22px;font-weight:800;line-height:1;}
 .stat-label{font-size:9px;color:var(--muted);margin-top:3px;font-weight:700;text-transform:uppercase;}
+label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;}
+input,select{width:100%;background:#1e2333;border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:10px 12px;font-size:14px;outline:none;box-sizing:border-box;font-family:Arial,sans-serif;}
+input:focus{border-color:var(--accent);}
+.btn{color:#fff;border:none;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:Arial,sans-serif;}
+.btn-orange{background:linear-gradient(135deg,#f97316,#ea580c);}
+.btn-blue{background:linear-gradient(135deg,#3b82f6,#2563eb);}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);}
+.btn-red{background:linear-gradient(135deg,#ef4444,#dc2626);}
+.btn-gray{background:var(--border);color:var(--muted);}
 .badge{border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;display:inline-block;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
 th{text-align:left;padding:8px 7px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);}
@@ -48,52 +41,39 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .bar-label{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;}
 .bar-bg{background:var(--border);border-radius:20px;height:9px;overflow:hidden;}
 .bar-fill{height:9px;border-radius:20px;}
-.notice-item{padding:12px 0;border-bottom:1px solid var(--border);}
-.notice-title{font-weight:700;font-size:13px;margin-bottom:4px;}
-.notice-body{font-size:12px;color:var(--muted);line-height:1.6;}
-.notice-date{font-size:10px;color:var(--accent);margin-top:4px;}
-.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
+.mb{margin-bottom:10px;}
+.notice-item{padding:12px;border-radius:10px;background:#1e2333;border-left:3px solid var(--accent);margin-bottom:8px;}
+.notice-title{font-weight:800;font-size:13px;margin-bottom:4px;}
+.notice-date{font-size:10px;color:var(--muted);}
+.notice-msg{font-size:12px;color:#94a3b8;margin-top:6px;line-height:1.5;}
+/* Login screen */
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.login-logo{font-size:56px;margin-bottom:16px;}
+.login-title{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:4px;text-align:center;}
+.login-sub{font-size:12px;color:var(--muted);margin-bottom:32px;text-align:center;}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:360px;}
+/* Header */
+.app-header{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:16px;padding:16px;margin-bottom:16px;position:relative;overflow:hidden;}
+.app-header::before{content:'📚';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:44px;opacity:.2;}
+.app-header-name{font-size:18px;font-weight:800;color:#fff;}
+.app-header-sub{font-size:11px;color:#fed7aa;margin-top:2px;}
 .toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:700;z-index:9999;display:none;white-space:nowrap;}
 .toast.err{background:var(--red);}
-.pay-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
-.pay-amount{font-size:16px;font-weight:800;color:var(--green);}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px;}
 </style>
 </head>
 <body>
-<!-- Login Screen -->
-<div class="center" id="login-screen">
-  <div class="logo">🔥</div>
-  <div class="title">Phoenix Classes</div>
-  <div class="sub">Maharashtra Board · Class 8–10<br>Student Portal</div>
-  <div class="login-card">
-    <div class="login-title">👋 Welcome Student!</div>
-    <div class="login-sub">Enter your registered phone number to login</div>
-    <div style="margin-bottom:12px"><label>Your Phone Number</label><input type="tel" id="login-phone" placeholder="Enter 10-digit number" maxlength="10"/></div>
-    <div style="margin-bottom:12px"><label>Your Class</label>
-    <select id="login-class"><option value="">-- Select Class --</option><option>Class 8</option><option>Class 9</option><option>Class 10</option></select></div>
-    <button class="btn" onclick="doLogin()">🔓 Login</button>
-    <div class="error" id="login-error">Phone number not found. Please contact your teacher.</div>
-  </div>
-</div>
-
-<!-- Dashboard Screen -->
-<div id="dashboard-screen" style="display:none">
-  <div class="main" id="app">Loading...</div>
-  <div class="bottom-nav">
-    <div class="bn-item active" onclick="goTab('home')" id="tab-home"><div class="bn-icon">🏠</div><span>Home</span></div>
-    <div class="bn-item" onclick="goTab('marks')" id="tab-marks"><div class="bn-icon">📊</div><span>Marks</span></div>
-    <div class="bn-item" onclick="goTab('attendance')" id="tab-attendance"><div class="bn-icon">📋</div><span>Attend</span></div>
-    <div class="bn-item" onclick="goTab('fees')" id="tab-fees"><div class="bn-icon">💰</div><span>Fees</span></div>
-    <div class="bn-item" onclick="goTab('notices')" id="tab-notices"><div class="bn-icon">📢</div><span>Notices</span></div>
-  </div>
-</div>
+<div id="root"></div>
 <div class="toast" id="toast"></div>
 
 <script>
 var API_URL='https://script.google.com/macros/s/AKfycbysvVzq3sp8v3-0_c5MlMxMr2YQ_2fiREzMor731zHDvAock6I76U7q_HUCC2GspDs7/exec';
+
+// ── State ─────────────────────────────────────────────────────────
 var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[]};
 var currentStudent=null;
-var currentTab='home';
+var pg='home';
+var loaded=false;
 
 function toast(msg,err){
   var t=document.getElementById('toast');
@@ -101,8 +81,8 @@ function toast(msg,err){
   setTimeout(function(){t.style.display='none';},3000);
 }
 
-// ── LOAD DATA FROM SHEETS ─────────────────────────────────────────
-function loadData(cb){
+// ── Load from Sheets ───────────────────────────────────────────────
+function loadDB(cb){
   var cbName='sCb'+Date.now();
   var script=document.createElement('script');
   var done=false;
@@ -110,69 +90,67 @@ function loadData(cb){
     done=true;delete window[cbName];
     try{document.head.removeChild(script);}catch(e){}
     if(d&&d.status==='ok'&&d.data){
-      DB.students=d.data.students||[];
-      DB.attendance=d.data.attendance||{};
-      DB.marks=d.data.marks||{tests:[],data:{}};
-      DB.fees=d.data.fees||{classFee:{},payments:{}};
-      DB.notices=d.data.notices||[];
-      if(cb)cb(true);
-    } else {if(cb)cb(false);}
+      var ld=d.data;
+      if(ld.students)DB.students=ld.students;
+      if(ld.attendance)DB.attendance=ld.attendance;
+      if(ld.marks)DB.marks=ld.marks;
+      if(ld.fees)DB.fees=ld.fees;
+      if(ld.notices)DB.notices=ld.notices;
+    }
+    loaded=true;
+    if(cb)cb();
   };
   script.src=API_URL+'?action=load&callback='+cbName+'&t='+Date.now();
-  script.onerror=function(){if(!done){delete window[cbName];if(cb)cb(false);}};
-  setTimeout(function(){if(!done){delete window[cbName];try{document.head.removeChild(script);}catch(e){}if(cb)cb(false);}},15000);
+  script.onerror=function(){
+    if(!done){delete window[cbName];loaded=true;if(cb)cb();}
+  };
+  setTimeout(function(){
+    if(!done){delete window[cbName];try{document.head.removeChild(script);}catch(e){}loaded=true;if(cb)cb();}
+  },15000);
   document.head.appendChild(script);
 }
 
-// ── LOGIN ─────────────────────────────────────────────────────────
+// ── Login ──────────────────────────────────────────────────────────
+function renderLogin(){
+  document.getElementById('root').innerHTML=
+    '<div class="login-wrap">'+
+    '<div class="login-logo">🔥</div>'+
+    '<div class="login-title">Phoenix Classes</div>'+
+    '<div class="login-sub">Student Portal · Maharashtra Board</div>'+
+    '<div class="login-card">'+
+    '<div style="font-weight:800;font-size:15px;margin-bottom:4px;text-align:center">Welcome! 👋</div>'+
+    '<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px">Login with your registered phone number</div>'+
+    '<div class="mb"><label>Your Phone Number</label><input type="tel" id="login-phone" placeholder="Enter 10-digit number" maxlength="10"/></div>'+
+    '<button class="btn btn-orange" onclick="doLogin()">Login →</button>'+
+    '<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px">Use the phone number registered with Phoenix Classes</div>'+
+    '</div></div>';
+}
+
 function doLogin(){
-  var phone=document.getElementById('login-phone').value.trim();
-  var cls=document.getElementById('login-class').value;
-  if(!phone||phone.length<10){document.getElementById('login-error').style.display='block';document.getElementById('login-error').textContent='Please enter valid 10-digit phone number.';return;}
-  if(!cls){document.getElementById('login-error').style.display='block';document.getElementById('login-error').textContent='Please select your class.';return;}
-  document.getElementById('login-error').style.display='none';
-  // Show loading
-  var btn=document.querySelector('.btn');
-  btn.textContent='Loading...';btn.disabled=true;
-  loadData(function(ok){
-    btn.textContent='🔓 Login';btn.disabled=false;
-    if(!ok){document.getElementById('login-error').style.display='block';document.getElementById('login-error').textContent='Cannot connect. Please check internet.';return;}
-    // Find student by phone + class
-    var stu=null;
-    for(var i=0;i<DB.students.length;i++){
-      var s=DB.students[i];
-      var sPhone=String(s.phone||'').replace(/\D/g,'');
-      var inputPhone=phone.replace(/\D/g,'');
-      if((sPhone===inputPhone||sPhone==='91'+inputPhone||'91'+sPhone===inputPhone)&&s.cls===cls){
-        stu=s;break;
-      }
-    }
-    if(!stu){
-      document.getElementById('login-error').style.display='block';
-      document.getElementById('login-error').textContent='Phone number not found in '+cls+'. Please contact your teacher.';
-      return;
-    }
-    currentStudent=stu;
-    // Save login
-    try{localStorage.setItem('px_stu',JSON.stringify({id:stu.id,phone:phone,cls:cls}));}catch(e){}
-    showDashboard();
-  });
+  var ph=document.getElementById('login-phone');
+  if(!ph||ph.value.length<10){toast('Enter valid 10-digit number!',true);return;}
+  var num=ph.value.trim();
+  // Find student by phone
+  var found=null;
+  for(var i=0;i<DB.students.length;i++){
+    var s=DB.students[i];
+    var sph=String(s.phone||'').replace(/\D/g,'');
+    if(sph===num||sph==='91'+num||num==='91'+sph){found=s;break;}
+  }
+  if(!found){toast('Phone number not found! Contact teacher.',true);return;}
+  currentStudent=found;
+  localStorage.setItem('pcStudentId',found.id);
+  pg='home';
+  renderApp();
 }
 
-function showDashboard(){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('dashboard-screen').style.display='block';
-  render();
-}
-
-function logout(){
-  try{localStorage.removeItem('px_stu');}catch(e){}
+function doLogout(){
   currentStudent=null;
-  document.getElementById('dashboard-screen').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
+  localStorage.removeItem('pcStudentId');
+  renderLogin();
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function bdg(t,c){return '<span class="badge" style="background:'+c+'22;color:'+c+'">'+t+'</span>';}
 function sc(n,l,c){return '<div class="stat-card" style="border-top:3px solid '+c+'"><div class="stat-num" style="color:'+c+'">'+n+'</div><div class="stat-label">'+l+'</div></div>';}
@@ -182,72 +160,44 @@ function bar(label,val,max,color){
     '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';
 }
 function fmtDate(str){if(!str)return '';var d=new Date(str);return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}
+function getTotalPaid(sid){return (DB.fees.payments[sid]||[]).reduce(function(s,p){return s+(+p.amount||0);},0);}
+function getYearlyFee(cls){return (DB.fees.classFee||{})[cls]||0;}
 
-// ── HOME ──────────────────────────────────────────────────────────
+// ── Pages ──────────────────────────────────────────────────────────
 function pgHome(){
   var s=currentStudent;
-  var tests=DB.marks.tests||[];
+  var attDays=0,attPresent=0;
+  for(var k in DB.attendance){
+    if(k.indexOf('_'+s.cls)>=0){
+      var rec=DB.attendance[k];
+      if(rec[s.id]){attDays++;if(rec[s.id]==='P')attPresent++;}
+    }
+  }
+  var attPct=attDays>0?Math.round((attPresent/attDays)*100):0;
+  var tests=(DB.marks.tests||[]).filter(function(t){return t.cls===s.cls&&(t.subject===s.subject||s.subject==='Both');});
   var md=DB.marks.data||{};
-  var stuTests=tests.filter(function(t){return t.cls===s.cls&&(t.subject===s.subject||s.subject==='Both');});
   var totM=0,obtM=0;
-  stuTests.forEach(function(t){var v=Number((md[t.id]||{})[s.id]||0);if(v){totM+=t.maxMarks;obtM+=v;}});
-  var ovPct=totM>0?Math.round((obtM/totM)*100):0;
-  var ovG=ovPct>=75?'A':ovPct>=60?'B':ovPct>=40?'C':stuTests.length>0?'D':'—';
+  tests.forEach(function(t){var v=Number((md[t.id]||{})[s.id]||0);if(v){totM+=t.maxMarks;obtM+=v;}});
+  var avgPct=totM>0?Math.round((obtM/totM)*100):0;
+  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls),bal=fee-paid;
+  var ovG=avgPct>=75?'A':avgPct>=60?'B':avgPct>=40?'C':tests.length>0?'D':'—';
   var gc=ovG==='A'?'#22c55e':ovG==='B'?'#3b82f6':ovG==='C'?'#eab308':'#ef4444';
-  // Attendance
-  var attD=0,attP=0;
-  for(var k in DB.attendance){if(k.indexOf('_'+s.cls)>=0){var rec=DB.attendance[k];if(rec[s.id]){attD++;if(rec[s.id]==='P')attP++;}}}
-  var attPct=attD>0?Math.round((attP/attD)*100):0;
-  // Fee
-  var pays=DB.fees.payments&&DB.fees.payments[s.id]?DB.fees.payments[s.id]:[];
-  var totalPaid=pays.reduce(function(sum,p){return sum+(+p.amount||0);},0);
-  var yearlyFee=(DB.fees.classFee&&DB.fees.classFee[s.cls])||0;
-  var balance=yearlyFee-totalPaid;
   return '<div class="app-header">'+
-    '<div style="font-size:18px;font-weight:800;color:#fff">Welcome! 👋</div>'+
-    '<div style="font-size:14px;font-weight:700;color:#fed7aa;margin-top:2px">'+esc(s.name)+'</div>'+
-    '<div style="font-size:11px;color:#fed7aa;margin-top:2px">'+s.cls+' · '+s.subject+' · Phoenix Classes</div>'+
+    '<div class="app-header-name">Hello, '+esc(s.name.split(' ')[0])+'! 👋</div>'+
+    '<div class="app-header-sub">'+s.cls+' · '+s.subject+' · Phoenix Classes</div></div>'+
+    '<div class="grid3">'+
+    sc(attPct+'%','Attendance','#22c55e')+
+    sc(ovG,'Overall Grade',gc)+
+    sc(bal<=0?'Paid':'₹'+bal,bal<=0?'Fee Clear':'Due','#eab308')+
     '</div>'+
-    '<div class="grid3">'+sc(ovG,'Overall Grade',gc)+sc(attPct+'%','Attendance','#22c55e')+sc(balance<=0?'Paid':'₹'+balance,balance<=0?'Fee Clear':'Balance Due',balance<=0?'#22c55e':'#ef4444')+'</div>'+
-    '<div class="card"><div class="card-title">📈 Quick Summary</div>'+
-    bar('Academic Score',obtM,totM||1,gc)+
-    bar('Attendance',attP,attD||1,'#22c55e')+
-    bar('Fee Paid',totalPaid,yearlyFee||1,'#eab308')+'</div>'+
-    '<div class="card" style="text-align:center">'+
-    '<button class="btn btn-gray" style="width:auto;padding:8px 20px;margin-top:0" onclick="refreshData()">🔄 Refresh Data</button>'+
-    '&nbsp;&nbsp;<button class="btn btn-gray" style="width:auto;padding:8px 20px;margin-top:0;background:#ef4444" onclick="logout()">🚪 Logout</button>'+
-    '</div>';
+    '<div class="card"><div class="card-title">📈 Attendance</div>'+bar('Present',attPresent,attDays||1,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">📊 Academic Performance</div>'+bar('Score',obtM,totM||1,gc)+'</div>'+
+    '<div class="card"><div class="card-title">💰 Fee Status</div>'+
+    '<div class="grid3" style="margin-bottom:0">'+
+    sc('₹'+fee,'Total Fee','#3b82f6')+sc('₹'+paid,'Paid','#22c55e')+sc(bal<=0?'₹0':'₹'+bal,bal<=0?'Cleared':'Balance',bal<=0?'#22c55e':'#ef4444')+
+    '</div></div>';
 }
 
-// ── MARKS ─────────────────────────────────────────────────────────
-function pgMarks(){
-  var s=currentStudent;
-  var tests=DB.marks.tests||[];
-  var md=DB.marks.data||{};
-  var stuTests=tests.filter(function(t){return t.cls===s.cls&&(t.subject===s.subject||s.subject==='Both');});
-  if(stuTests.length===0)return '<div class="card"><div class="card-title">📊 My Marks</div><div class="empty">No tests recorded yet.</div></div>';
-  var totM=0,obtM=0;
-  var rows=stuTests.map(function(t,i){
-    var val=Number((md[t.id]||{})[s.id]||0);
-    var pct=val?(val/t.maxMarks)*100:0;
-    var g=!val?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
-    var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'var(--muted)';
-    if(val){totM+=t.maxMarks;obtM+=val;}
-    return '<tr><td style="font-weight:700">'+esc(t.testName)+'</td><td>'+bdg(t.subject,'#3b82f6')+'</td><td style="font-weight:700">'+val+'/'+t.maxMarks+'</td><td>'+bdg(g,gc)+'</td></tr>';
-  }).join('');
-  var ovPct=totM>0?Math.round((obtM/totM)*100):0;
-  var ovG=ovPct>=75?'A':ovPct>=60?'B':ovPct>=40?'C':stuTests.length>0?'D':'—';
-  var gc2=ovG==='A'?'#22c55e':ovG==='B'?'#3b82f6':ovG==='C'?'#eab308':'#ef4444';
-  return '<div class="card"><div class="card-title">📊 My Marks — '+s.cls+'</div>'+
-    bar('Overall Score',obtM,totM||1,gc2)+
-    '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;margin-bottom:8px;border-bottom:1px solid var(--border)">'+
-    '<span style="font-weight:700">Overall Grade</span>'+
-    '<span style="font-size:28px;font-weight:800;color:'+gc2+'">'+ovG+'</span></div>'+
-    '<table><thead><tr><th>Test</th><th>Subject</th><th>Marks</th><th>Grade</th></tr></thead>'+
-    '<tbody>'+rows+'</tbody></table></div>';
-}
-
-// ── ATTENDANCE ────────────────────────────────────────────────────
 function pgAttendance(){
   var s=currentStudent;
   var records=[];
@@ -255,8 +205,8 @@ function pgAttendance(){
     if(k.indexOf('_'+s.cls)>=0){
       var rec=DB.attendance[k];
       if(rec[s.id]){
-        var parts=k.split('_'+s.cls);
-        records.push({date:parts[0],status:rec[s.id]});
+        var date=k.replace('_'+s.cls,'');
+        records.push({date:date,status:rec[s.id]});
       }
     }
   }
@@ -266,110 +216,122 @@ function pgAttendance(){
   var pct=records.length>0?Math.round((present/records.length)*100):0;
   var rows=records.length===0?'<tr><td colspan="3" class="empty">No attendance records yet.</td></tr>':
     records.map(function(r){
-      return '<tr><td>'+r.date+'</td><td>'+(r.status==='P'?bdg('Present','#22c55e'):bdg('Absent','#ef4444'))+'</td></tr>';
+      return '<tr><td>'+fmtDate(r.date)+'</td>'+
+        '<td>'+(r.status==='P'?bdg('Present','#22c55e'):bdg('Absent','#ef4444'))+'</td></tr>';
     }).join('');
-  return '<div class="grid3" style="margin-top:0">'+sc(present,'Present','#22c55e')+sc(absent,'Absent','#ef4444')+sc(pct+'%','Rate','#3b82f6')+'</div>'+
-    '<div class="card"><div class="card-title">📋 My Attendance — '+s.cls+'</div>'+
-    bar('Attendance Rate',present,records.length||1,'#22c55e')+
+  return '<div class="grid3">'+sc(present,'Present','#22c55e')+sc(absent,'Absent','#ef4444')+sc(pct+'%','Percentage','#3b82f6')+'</div>'+
+    '<div class="card"><div class="card-title">📈 Attendance Progress</div>'+bar('Present',present,records.length||1,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">📋 Attendance Records</div>'+
     '<table><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
-// ── FEES ──────────────────────────────────────────────────────────
+function pgMarks(){
+  var s=currentStudent;
+  var tests=(DB.marks.tests||[]).filter(function(t){return t.cls===s.cls&&(t.subject===s.subject||s.subject==='Both'||t.subject===s.subject);});
+  var md=DB.marks.data||{};
+  var totM=0,obtM=0;
+  var rows=tests.length===0?'<tr><td colspan="5" class="empty">No test results yet.</td></tr>':
+    tests.map(function(t){
+      var val=Number((md[t.id]||{})[s.id]||0);
+      var pct=val?Math.round((val/t.maxMarks)*100):0;
+      var g=!val?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+      var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'var(--muted)';
+      if(val){totM+=t.maxMarks;obtM+=val;}
+      return '<tr><td style="font-weight:700">'+esc(t.testName)+'</td><td>'+t.subject+'</td>'+
+        '<td>'+val+'/'+t.maxMarks+'</td><td>'+pct+'%</td><td>'+bdg(g,gc)+'</td></tr>';
+    }).join('');
+  var avgPct=totM>0?Math.round((obtM/totM)*100):0;
+  var ovG=avgPct>=75?'A':avgPct>=60?'B':avgPct>=40?'C':tests.length>0?'D':'—';
+  var gc2=ovG==='A'?'#22c55e':ovG==='B'?'#3b82f6':ovG==='C'?'#eab308':'#ef4444';
+  return '<div class="grid2">'+sc(avgPct+'%','Average Score',gc2)+sc(ovG,'Overall Grade',gc2)+'</div>'+
+    '<div class="card"><div class="card-title">📈 Overall Performance</div>'+bar('Score',obtM,totM||1,gc2)+'</div>'+
+    '<div class="card"><div class="card-title">📝 All Test Results</div>'+
+    '<table><thead><tr><th>Test</th><th>Sub</th><th>Marks</th><th>%</th><th>Grade</th></tr></thead>'+
+    '<tbody>'+rows+'</tbody></table></div>';
+}
+
 function pgFees(){
   var s=currentStudent;
-  var pays=(DB.fees.payments&&DB.fees.payments[s.id])||[];
-  var totalPaid=pays.reduce(function(sum,p){return sum+(+p.amount||0);},0);
-  var yearlyFee=(DB.fees.classFee&&DB.fees.classFee[s.cls])||0;
+  var pays=DB.fees.payments[s.id]||[];
+  var totalPaid=getTotalPaid(s.id);
+  var yearlyFee=getYearlyFee(s.cls);
   var balance=yearlyFee-totalPaid;
   var payRows=pays.length===0?'<div class="empty">No payments recorded yet.</div>':
     pays.slice().reverse().map(function(p){
-      return '<div class="pay-item"><div><div class="pay-amount">₹'+p.amount+'</div><div style="font-size:10px;color:var(--muted)">'+fmtDate(p.date)+(p.note?' · '+p.note:'')+'</div></div>'+bdg('Paid','#22c55e')+'</div>';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'+
+        '<div><div style="font-weight:700;color:#22c55e;font-size:15px">₹'+p.amount+'</div>'+
+        '<div style="font-size:10px;color:var(--muted)">'+fmtDate(p.date)+(p.note?' · '+esc(p.note):'')+'</div></div>'+
+        bdg('Paid','#22c55e')+'</div>';
     }).join('');
-  return '<div class="grid3">'+sc('₹'+totalPaid,'Total Paid','#22c55e')+sc(balance<=0?'₹0':'₹'+balance,'Balance','#ef4444')+sc('₹'+yearlyFee,'Yearly Fee','#3b82f6')+'</div>'+
-    '<div class="card"><div class="card-title">💰 Fee Status — '+s.cls+'</div>'+
-    bar('Fee Paid',totalPaid,yearlyFee||1,'#22c55e')+
-    '<div style="padding:12px 0;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)">'+
-    '<span style="font-weight:700">Status</span>'+
-    (balance<=0?bdg('✅ Fully Paid','#22c55e'):bdg('₹'+balance+' Pending','#ef4444'))+
-    '</div></div>'+
-    '<div class="card"><div class="card-title">Payment History</div>'+payRows+'</div>';
+  return '<div class="grid3">'+sc('₹'+yearlyFee,'Total Fee','#3b82f6')+sc('₹'+totalPaid,'Paid','#22c55e')+sc(balance<=0?'₹0':'₹'+balance,balance<=0?'Cleared','Balance',balance<=0?'#22c55e':'#ef4444')+'</div>'+
+    '<div class="card"><div class="card-title">📈 Payment Progress</div>'+bar('Fee Paid',totalPaid,yearlyFee||1,'#22c55e')+'</div>'+
+    '<div class="card"><div class="card-title">💳 Payment History</div>'+payRows+'</div>';
 }
 
-// ── NOTICES ───────────────────────────────────────────────────────
 function pgNotices(){
   var notices=DB.notices||[];
-  // Filter notices for this student's class
-  var s=currentStudent;
-  var myNotices=notices.filter(function(n){return n.cls==='All'||n.cls===s.cls;});
-  myNotices.sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
-  var items=myNotices.length===0?'<div class="empty">No notices yet.</div>':
-    myNotices.map(function(n){
-      return '<div class="notice-item">'+
-        '<div class="notice-title">'+esc(n.title)+'</div>'+
-        '<div class="notice-body">'+esc(n.body)+'</div>'+
-        '<div class="notice-date">'+fmtDate(n.date)+' · '+bdg(n.cls,'#f97316')+'</div>'+
-        '</div>';
-    }).join('');
+  if(notices.length===0){
+    return '<div class="card"><div class="empty" style="padding:40px">📢<br><br>No notices yet.<br>Check back later!</div></div>';
+  }
+  var items=notices.slice().reverse().map(function(n){
+    return '<div class="notice-item">'+
+      '<div class="notice-title">'+esc(n.title)+'</div>'+
+      '<div class="notice-date">📅 '+fmtDate(n.date)+(n.cls&&n.cls!=='All'?' · '+n.cls:'')+'</div>'+
+      '<div class="notice-msg">'+esc(n.message)+'</div></div>';
+  }).join('');
   return '<div class="card"><div class="card-title">📢 Notices & Announcements</div>'+items+'</div>';
 }
 
+// ── Render App ────────────────────────────────────────────────────
+function renderApp(){
+  var navHTML='<div class="bottom-nav">'+
+    '<div class="bn-item '+(pg==='home'?'active':'')+'" onclick="go(\'home\')"><div class="bn-icon">🏠</div><span>Home</span></div>'+
+    '<div class="bn-item '+(pg==='attendance'?'active':'')+'" onclick="go(\'attendance\')"><div class="bn-icon">📋</div><span>Attendance</span></div>'+
+    '<div class="bn-item '+(pg==='marks'?'active':'')+'" onclick="go(\'marks\')"><div class="bn-icon">📊</div><span>Marks</span></div>'+
+    '<div class="bn-item '+(pg==='fees'?'active':'')+'" onclick="go(\'fees\')"><div class="bn-icon">💰</div><span>Fees</span></div>'+
+    '<div class="bn-item '+(pg==='notices'?'active':'')+'" onclick="go(\'notices\')"><div class="bn-icon">📢</div><span>Notices</span></div>'+
+    '</div>';
+  var content='';
+  var pageTitle='';
+  if(pg==='home'){content=pgHome();pageTitle='';}
+  else if(pg==='attendance'){content=pgAttendance();pageTitle='My Attendance';}
+  else if(pg==='marks'){content=pgMarks();pageTitle='My Results';}
+  else if(pg==='fees'){content=pgFees();pageTitle='Fee Status';}
+  else if(pg==='notices'){content=pgNotices();pageTitle='Notices';}
+  var header=pageTitle?'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
+    '<div style="font-size:18px;font-weight:800;color:var(--accent)">'+pageTitle+'</div>'+
+    '<button onclick="refreshData()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);cursor:pointer;font-size:12px">🔄 Refresh</button></div>':'';
+  document.getElementById('root').innerHTML='<div class="main">'+header+content+'</div>'+navHTML+
+    '<div style="position:fixed;top:10px;right:10px;z-index:200">'+
+    '<button onclick="doLogout()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--muted);cursor:pointer;font-size:11px">Logout</button></div>';
+}
+
+function go(p){pg=p;renderApp();window.scrollTo(0,0);}
+
 function refreshData(){
-  toast('Refreshing...',false);
-  loadData(function(ok){
-    if(ok){render();toast('Data updated!',false);}
-    else{toast('Refresh failed. Check internet.',true);}
+  toast('🔄 Refreshing...',false);
+  loadDB(function(){renderApp();toast('✅ Updated!',false);});
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+function init(){
+  document.getElementById('root').innerHTML='<div class="login-wrap"><div class="login-logo">🔥</div><div style="color:var(--muted);font-size:13px">Loading Phoenix Classes...</div></div>';
+  loadDB(function(){
+    // Try auto-login from saved session
+    var savedId=localStorage.getItem('pcStudentId');
+    if(savedId){
+      for(var i=0;i<DB.students.length;i++){
+        if(String(DB.students[i].id)===String(savedId)){
+          currentStudent=DB.students[i];break;
+        }
+      }
+    }
+    if(currentStudent){renderApp();}
+    else{renderLogin();}
   });
 }
 
-// ── ROUTER ────────────────────────────────────────────────────────
-function goTab(tab){
-  currentTab=tab;
-  document.querySelectorAll('.bn-item').forEach(function(el){el.classList.remove('active');});
-  var t=document.getElementById('tab-'+tab);
-  if(t)t.classList.add('active');
-  render();
-}
-function render(){
-  var el=document.getElementById('app');if(!el)return;
-  try{
-    if(currentTab==='home')el.innerHTML=pgHome();
-    else if(currentTab==='marks')el.innerHTML=pgMarks();
-    else if(currentTab==='attendance')el.innerHTML=pgAttendance();
-    else if(currentTab==='fees')el.innerHTML=pgFees();
-    else if(currentTab==='notices')el.innerHTML=pgNotices();
-    window.scrollTo(0,0);
-  }catch(e){el.innerHTML='<div class="card" style="color:#ef4444;padding:20px">Error: '+e.message+'</div>';}
-}
-
-// ── STARTUP ───────────────────────────────────────────────────────
-window.onload=function(){
-  // Check saved login
-  try{
-    var saved=localStorage.getItem('px_stu');
-    if(saved){
-      var info=JSON.parse(saved);
-      // Load data then verify login
-      document.getElementById('login-screen').innerHTML='<div class="loading">🔥<br><br>Loading Phoenix Classes...<br><br><span style="font-size:12px;color:var(--muted)">Please wait...</span></div>';
-      loadData(function(ok){
-        if(ok){
-          var stu=null;
-          for(var i=0;i<DB.students.length;i++){
-            if(DB.students[i].id===info.id){stu=DB.students[i];break;}
-          }
-          if(stu){currentStudent=stu;showDashboard();}
-          else{
-            document.getElementById('login-screen').innerHTML='';
-            document.getElementById('login-screen').style.display='flex';
-            location.reload();
-          }
-        } else {
-          // Offline — show login
-          location.reload();
-        }
-      });
-    }
-  }catch(e){}
-};
+window.onload=function(){init();};
 </script>
 </body>
 </html>

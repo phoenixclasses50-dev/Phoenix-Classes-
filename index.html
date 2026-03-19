@@ -219,7 +219,7 @@ var DB={
     classFee:{'Class 8':3000,'Class 9':3500,'Class 10':4000},
     payments:{} // payments[studentId] = [{date, amount, note}]
   },
-  timetable:{},settings:{theme:'orange',darkMode:true},photos:{},notices:[],schedule:[],starStudent:null,remarks:{}
+  timetable:{},settings:{theme:'orange',darkMode:true},photos:{},notices:[],schedule:[],starStudent:null,remarks:{},materials:[]
 };
 function dbS(){try{localStorage.setItem('pxDB3',JSON.stringify(DB));}catch(e){}}
 function dbL(){
@@ -233,6 +233,7 @@ function dbL(){
     if(!DB.schedule)DB.schedule=[];
     if(!DB.starStudent)DB.starStudent=null;
     if(!DB.remarks)DB.remarks={};
+    if(!DB.materials)DB.materials=[];
     if(!DB.fees.classFee)DB.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
     if(!DB.fees.payments)DB.fees.payments={};
   }catch(e){}
@@ -411,6 +412,33 @@ function alertStudents(){
 }
 
 // ── MINI BAR CHART ───────────────────────────────────────────────
+
+function sendReportWA(sid){
+  var s=null;for(var i=0;i<DB.students.length;i++){if(DB.students[i].id===sid){s=DB.students[i];break;}}
+  if(!s||!s.phone){toast('No phone number for this student!',true);return;}
+  var attD=0,attP=0;
+  for(var k in DB.attendance){if(k.indexOf('_'+s.cls)>=0){var r=DB.attendance[k];if(r[sid]){attD++;if(r[sid]==='P')attP++;}}}
+  var attPct=attD>0?Math.round((attP/attD)*100):0;
+  var tests=(DB.marks.tests||[]).filter(function(t){return t.cls===s.cls;});
+  var md=DB.marks.data||{},totM=0,obtM=0;
+  tests.forEach(function(t){var v=Number((md[t.id]||{})[sid]||0);if(v){totM+=t.maxMarks;obtM+=v;}});
+  var avgPct=totM>0?Math.round((obtM/totM)*100):0;
+  var ovG=avgPct>=75?'A':avgPct>=60?'B':avgPct>=40?'C':tests.length>0?'D':'—';
+  var paid=getTotalPaid(sid),fee=getYearlyFee(s.cls),bal=fee-paid;
+  var today=new Date();var dateStr=today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
+  var testLines=tests.map(function(t){var v=Number((md[t.id]||{})[sid]||0);var pct=v?Math.round((v/t.maxMarks)*100):0;var g=!v?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';return '• '+t.testName+': '+v+'/'+t.maxMarks+' ('+pct+'%) — Grade '+g;}).join('\n');
+  var msg='📊 *Monthly Progress Report*\n🔥 Phoenix Classes\n📅 Date: '+dateStr+'\n━━━━━━━━━━━━━━━━\n'+
+    '👤 Student: *'+s.name+'*\n📚 Class: '+s.cls+' | Subject: '+s.subject+'\n\n'+
+    '✅ *Attendance*\nPresent: '+attP+'/'+attD+' days ('+attPct+'%)\n'+
+    (attPct<75?'⚠️ Below 75% — Please attend regularly!':'🌟 Good attendance!')+'\n\n'+
+    '📝 *Test Performance*\n'+
+    (testLines||'No tests recorded yet')+
+    '\n\n📊 Overall Grade: *'+ovG+'* ('+avgPct+'%)\n\n'+
+    '💰 *Fee Status*\nTotal: ₹'+fee+' | Paid: ₹'+paid+(bal>0?'\n⚠️ Balance Due: ₹'+bal:'\n✅ Fully Cleared!')+
+    '\n\n━━━━━━━━━━━━━━━━\nLearn · Think · Grow\nPhoenix Classes, Bahe-Walwa, Sangli';
+  waOpen(s.phone,msg);
+}
+
 function miniChart(sid,cls){
   var tests=(DB.marks.tests||[]).filter(function(t){return t.cls===cls;}).slice(-6);
   if(!tests.length)return '<div style="color:var(--muted);font-size:11px;text-align:center;padding:12px">No test data yet</div>';
@@ -887,11 +915,67 @@ function pgMore(){
   return topbar('More')+
     '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">'+
     '<button class="btn '+(moreTab==='notices'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'notices\';render()">📢 Notices</button>'+
+    '<button class="btn '+(moreTab==='materials'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'materials\';render()">📝 Notes</button>'+
     '<button class="btn '+(moreTab==='schedule'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'schedule\';render()">📅 Schedule</button>'+
     '<button class="btn '+(moreTab==='star'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'star\';render()">⭐ Star</button>'+
     '<button class="btn '+(moreTab==='timetable'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'timetable\';render()">📅 Time</button>'+
     '<button class="btn '+(moreTab==='settings'?'btn-orange':'btn-gray')+'" style="margin-top:0;flex:1;padding:9px;font-size:12px" onclick="moreTab=\'settings\';render()">⚙️ Settings</button>'+
-    '</div>'+(moreTab==='notices'?pgNotices():moreTab==='schedule'?pgScheduleMgr():moreTab==='star'?pgStarStudent():moreTab==='timetable'?pgTimetable():pgSettings());
+    '</div>'+(moreTab==='notices'?pgNotices():moreTab==='materials'?pgMaterials():moreTab==='schedule'?pgScheduleMgr():moreTab==='star'?pgStarStudent():moreTab==='timetable'?pgTimetable():pgSettings());
+}
+
+function pgMaterials(){
+  var mats=DB.materials||[];
+  var matList=mats.length===0?'<div class="empty">No study materials added yet.</div>':
+    mats.slice().reverse().map(function(m,ri){
+      var realIdx=mats.length-1-ri;
+      var typeIcon=m.type==='pdf'?'📄':m.type==='video'?'🎥':m.type==='image'?'🖼️':'🔗';
+      return '<div style="padding:12px;background:var(--bg);border-radius:10px;margin-bottom:8px;border:1px solid var(--border)">'+
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+        '<div style="flex:1">'+
+        '<div style="font-weight:800;font-size:13px">'+typeIcon+' '+esc(m.title)+'</div>'+
+        '<div style="font-size:11px;color:var(--muted);margin-top:3px">'+esc(m.cls==='All'?'All Classes':m.cls)+' · '+esc(m.subject)+' · '+fmtDate(m.date)+'</div>'+
+        (m.desc?'<div style="font-size:12px;color:var(--muted);margin-top:4px">'+esc(m.desc)+'</div>':'')+
+        '</div>'+
+        '<div style="display:flex;gap:6px;flex-shrink:0;margin-left:8px">'+
+        '<a href="'+esc(m.link)+'" target="_blank" class="btn-sm btn-blue" style="text-decoration:none">Open</a>'+
+        '<button class="btn-sm btn-red" onclick="delMaterial('+realIdx+')">✕</button>'+
+        '</div></div></div>';
+    }).join('');
+  return '<div class="card"><div class="card-title">➕ Add Study Material</div>'+
+    '<div class="mb"><label>Title</label><input id="mat-title" placeholder="e.g. Chapter 3 - Algebra Notes"/></div>'+
+    '<div class="grid2 mb"><div><label>Class</label><select id="mat-cls">'+
+    ['All Classes'].concat(CL).map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Subject</label><select id="mat-sub">'+
+    SB.concat(['Both']).map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="mb"><label>Type</label><select id="mat-type">'+
+    '<option value="pdf">📄 PDF</option><option value="video">🎥 YouTube Video</option><option value="image">🖼️ Image</option><option value="link">🔗 Other Link</option>'+
+    '</select></div>'+
+    '<div class="mb"><label>Google Drive / YouTube Link</label><input id="mat-link" placeholder="Paste link here..."/></div>'+
+    '<div class="mb"><label>Description (Optional)</label><input id="mat-desc" placeholder="Short description..."/></div>'+
+    '<button class="btn btn-orange" onclick="addMaterial()">📝 Add Material</button></div>'+
+    '<div class="card"><div class="card-title">📚 All Study Materials ('+mats.length+')</div>'+matList+'</div>';
+}
+function addMaterial(){
+  var title=document.getElementById('mat-title');
+  var link=document.getElementById('mat-link');
+  if(!title||!title.value.trim()){toast('Enter material title!',true);return;}
+  if(!link||!link.value.trim()){toast('Enter a link!',true);return;}
+  if(!DB.materials)DB.materials=[];
+  DB.materials.push({
+    id:Date.now(),
+    title:title.value.trim(),
+    cls:document.getElementById('mat-cls').value,
+    subject:document.getElementById('mat-sub').value,
+    type:document.getElementById('mat-type').value,
+    link:link.value.trim(),
+    desc:document.getElementById('mat-desc').value,
+    date:aDt
+  });
+  dbSWithSync();toast('Study material added!',false);render();
+}
+function delMaterial(idx){
+  if(!confirm('Delete this material?'))return;
+  DB.materials.splice(idx,1);dbSWithSync();render();toast('Deleted.',false);
 }
 
 function pgNotices(){

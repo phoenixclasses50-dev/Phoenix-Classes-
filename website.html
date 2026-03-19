@@ -143,6 +143,12 @@ footer{background:#0f172a;color:#94a3b8;padding:40px 20px 20px;}
   .why-grid,.subjects-grid,.fee-grid,.achieve-grid{grid-template-columns:1fr;}
 }
 </style>
+<meta name="theme-color" content="#1e40af"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Phoenix Classes"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231e40af'/><text y='.9em' font-size='80'>🔥</text></svg>"/>
 </head>
 <body>
 
@@ -470,6 +476,28 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}
   });
 });
+</script>
+
+<div id="pwa-banner" style="display:none;position:fixed;bottom:80px;left:16px;right:16px;background:#1e40af;color:#fff;border-radius:14px;padding:14px 16px;z-index:300;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 8px 30px rgba(0,0,0,.2)">
+  <div><div style="font-weight:700;font-size:14px">📱 Install Phoenix Classes</div><div style="font-size:12px;opacity:.8;margin-top:2px">Add to home screen for quick access</div></div>
+  <div style="display:flex;gap:8px">
+    <button id="pwa-install" style="background:#fff;color:#1e40af;border:none;border-radius:8px;padding:7px 14px;font-weight:700;font-size:13px;cursor:pointer">Install</button>
+    <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;padding:7px 10px;cursor:pointer">✕</button>
+  </div>
+</div>
+<script>
+var deferredPrompt;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('pwa-banner').style.display='flex';
+});
+document.getElementById('pwa-install').addEventListener('click',function(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.waitForUserChoice().then(function(){deferredPrompt=null;document.getElementById('pwa-banner').style.display='none';});}
+});
+window.addEventListener('appinstalled',function(){document.getElementById('pwa-banner').style.display='none';});
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
 </script>
 </body>
 </html>

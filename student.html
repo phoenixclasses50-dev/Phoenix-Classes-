@@ -448,6 +448,71 @@ function pgNotices(){
 }
 
 // ── Render ────────────────────────────────────────────────────────
+
+function pgMaterials(){
+  var s=currentStudent;
+  var mats=(DB.materials||[]).filter(function(m){return m.cls==='All'||m.cls===s.cls;});
+  var typeIcon={'PDF':'📄','Video':'🎥','Image':'🖼️','Link':'🔗'};
+  var typeColor={'PDF':'#ef4444','Video':'#8b5cf6','Image':'#22c55e','Link':'#3b82f6'};
+  if(mats.length===0){
+    return '<div class="card"><div class="empty" style="padding:40px">📝<br><br>No study materials yet.<br>Check back later!</div></div>';
+  }
+  // Group by subject
+  var grouped={};
+  mats.forEach(function(m){
+    var key=m.subject||'General';
+    if(!grouped[key])grouped[key]=[];
+    grouped[key].push(m);
+  });
+  var html='';
+  Object.keys(grouped).forEach(function(sub){
+    html+='<div class="card"><div class="card-title">📚 '+esc(sub)+'</div>'+
+      grouped[sub].map(function(m){
+        var icon=typeIcon[m.type]||'🔗';
+        var color=typeColor[m.type]||'#3b82f6';
+        return '<div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'+
+          '<div style="width:40px;height:40px;border-radius:10px;background:'+color+'22;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+icon+'</div>'+
+          '<div style="flex:1"><div style="font-weight:700;font-size:13px">'+esc(m.title)+'</div>'+
+          '<div style="font-size:11px;color:var(--muted)">'+m.type+(m.desc?' · '+esc(m.desc):'')+'</div></div>'+
+          '<a href="'+esc(m.link)+'" target="_blank" style="background:'+color+';color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;flex-shrink:0">Open</a>'+
+          '</div>';
+      }).join('')+'</div>';
+  });
+  return html;
+}
+
+function pgIDCard(){
+  var s=currentStudent;
+  var today=new Date();
+  var yr=today.getFullYear()+'-'+(today.getFullYear()+1);
+  var photo=s.photo?
+    '<img src="'+s.photo+'" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,.6);object-fit:cover"/>':
+    '<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,.4)">'+esc(s.name[0])+'</div>';
+  return '<style>@media print{.no-print{display:none!important;}body{background:#fff!important;}.main{padding:0!important;}}</style>'+
+    '<div id="id-card-print" style="background:linear-gradient(135deg,#f97316,#c2410c);border-radius:20px;padding:24px;color:#fff;position:relative;overflow:hidden;margin-bottom:14px">'+
+    '<div style="position:absolute;right:-20px;bottom:-30px;font-size:120px;opacity:0.06">🔥</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
+    '<div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:2px">PHOENIX CLASSES · STUDENT ID</div>'+
+    '<div style="font-size:9px;color:rgba(255,255,255,.5)">'+yr+'</div></div>'+
+    '<div style="display:flex;gap:16px;align-items:center">'+photo+
+    '<div><div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">'+esc(s.name)+'</div>'+
+    '<div style="font-size:12px;color:#fed7aa">'+s.cls+' · '+s.subject+'</div>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px">ID: PC-'+String(s.id).slice(-6).padStart(6,'0')+'</div></div></div>'+
+    '<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);display:flex;justify-content:space-between;align-items:center">'+
+    '<div><div style="font-size:10px;color:rgba(255,255,255,.6)">Bahe, Walwa, Dist-Sangli</div>'+
+    '<div style="font-size:10px;color:rgba(255,255,255,.6)">9503949009 · 9096815310</div></div>'+
+    '<div style="font-size:10px;color:rgba(255,255,255,.6);text-align:right">Maharashtra Board<br>Learn · Think · Grow</div></div></div>'+
+    '<button class="btn btn-orange no-print" onclick="window.print()">🖨️ Print / Save ID Card</button>'+
+    '<div class="card no-print"><div class="card-title">ℹ️ Student Details</div>'+
+    '<table><tbody>'+
+    '<tr><td style="color:var(--muted);font-size:12px;width:100px">Name</td><td style="font-weight:700">'+esc(s.name)+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px">Class</td><td style="font-weight:700">'+s.cls+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px">Subject</td><td style="font-weight:700">'+s.subject+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px">Phone</td><td style="font-weight:700">'+esc(s.phone||'—')+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px">Student ID</td><td style="font-weight:700">PC-'+String(s.id).slice(-6).padStart(6,'0')+'</td></tr>'+
+    '</tbody></table></div>';
+}
+
 function go(p){pg=p;renderApp();window.scrollTo(0,0);}
 
 function renderApp(){
@@ -558,7 +623,7 @@ function refreshData(){
 var _origGo=go;
 go=function(p){
   pg=p;
-  if(p==='attendance'||p==='marks'||p==='fees'||p==='notices'||p==='report'||p==='feedback'){
+  if(p==='attendance'||p==='marks'||p==='fees'||p==='notices'||p==='report'||p==='feedback'||p==='materials'||p==='idcard'){
     var content='',title='';
     if(p==='attendance'){content=pgAttendance();title='📋 My Attendance';}
     else if(p==='marks'){content=pgMarks();title='📊 My Results';}
@@ -566,6 +631,8 @@ go=function(p){
     else if(p==='notices'){content=pgNotices();title='📢 Notices';}
     else if(p==='report'){content=pgReport();title='📈 Progress Report';}
     else if(p==='feedback'){content=pgFeedback();title='💬 Feedback';}
+    else if(p==='materials'){content=pgMaterials();title='📝 Study Materials';}
+    else if(p==='idcard'){content=pgIDCard();title='📱 Student ID Card';}
     var navItems=[{id:'home',icon:'🏠',label:'Home'},{id:'schedule',icon:'📅',label:'Schedule'},{id:'rankings',icon:'🏆',label:'Ranks'},{id:'idcard',icon:'📱',label:'ID Card'},{id:'more',icon:'📋',label:'More'}];
     var nav='<div class="bottom-nav">'+navItems.map(function(n){return '<div class="bn-item" onclick="go(\''+n.id+'\')"><div class="bn-icon">'+n.icon+'</div><span>'+n.label+'</span></div>';}).join('')+'</div>';
     document.getElementById('root').innerHTML=

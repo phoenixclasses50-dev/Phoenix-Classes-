@@ -93,6 +93,76 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 <input type="file" id="photoFile" accept="image/*" style="display:none" onchange="uploadPhoto(this)"/>
 
 <script>
+// ── GOOGLE SHEETS API ────────────────────────────────────────────
+var API_URL='https://script.google.com/macros/s/AKfycbz8wNzYzGW8xTog574vX45_xbDHpzmLU0Kg3ZG3rsM2FsSNqag-CLY92iJzfTWpicxr/exec';
+var syncStatus='idle'; // idle | syncing | done | error
+
+function syncToSheets(){
+  if(syncStatus==='syncing')return;
+  syncStatus='syncing';
+  showSyncBar('☁️ Saving to Google Sheets...',false);
+  fetch(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'save',payload:{
+      students:DB.students,
+      attendance:DB.attendance,
+      marks:DB.marks,
+      fees:DB.fees
+    }})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    syncStatus='done';
+    if(d.status==='ok'){showSyncBar('✅ Saved to Google Sheets!',false);}
+    else{showSyncBar('❌ Sheets Error: '+d.message,true);}
+  })
+  .catch(function(e){
+    syncStatus='error';
+    showSyncBar('❌ Sync failed: '+e.message,true);
+  });
+}
+
+function loadFromSheets(){
+  showSyncBar('☁️ Loading from Google Sheets...',false);
+  fetch(API_URL)
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.status==='ok'&&d.data){
+      var loaded=d.data;
+      if(loaded.students)DB.students=loaded.students;
+      if(loaded.attendance)DB.attendance=loaded.attendance;
+      if(loaded.marks)DB.marks=loaded.marks;
+      if(loaded.fees){
+        DB.fees=loaded.fees;
+        if(!DB.fees.classFee)DB.fees.classFee={'Class 8':3000,'Class 9':3500,'Class 10':4000};
+        if(!DB.fees.payments)DB.fees.payments={};
+      }
+      dbS();render();
+      showSyncBar('✅ Data loaded from Google Sheets! '+DB.students.length+' students.',false);
+    } else {
+      showSyncBar('❌ Load failed: '+(d.message||'Unknown error'),true);
+    }
+  })
+  .catch(function(e){showSyncBar('❌ Load failed: '+e.message,true);});
+}
+
+function showSyncBar(msg,err){
+  var t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=msg;t.className='toast'+(err?' err':'');t.style.display='block';
+  if(!err)setTimeout(function(){t.style.display='none';},4000);
+}
+
+// Auto sync after every save
+var _origDbS=null;
+function dbSWithSync(){
+  dbS();
+  // debounce sync — wait 2 seconds after last change
+  clearTimeout(window._syncTimer);
+  window._syncTimer=setTimeout(function(){syncToSheets();},2000);
+}
+
 // ── DB ────────────────────────────────────────────────────────────
 var DB={
   students:[],attendance:{},marks:{tests:[],data:{}},
@@ -285,9 +355,9 @@ function aStu(){
   var n=document.getElementById('sn'),c=document.getElementById('sc2'),s=document.getElementById('ss'),p=document.getElementById('sp');
   if(!n||!n.value.trim()){toast('Please enter student name!',true);return;}
   DB.students.push({id:Date.now(),name:n.value.trim(),cls:c.value,subject:s.value,phone:p?p.value:''});
-  dbS();render();toast('Student added successfully!',false);
+  dbSWithSync();render();toast('Student added successfully!',false);
 }
-function dStu(id){if(!confirm('Remove this student?'))return;DB.students=DB.students.filter(function(s){return s.id!==id;});delete DB.photos[id];delete DB.fees.payments[id];dbS();render();}
+function dStu(id){if(!confirm('Remove this student?'))return;DB.students=DB.students.filter(function(s){return s.id!==id;});delete DB.photos[id];delete DB.fees.payments[id];dbSWithSync();render();}
 function setSF(v){sF=v;render();}
 
 // ── REPORT CARD ───────────────────────────────────────────────────
@@ -374,8 +444,8 @@ function pgAtt(){
     '<div style="display:flex;gap:6px"><button class="btn-sm btn-green" onclick="mAll(\'P\')">✓ All P</button><button class="btn-sm btn-red" onclick="mAll(\'A\')">✗ All A</button><button class="btn-sm" style="background:#7c3aed" onclick="delAtt(\''+aDt+'\',\''+aCl+'\')">🗑️</button></div></div>'+
     '<table><thead><tr><th></th><th>Name</th><th>Status</th><th>Mark</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
-function mAtt(id,s){var k=aDt+'_'+aCl;if(!DB.attendance[k])DB.attendance[k]={};DB.attendance[k][id]=s;dbS();render();toast(s==='P'?'Marked Present ✓':'Marked Absent ✗',s==='A');}
-function mAll(s){var k=aDt+'_'+aCl;DB.attendance[k]={};DB.students.filter(function(x){return x.cls===aCl;}).forEach(function(x){DB.attendance[k][x.id]=s;});dbS();render();toast(s==='P'?'All Present!':'All Absent!',false);}
+function mAtt(id,s){var k=aDt+'_'+aCl;if(!DB.attendance[k])DB.attendance[k]={};DB.attendance[k][id]=s;dbSWithSync();render();toast(s==='P'?'Marked Present ✓':'Marked Absent ✗',s==='A');}
+function mAll(s){var k=aDt+'_'+aCl;DB.attendance[k]={};DB.students.filter(function(x){return x.cls===aCl;}).forEach(function(x){DB.attendance[k][x.id]=s;});dbSWithSync();render();toast(s==='P'?'All Present!':'All Absent!',false);}
 function setAC(c){aCl=c;render();}
 
 // ── MARKS ─────────────────────────────────────────────────────────
@@ -426,11 +496,11 @@ function pgMrk(){
 function addT(){
   var tn=document.getElementById('tn');if(!tn||!tn.value.trim()){toast('Enter test name!',true);return;}
   var t={id:Date.now(),testName:tn.value.trim(),cls:document.getElementById('tc').value,subject:document.getElementById('tsu').value,maxMarks:+document.getElementById('tm').value||100,date:document.getElementById('td').value};
-  DB.marks.tests.push(t);dbS();selT=t.id;mEn={};render();toast('Test created!',false);
+  DB.marks.tests.push(t);dbSWithSync();selT=t.id;mEn={};render();toast('Test created!',false);
 }
 function selTest(id){selT=id;mEn={};var d=(DB.marks.data||{})[id]||{};for(var k in d)mEn[k]=d[k];render();}
-function saveMrk(){if(!DB.marks.data)DB.marks.data={};var cp={};for(var k in mEn)cp[k]=mEn[k];DB.marks.data[selT]=cp;dbS();toast('Marks saved!',false);render();}
-function delTest(id){if(!confirm('Delete this test and all its marks?'))return;DB.marks.tests=DB.marks.tests.filter(function(t){return t.id!==id;});if(DB.marks.data)delete DB.marks.data[id];if(selT===id)selT=null;dbS();render();toast('Test deleted!',false);}
+function saveMrk(){if(!DB.marks.data)DB.marks.data={};var cp={};for(var k in mEn)cp[k]=mEn[k];DB.marks.data[selT]=cp;dbSWithSync();toast('Marks saved!',false);render();}
+function delTest(id){if(!confirm('Delete this test and all its marks?'))return;DB.marks.tests=DB.marks.tests.filter(function(t){return t.id!==id;});if(DB.marks.data)delete DB.marks.data[id];if(selT===id)selT=null;dbSWithSync();render();toast('Test deleted!',false);}
 
 // ── FEES (Student-wise, any amount) ───────────────────────────────
 var feeTab='collect'; // collect | structure | history
@@ -689,8 +759,13 @@ function pgSettings(){
     '<label class="toggle"><input type="checkbox" '+(DB.settings.darkMode?'checked':'')+' onchange="DB.settings.darkMode=this.checked;dbS();applyTheme();render()"/><span class="toggle-slider"></span></label></div>'+
     '<div class="setting-row"><div><div style="font-size:13px;font-weight:600">App Theme Color</div></div><div>'+tc.map(function(t){return '<span class="theme-dot '+(DB.settings.theme===t.id?'on':'')+'" style="background:'+t.c+'" onclick="setTheme(\''+t.id+'\')"></span>';}).join('')+'</div></div></div>'+
     '<div class="card"><div class="card-title">☁️ Data</div>'+
-    '<button class="btn btn-green" onclick="exportData()">📥 Download Backup</button>'+
-    '<button class="btn btn-purple" onclick="document.getElementById(\'importFile\').click()">📤 Restore Backup</button>'+
+    '<div style="background:rgba(34,197,94,0.1);border:1px solid #22c55e;border-radius:10px;padding:12px;margin-bottom:10px">'+
+    '<div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:4px">✅ Google Sheets Connected!</div>'+
+    '<div style="font-size:11px;color:var(--muted)">Data automatically syncs to Google Sheets after every change.</div></div>'+
+    '<button class="btn btn-green" onclick="syncToSheets()">☁️ Sync to Google Sheets Now</button>'+
+    '<button class="btn btn-blue" onclick="loadFromSheets()">📥 Load from Google Sheets</button>'+
+    '<button class="btn btn-green" style="background:#22c55e" onclick="exportData()">💾 Download Local Backup</button>'+
+    '<button class="btn btn-purple" onclick="document.getElementById(\'importFile\').click()">📤 Restore Local Backup</button>'+
     '<button class="btn btn-red" onclick="clearAll()">🗑️ Clear All Data</button></div>'+
     '<div class="card"><div class="card-title">ℹ️ About</div><div style="font-size:12px;color:var(--muted);line-height:1.8"><b style="color:var(--text)">Phoenix Classes App</b><br>Maharashtra Board · Class 8–10<br>Maths & Science · Free Forever<br><br>Built with ❤️ for Phoenix Classes</div></div>';
 }
@@ -719,7 +794,7 @@ function render(){
     document.getElementById('app').innerHTML='<div class="card" style="color:#ef4444;padding:20px"><b>Error:</b> '+ex.message+'<br><button class="btn btn-orange" onclick="render()" style="margin-top:10px">Retry</button></div>';
   }
 }
-window.onload=function(){dbL();initDate();applyTheme();render();};
+window.onload=function(){dbL();initDate();applyTheme();render();setTimeout(function(){loadFromSheets();},1000);};
 </script>
 </body>
 </html>

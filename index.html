@@ -110,7 +110,8 @@ function syncToSheets(){
         notices:DB.notices||[],
         schedule:DB.schedule||[],
         starStudent:DB.starStudent||null,
-        remarks:DB.remarks||{}
+        remarks:DB.remarks||{},
+        materials:DB.materials||[]
       }
     };
     var encoded=encodeURIComponent(JSON.stringify(payload));
@@ -174,6 +175,7 @@ function loadFromSheets(){
         if(ld.schedule)DB.schedule=ld.schedule;
         if(ld.starStudent!==undefined)DB.starStudent=ld.starStudent;
         if(ld.remarks)DB.remarks=ld.remarks;
+        if(ld.materials)DB.materials=ld.materials;else if(!DB.materials)DB.materials=[];
         dbS();render();
         showSyncBar('✅ Synced! '+DB.students.length+' students.',false);
       }else{

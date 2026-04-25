@@ -100,7 +100,24 @@ function sc(n,l,c){return '<div class="stat-card" style="border-top:3px solid '+
 function bar(label,val,max,color){var pct=max>0?Math.round((val/max)*100):0;return '<div class="bar-wrap"><div class="bar-label"><span>'+label+'</span><span style="color:'+color+';font-weight:700">'+val+'/'+max+' ('+pct+'%)</span></div><div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';}
 function fmtDate(str){if(!str)return '';var d=new Date(str);return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}
 function getTotalPaid(sid){return(DB.fees.payments[sid]||[]).reduce(function(s,p){return s+(+p.amount||0);},0);}
-function getYearlyFee(cls){return(DB.fees.classFee||{})[cls]||0;}
+function getYearlyFee(cls,subject){
+  var cf=DB.fees.classFee||{};
+  // Try exact key: "Class 10 Semi-English - Maths"
+  if(subject){
+    var key=cls+' - '+subject;
+    if(cf[key]!==undefined&&cf[key]>0)return cf[key];
+  }
+  // Try without subject (old format)
+  if(cf[cls]!==undefined&&cf[cls]>0)return cf[cls];
+  // Try matching by class prefix
+  if(subject){
+    var keys=Object.keys(cf);
+    for(var i=0;i<keys.length;i++){
+      if(keys[i].indexOf(cls)>=0&&keys[i].indexOf(subject)>=0&&cf[keys[i]]>0)return cf[keys[i]];
+    }
+  }
+  return 0;
+}
 function toggleDark(){var b=document.body.classList.toggle('dark-mode');localStorage.setItem('pcDark',b?'1':'0');document.getElementById('theme-btn').textContent=b?'☀️':'🌙';}
 function applyDark(){if(localStorage.getItem('pcDark')==='1'){document.body.classList.add('dark-mode');setTimeout(function(){var b=document.getElementById('theme-btn');if(b)b.textContent='☀️';},100);}}
 
@@ -197,7 +214,7 @@ function pgHome(){
   var md=DB.marks.data||{},totM=0,obtM=0;
   tests.forEach(function(t){var v=Number((md[t.id]||{})[s.id]||0);if(v){totM+=t.maxMarks;obtM+=v;}});
   var avgPct=totM>0?Math.round((obtM/totM)*100):0;
-  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls),bal=fee-paid;
+  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls,s.subject),bal=fee-paid;
   var ovG=avgPct>=75?'A':avgPct>=60?'B':avgPct>=40?'C':tests.length>0?'D':'—';
   var gc=ovG==='A'?'#22c55e':ovG==='B'?'#3b82f6':ovG==='C'?'#eab308':'#ef4444';
 
@@ -596,7 +613,7 @@ function pgMarks(){
 
 function pgFees(){
   var s=currentStudent,pays=DB.fees.payments[s.id]||[];
-  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls),bal=fee-paid;
+  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls,s.subject),bal=fee-paid;
   var upiUrl='upi://pay?pa=9503949009%40ybl&pn=Phoenix%20Classes&am='+Math.max(bal,0)+'&cu=INR&tn=Fee%20Payment%20'+encodeURIComponent(s.name);
   return '<div class="grid3">'+sc('₹'+fee,'Total Fee','#3b82f6')+sc('₹'+paid,'Paid','#22c55e')+sc(bal<=0?'₹0':'₹'+bal,bal<=0?'Cleared':'Balance',bal<=0?'#22c55e':'#ef4444')+'</div>'+
     (bal>0?'<button class="btn" style="background:#5f259f;margin-bottom:12px" onclick="window.open(\''+upiUrl+'\',\'_blank\')">📱 Pay ₹'+bal+' via UPI (PhonePe / GPay)</button>':

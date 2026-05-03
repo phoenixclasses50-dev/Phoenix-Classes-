@@ -3,79 +3,590 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#f97316"/>
+<meta name="theme-color" content="#ff6b00"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="Phoenix Classes"/>
 <title>Phoenix Classes — Student Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b;--accent:#f97316;--accent2:#ea580c;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--yellow:#eab308;}
-.dark-mode{--bg:#0a0d14;--card:#111827;--border:#1f2937;--text:#f1f5f9;--muted:#6b7280;}
+:root{
+  --bg:#f0f4ff;
+  --bg2:#e8eeff;
+  --card:#ffffff;
+  --card2:rgba(255,255,255,0.7);
+  --border:rgba(99,102,241,0.12);
+  --text:#1a1d3a;
+  --muted:#6b7280;
+  --accent:#f97316;
+  --accent2:#ea580c;
+  --accentLight:rgba(249,115,22,0.12);
+  --green:#10b981;
+  --greenLight:rgba(16,185,129,0.12);
+  --red:#ef4444;
+  --redLight:rgba(239,68,68,0.1);
+  --blue:#6366f1;
+  --blueLight:rgba(99,102,241,0.1);
+  --purple:#8b5cf6;
+  --yellow:#f59e0b;
+  --shadow:0 4px 24px rgba(99,102,241,0.10);
+  --shadow-lg:0 8px 40px rgba(99,102,241,0.16);
+  --radius:18px;
+  --radius-sm:12px;
+  --font:'Nunito',sans-serif;
+  --font-head:'Sora',sans-serif;
+}
+.dark-mode{
+  --bg:#0d0f1e;
+  --bg2:#111427;
+  --card:#161929;
+  --card2:rgba(22,25,41,0.85);
+  --border:rgba(99,102,241,0.18);
+  --text:#e8eaff;
+  --muted:#7b80a0;
+  --accentLight:rgba(249,115,22,0.15);
+  --greenLight:rgba(16,185,129,0.12);
+  --redLight:rgba(239,68,68,0.12);
+  --blueLight:rgba(99,102,241,0.12);
+  --shadow:0 4px 24px rgba(0,0,0,0.35);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.45);
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);font-family:Arial,sans-serif;color:var(--text);font-size:14px;min-height:100vh;transition:background .2s,color .2s;}
-.main{padding:16px 14px 76px;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:100;height:60px;}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:9px;gap:2px;}
-.bn-item.active{color:var(--accent);}
-.bn-icon{font-size:18px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;}
-.card-title{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;}
-.stat-num{font-size:22px;font-weight:800;line-height:1;}
-.stat-label{font-size:9px;color:var(--muted);margin-top:3px;font-weight:700;text-transform:uppercase;}
-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;display:block;text-transform:uppercase;}
-input,select,textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:9px 12px;font-size:13px;outline:none;box-sizing:border-box;font-family:Arial,sans-serif;}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);}
-.btn{color:#fff;border:none;border-radius:10px;padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:Arial,sans-serif;}
-.btn-orange{background:linear-gradient(135deg,#f97316,#ea580c);}
-.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);}
-.btn-blue{background:linear-gradient(135deg,#3b82f6,#2563eb);}
-.btn-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
-.btn-gray{background:var(--border);color:var(--muted);}
-.btn-sm{color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;background:#f97316;}
-.badge{border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;display:inline-block;}
-table{width:100%;border-collapse:collapse;font-size:12px;}
-th{text-align:left;padding:8px 7px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);}
-td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
-.empty{color:var(--muted);text-align:center;padding:24px;font-size:12px;}
-.bar-wrap{margin-bottom:8px;}
-.bar-label{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;}
-.bar-bg{background:var(--border);border-radius:20px;height:9px;overflow:hidden;}
-.bar-fill{height:9px;border-radius:20px;}
-.mb{margin-bottom:10px;}
-/* Login */
-.login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#fff7ed,#fff);}
-.dark-mode .login-wrap{background:linear-gradient(135deg,#0a0d14,#111827);}
-.login-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(249,115,22,.1);}
-/* ID Card */
-.id-card{background:linear-gradient(135deg,#f97316,#ea580c);border-radius:18px;padding:20px;color:#fff;position:relative;overflow:hidden;margin-bottom:14px;}
-.id-card::before{content:'🔥';position:absolute;right:-10px;bottom:-20px;font-size:100px;opacity:.1;}
-.id-photo{width:70px;height:70px;border-radius:50%;border:3px solid rgba(255,255,255,.5);object-fit:cover;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;}
-/* Star student */
-.star-banner{background:linear-gradient(135deg,#eab308,#f59e0b);border-radius:14px;padding:16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
-/* Rankings */
-.rank-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
-.rank-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
-/* Schedule */
-.schedule-item{padding:12px;border-radius:10px;margin-bottom:8px;background:var(--bg);border-left:3px solid var(--accent);}
-/* Feedback */
-.feedback-sent{background:rgba(34,197,94,.1);border:1px solid #22c55e;border-radius:10px;padding:14px;text-align:center;}
-/* Notice */
-.notice-item{padding:12px;border-radius:10px;background:var(--bg);border-left:3px solid var(--accent);margin-bottom:8px;}
-/* Toast */
-.toast{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:700;z-index:9999;display:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2);}
+body{
+  background:var(--bg);
+  font-family:var(--font);
+  color:var(--text);
+  font-size:14px;
+  min-height:100vh;
+  transition:background .3s,color .3s;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Background pattern */
+body::before{
+  content:'';
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(249,115,22,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.08) 0%, transparent 50%);
+  pointer-events:none;
+  z-index:0;
+}
+#root{position:relative;z-index:1;}
+
+.main{padding:16px 14px 80px;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--card);
+  border-top:1px solid var(--border);
+  display:flex;
+  z-index:100;
+  height:64px;
+  padding:0 8px;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 -4px 24px rgba(0,0,0,0.08);
+}
+.bn-item{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);
+  font-size:9px;gap:3px;
+  font-weight:700;letter-spacing:0.3px;
+  font-family:var(--font);
+  transition:all .2s;
+  border-radius:12px;
+  margin:6px 2px;
+}
+.bn-item.active{
+  color:var(--accent);
+  background:var(--accentLight);
+}
+.bn-icon{font-size:20px;line-height:1;}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+  transition:all .2s;
+}
+.glass-card{
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:12px;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:var(--shadow);
+}
+.card-title{
+  font-family:var(--font-head);
+  font-size:11px;
+  font-weight:800;
+  color:var(--accent);
+  margin-bottom:14px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.card-title::after{
+  content:'';flex:1;height:1px;
+  background:var(--border);
+}
+
+/* ── GRIDS ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+
+/* ── STAT CARDS ── */
+.stat-card{
+  border-radius:var(--radius-sm);
+  padding:14px 12px;
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+}
+.stat-card::before{
+  content:'';position:absolute;
+  bottom:-10px;right:-10px;
+  width:50px;height:50px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+}
+.stat-num{
+  font-family:var(--font-head);
+  font-size:20px;
+  font-weight:800;
+  line-height:1.1;
+}
+.stat-label{
+  font-size:9px;
+  color:rgba(255,255,255,0.8);
+  margin-top:3px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+/* ── FORM ELEMENTS ── */
+label{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:0.5px;}
+input,select,textarea{
+  width:100%;
+  background:var(--bg2);
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  padding:11px 14px;
+  font-size:14px;
+  outline:none;
+  box-sizing:border-box;
+  font-family:var(--font);
+  font-weight:600;
+  transition:all .2s;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accentLight);
+  background:var(--card);
+}
+
+/* ── BUTTONS ── */
+.btn{
+  color:#fff;border:none;
+  border-radius:var(--radius-sm);
+  padding:13px 16px;
+  font-size:14px;
+  font-weight:800;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+  font-family:var(--font);
+  letter-spacing:0.2px;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.btn:active{transform:scale(0.97);}
+.btn-orange{background:linear-gradient(135deg,#f97316,#ea580c);box-shadow:0 4px 16px rgba(249,115,22,0.35);}
+.btn-green{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 4px 16px rgba(16,185,129,0.35);}
+.btn-blue{background:linear-gradient(135deg,#6366f1,#4f46e5);box-shadow:0 4px 16px rgba(99,102,241,0.35);}
+.btn-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed);box-shadow:0 4px 16px rgba(139,92,246,0.35);}
+.btn-gray{background:var(--bg2);color:var(--muted);box-shadow:none;}
+.btn-sm{
+  color:#fff;border:none;
+  border-radius:8px;
+  padding:6px 12px;
+  font-size:11px;font-weight:800;
+  cursor:pointer;
+  font-family:var(--font);
+  background:linear-gradient(135deg,#f97316,#ea580c);
+}
+
+/* ── BADGES ── */
+.badge{
+  border-radius:20px;
+  padding:3px 10px;
+  font-size:11px;
+  font-weight:800;
+  display:inline-block;
+  letter-spacing:0.2px;
+}
+
+/* ── TABLE ── */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;}
+th{
+  text-align:left;padding:8px 8px;
+  font-size:10px;font-weight:800;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  border-bottom:2px solid var(--border);
+}
+td{padding:10px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+
+/* ── BARS ── */
+.bar-wrap{margin-bottom:10px;}
+.bar-label{font-size:11px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;}
+.bar-bg{background:var(--bg2);border-radius:20px;height:10px;overflow:hidden;}
+.bar-fill{height:10px;border-radius:20px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+
+/* ── LOGIN ── */
+.login-wrap{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px;
+  background:linear-gradient(160deg, #fff7ed 0%, #fef3c7 30%, #ede9fe 70%, #dbeafe 100%);
+  position:relative;overflow:hidden;
+}
+.dark-mode .login-wrap{
+  background:linear-gradient(160deg,#0d0f1e 0%,#111427 50%,#0f0a1e 100%);
+}
+.login-wrap::before{
+  content:'';position:absolute;
+  top:-100px;left:-100px;
+  width:400px;height:400px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(249,115,22,0.15) 0%,transparent 70%);
+}
+.login-wrap::after{
+  content:'';position:absolute;
+  bottom:-80px;right:-80px;
+  width:300px;height:300px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 70%);
+}
+.login-card{
+  background:rgba(255,255,255,0.85);
+  border:1px solid rgba(255,255,255,0.9);
+  border-radius:24px;
+  padding:28px;
+  width:100%;max-width:360px;
+  box-shadow:0 20px 60px rgba(249,115,22,0.15),0 4px 16px rgba(0,0,0,0.06);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  position:relative;z-index:1;
+}
+.dark-mode .login-card{
+  background:rgba(22,25,41,0.9);
+  border:1px solid rgba(99,102,241,0.2);
+}
+.login-logo-wrap{
+  text-align:center;
+  margin-bottom:28px;
+}
+.login-brand{
+  font-family:var(--font-head);
+  font-size:26px;
+  font-weight:800;
+  background:linear-gradient(135deg,#f97316,#ea580c);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-top:8px;
+}
+.login-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
+.login-title{font-family:var(--font-head);font-weight:800;font-size:18px;margin-bottom:4px;text-align:center;}
+
+/* ── HEADER HERO ── */
+.hero-card{
+  background:linear-gradient(135deg,#f97316 0%,#ea580c 60%,#dc2626 100%);
+  border-radius:var(--radius);
+  padding:18px 16px;
+  margin-bottom:12px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(249,115,22,0.35);
+}
+.hero-card::before{
+  content:'';position:absolute;
+  top:-40px;right:-40px;
+  width:150px;height:150px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.07);
+}
+.hero-card::after{
+  content:'';position:absolute;
+  bottom:-30px;left:40px;
+  width:100px;height:100px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+}
+.hero-avatar{
+  width:48px;height:48px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.2);
+  border:2.5px solid rgba(255,255,255,0.5);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-head);
+  font-size:20px;font-weight:800;
+  color:#fff;flex-shrink:0;
+  backdrop-filter:blur(4px);
+}
+
+/* ── SCHEDULE ── */
+.schedule-item{
+  padding:13px;
+  border-radius:var(--radius-sm);
+  margin-bottom:8px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.days-badge{
+  min-width:48px;
+  text-align:center;
+  border-radius:10px;
+  padding:6px 10px;
+  flex-shrink:0;
+}
+
+/* ── RANK ── */
+.rank-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 8px;
+  border-radius:10px;
+  margin-bottom:2px;
+  transition:background .15s;
+}
+.rank-num{
+  width:32px;height:32px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:13px;flex-shrink:0;
+  font-family:var(--font-head);
+}
+
+/* ── NOTICE ── */
+.notice-item{
+  padding:13px;border-radius:var(--radius-sm);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-left:3px solid var(--blue);
+  margin-bottom:8px;
+}
+
+/* ── MATERIAL ITEM ── */
+.material-item{
+  display:flex;gap:12px;align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.material-item:last-child{border-bottom:none;}
+.mat-icon{
+  width:44px;height:44px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+}
+
+/* ── ID CARD ── */
+.id-card{
+  background:linear-gradient(135deg,#f97316 0%,#ea580c 50%,#c2410c 100%);
+  border-radius:20px;padding:22px;
+  color:#fff;position:relative;overflow:hidden;
+  margin-bottom:14px;
+  box-shadow:0 12px 40px rgba(249,115,22,0.35);
+}
+.id-card::before{
+  content:'🔥';position:absolute;
+  right:-15px;bottom:-25px;
+  font-size:110px;opacity:0.08;
+}
+
+/* ── MORE GRID ── */
+.more-item{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  cursor:pointer;
+  text-align:center;
+  transition:all .2s;
+  box-shadow:var(--shadow);
+}
+.more-item:active{transform:scale(0.95);}
+.more-item-icon{font-size:30px;margin-bottom:8px;}
+.more-item-label{font-weight:800;font-size:12px;font-family:var(--font-head);}
+
+/* ── FEEDBACK ── */
+.feedback-sent{
+  background:var(--greenLight);
+  border:1px solid var(--green);
+  border-radius:var(--radius-sm);
+  padding:24px;text-align:center;
+}
+.star-btn{
+  cursor:pointer;
+  font-size:28px;
+  transition:transform .1s;
+  line-height:1;
+}
+.star-btn:active{transform:scale(1.3);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;
+  bottom:76px;
+  left:50%;transform:translateX(-50%);
+  background:var(--green);color:#fff;
+  padding:10px 20px;border-radius:24px;
+  font-size:13px;font-weight:800;
+  z-index:9999;display:none;
+  white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,0.2);
+  font-family:var(--font);
+  animation:toastIn .2s ease;
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 .toast.err{background:var(--red);}
-/* Top bar */
-.top-btns{position:fixed;top:10px;right:10px;z-index:200;display:flex;gap:6px;}
-.top-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;color:var(--text);}
-/* PDF print styles */
+
+/* ── TOP CONTROLS ── */
+.top-btns{position:fixed;top:12px;right:12px;z-index:200;display:flex;gap:6px;}
+.top-btn{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:7px 11px;
+  cursor:pointer;
+  font-size:14px;
+  color:var(--text);
+  font-family:var(--font);
+  font-weight:700;
+  box-shadow:var(--shadow);
+  transition:all .15s;
+}
+.top-btn:active{transform:scale(0.95);}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  display:flex;justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+.page-title{
+  font-family:var(--font-head);
+  font-size:18px;
+  font-weight:800;
+  color:var(--accent);
+}
+
+/* ── MINI CHART BARS ── */
+.chart-bar-wrap{display:flex;gap:6px;align-items:flex-end;padding:4px 0;height:80px;}
+.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;}
+.chart-bar-pct{font-size:9px;color:var(--muted);font-weight:800;}
+.chart-bar-bg{width:100%;background:var(--bg2);border-radius:6px;flex:1;display:flex;align-items:flex-end;overflow:hidden;}
+.chart-bar-fill{width:100%;border-radius:6px;transition:height .5s ease;}
+.chart-bar-name{font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:38px;font-weight:700;}
+
+/* ── ATTENDANCE WARNING ── */
+.att-warning{
+  background:var(--redLight);
+  border:1px solid var(--red);
+  border-radius:var(--radius-sm);
+  padding:14px;
+  margin-bottom:12px;
+  display:flex;gap:12px;align-items:center;
+}
+
+/* ── STAR BANNER ── */
+.star-banner{
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  border-radius:var(--radius-sm);
+  padding:16px;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 6px 20px rgba(245,158,11,0.3);
+}
+
+/* ── SECTION DIVIDER ── */
+.mb{margin-bottom:12px;}
+.empty{color:var(--muted);text-align:center;padding:32px 24px;font-size:13px;font-weight:600;}
+
+/* ── PRINT ── */
 @media print{
   .bottom-nav,.top-btns,.btn,.no-print{display:none!important;}
   body{background:#fff!important;color:#000!important;}
+  body::before{display:none;}
   .main{padding:0!important;}
   .card{break-inside:avoid;border:1px solid #ddd!important;box-shadow:none!important;}
 }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.anim{animation:fadeUp .3s ease forwards;}
+.anim-d1{animation-delay:.05s;opacity:0;}
+.anim-d2{animation-delay:.10s;opacity:0;}
+.anim-d3{animation-delay:.15s;opacity:0;}
+.anim-d4{animation-delay:.20s;opacity:0;}
+
+/* ── PILL TAGS ── */
+.pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:800;
+  letter-spacing:0.2px;
+}
+
+/* ── UPI BUTTON ── */
+.upi-btn{
+  background:linear-gradient(135deg,#5f259f,#7c3aed);
+  color:#fff;border:none;
+  border-radius:var(--radius-sm);
+  padding:14px;font-size:14px;font-weight:800;
+  cursor:pointer;width:100%;margin-bottom:12px;
+  font-family:var(--font);
+  box-shadow:0 6px 20px rgba(124,58,237,0.35);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .2s;
+}
+.upi-btn:active{transform:scale(0.97);}
+
+/* ── LOADING ── */
+.loading-screen{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;
+}
+.loading-dots{display:flex;gap:6px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:bounce .8s infinite;}
+.dot:nth-child(2){animation-delay:.15s;}
+.dot:nth-child(3){animation-delay:.30s;}
+@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.5;}40%{transform:scale(1);opacity:1;}}
 </style>
 </head>
 <body>
@@ -84,8 +595,9 @@ td{padding:9px 7px;border-bottom:1px solid var(--border);vertical-align:middle;}
 
 <script>
 var API_URL='https://script.google.com/macros/s/AKfycbw_n1ucp7EZWpEZTgG50qcp7s_BucHGiDMigwGKbPO2Tzut3mQAPlkAc8YN0WIUxzpD/exec';
+
 var logoSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" width="52" height="40" style="flex-shrink:0"><defs><linearGradient id="ll1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#fde68a"/><stop offset="50%" style="stop-color:#f59e0b"/><stop offset="100%" style="stop-color:#b45309"/></linearGradient><linearGradient id="ll2" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#9a3412"/><stop offset="40%" style="stop-color:#ea580c"/><stop offset="75%" style="stop-color:#f97316"/><stop offset="100%" style="stop-color:#fbbf24"/></linearGradient><linearGradient id="ll3" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#f97316"/><stop offset="60%" style="stop-color:#fde68a"/><stop offset="100%" style="stop-color:#fff"/></linearGradient></defs><polygon points="340,240 298,278 312,208" fill="url(#ll1)"/><polygon points="340,240 272,270 290,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 248,258 270,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 226,244 252,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 382,278 368,208" fill="url(#ll1)"/><polygon points="340,240 408,270 390,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 432,258 410,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 454,244 428,170" fill="#b45309" opacity="0.55"/><path d="M340,240 C329,220 323,198 328,174 C332,188 335,200 338,192 C340,178 342,158 336,140 C344,154 349,172 346,188 C350,174 354,158 352,143 C358,158 356,178 350,192 C355,178 360,162 358,148 C364,164 360,186 352,200 C357,188 362,174 360,160 C365,178 360,200 351,212 C347,220 343,230 340,240Z" fill="url(#ll2)"/><path d="M340,234 C333,216 330,197 334,178 C337,190 340,200 340,194 C342,182 343,165 339,150 C345,162 349,178 346,192 C349,180 352,166 351,154 C355,168 352,186 347,198 C351,186 355,172 353,160 C357,175 353,196 347,208 C344,216 342,225 340,234Z" fill="url(#ll3)" opacity="0.9"/></svg>';
-var logoSmSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" width="32" height="26" style="flex-shrink:0"><defs><linearGradient id="ls1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#fde68a"/><stop offset="50%" style="stop-color:#f59e0b"/><stop offset="100%" style="stop-color:#b45309"/></linearGradient><linearGradient id="ls2" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#9a3412"/><stop offset="40%" style="stop-color:#ea580c"/><stop offset="75%" style="stop-color:#f97316"/><stop offset="100%" style="stop-color:#fbbf24"/></linearGradient></defs><polygon points="340,240 298,278 312,208" fill="url(#ls1)"/><polygon points="340,240 272,270 290,195" fill="#fbbf24" opacity="0.85"/><polygon points="340,240 248,258 270,182" fill="#f59e0b" opacity="0.7"/><polygon points="340,240 382,278 368,208" fill="url(#ls1)"/><polygon points="340,240 408,270 390,195" fill="#fbbf24" opacity="0.85"/><polygon points="340,240 432,258 410,182" fill="#f59e0b" opacity="0.7"/><path d="M340,240 C329,220 323,198 328,174 C332,188 335,200 338,192 C340,178 342,158 336,140 C344,154 349,172 346,188 C350,174 354,158 352,143 C358,158 356,178 350,192 C355,178 360,162 358,148 C364,164 360,186 352,200 C357,188 362,174 360,160 C365,178 360,200 351,212 C347,220 343,230 340,240Z" fill="url(#ls2)"/></svg>';
+
 var logoBigSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" width="90" height="68"><defs><linearGradient id="lb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#fde68a"/><stop offset="50%" style="stop-color:#f59e0b"/><stop offset="100%" style="stop-color:#b45309"/></linearGradient><linearGradient id="lb2" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#9a3412"/><stop offset="40%" style="stop-color:#ea580c"/><stop offset="75%" style="stop-color:#f97316"/><stop offset="100%" style="stop-color:#fbbf24"/></linearGradient><linearGradient id="lb3" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#f97316"/><stop offset="60%" style="stop-color:#fde68a"/><stop offset="100%" style="stop-color:#fff"/></linearGradient></defs><polygon points="340,240 298,278 312,208" fill="url(#lb1)"/><polygon points="340,240 272,270 290,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 248,258 270,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 226,244 252,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 208,232 236,162" fill="#92400e" opacity="0.35"/><polygon points="340,240 382,278 368,208" fill="url(#lb1)"/><polygon points="340,240 408,270 390,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 432,258 410,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 454,244 428,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 472,232 444,162" fill="#92400e" opacity="0.35"/><path d="M340,240 C329,220 323,198 328,174 C332,188 335,200 338,192 C340,178 342,158 336,140 C344,154 349,172 346,188 C350,174 354,158 352,143 C358,158 356,178 350,192 C355,178 360,162 358,148 C364,164 360,186 352,200 C357,188 362,174 360,160 C365,178 360,200 351,212 C347,220 343,230 340,240Z" fill="url(#lb2)"/><path d="M340,234 C333,216 330,197 334,178 C337,190 340,200 340,194 C342,182 343,165 339,150 C345,162 349,178 346,192 C349,180 352,166 351,154 C355,168 352,186 347,198 C351,186 355,172 353,160 C357,175 353,196 347,208 C344,216 342,225 340,234Z" fill="url(#lb3)" opacity="0.9"/></svg>';
 
 var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[],schedule:[],starStudent:null,feedback:[],materials:[]};
@@ -93,35 +605,56 @@ var currentStudent=null;
 var pg='home';
 var loaded=false;
 
-function toast(msg,err){var t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(err?' err':'');t.style.display='block';setTimeout(function(){t.style.display='none';},3000);}
+function toast(msg,err){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(err?' err':'');
+  t.style.display='block';
+  setTimeout(function(){t.style.display='none';},3000);
+}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function bdg(t,c){return '<span class="badge" style="background:'+c+'22;color:'+c+'">'+t+'</span>';}
-function sc(n,l,c){return '<div class="stat-card" style="border-top:3px solid '+c+'"><div class="stat-num" style="color:'+c+'">'+n+'</div><div class="stat-label">'+l+'</div></div>';}
-function bar(label,val,max,color){var pct=max>0?Math.round((val/max)*100):0;return '<div class="bar-wrap"><div class="bar-label"><span>'+label+'</span><span style="color:'+color+';font-weight:700">'+val+'/'+max+' ('+pct+'%)</span></div><div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';}
+
+function bdg(t,c){
+  return '<span class="badge" style="background:'+c+'20;color:'+c+';border:1px solid '+c+'30">'+t+'</span>';
+}
+
+function sc(n,l,bg,color){
+  color=color||'#fff';
+  return '<div class="stat-card" style="background:'+bg+'"><div class="stat-num" style="color:'+color+'">'+n+'</div><div class="stat-label">'+l+'</div></div>';
+}
+
+function bar(label,val,max,color){
+  var pct=max>0?Math.round((val/max)*100):0;
+  return '<div class="bar-wrap"><div class="bar-label"><span style="font-weight:700">'+label+'</span>'+
+    '<span style="color:'+color+';font-weight:800">'+val+'/'+max+' ('+pct+'%)</span></div>'+
+    '<div class="bar-bg"><div class="bar-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+color+','+color+'cc)"></div></div></div>';
+}
+
 function fmtDate(str){if(!str)return '';var d=new Date(str);return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}
+
 function getTotalPaid(sid){return(DB.fees.payments[sid]||[]).reduce(function(s,p){return s+(+p.amount||0);},0);}
+
 function getYearlyFee(cls,subject){
   var cf=DB.fees.classFee||{};
-  // Try exact key: "Class 10 Semi-English - Maths"
-  if(subject){
-    var key=cls+' - '+subject;
-    if(cf[key]!==undefined&&cf[key]>0)return cf[key];
-  }
-  // Try without subject (old format)
+  if(subject){var key=cls+' - '+subject;if(cf[key]!==undefined&&cf[key]>0)return cf[key];}
   if(cf[cls]!==undefined&&cf[cls]>0)return cf[cls];
-  // Try matching by class prefix
-  if(subject){
-    var keys=Object.keys(cf);
-    for(var i=0;i<keys.length;i++){
-      if(keys[i].indexOf(cls)>=0&&keys[i].indexOf(subject)>=0&&cf[keys[i]]>0)return cf[keys[i]];
-    }
-  }
+  if(subject){var keys=Object.keys(cf);for(var i=0;i<keys.length;i++){if(keys[i].indexOf(cls)>=0&&keys[i].indexOf(subject)>=0&&cf[keys[i]]>0)return cf[keys[i]];}}
   return 0;
 }
-function toggleDark(){var b=document.body.classList.toggle('dark-mode');localStorage.setItem('pcDark',b?'1':'0');document.getElementById('theme-btn').textContent=b?'☀️':'🌙';}
-function applyDark(){if(localStorage.getItem('pcDark')==='1'){document.body.classList.add('dark-mode');setTimeout(function(){var b=document.getElementById('theme-btn');if(b)b.textContent='☀️';},100);}}
 
-// ── Load DB ───────────────────────────────────────────────────────
+function toggleDark(){
+  var b=document.body.classList.toggle('dark-mode');
+  localStorage.setItem('pcDark',b?'1':'0');
+  document.getElementById('theme-btn').textContent=b?'☀️':'🌙';
+}
+function applyDark(){
+  if(localStorage.getItem('pcDark')==='1'){
+    document.body.classList.add('dark-mode');
+    setTimeout(function(){var b=document.getElementById('theme-btn');if(b)b.textContent='☀️';},100);
+  }
+}
+
+// ── Load DB ──────────────────────────────────────────────────────
 function loadDB(cb){
   var cbName='sCb'+Date.now(),script=document.createElement('script'),done=false;
   window[cbName]=function(d){
@@ -147,45 +680,23 @@ function loadDB(cb){
   document.head.appendChild(script);
 }
 
-// ── Send Feedback ─────────────────────────────────────────────────
-function sendFeedback(){
-  var msg=document.getElementById('fb-msg');
-  var rating=document.querySelector('input[name="rating"]:checked');
-  if(!msg||!msg.value.trim()){toast('Please write your feedback!',true);return;}
-  var fbData={
-    action:'feedback',
-    studentId:currentStudent.id,
-    studentName:currentStudent.name,
-    cls:currentStudent.cls,
-    rating:rating?rating.value:'5',
-    message:msg.value.trim(),
-    date:new Date().toISOString().slice(0,10)
-  };
-  var cbName='fbCb'+Date.now(),script=document.createElement('script'),done=false;
-  window[cbName]=function(d){done=true;delete window[cbName];try{document.head.removeChild(script);}catch(e){}
-    toast('Feedback sent! Thank you 😊',false);render();
-  };
-  script.src=API_URL+'?action=feedback&callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(fbData))+'&t='+Date.now();
-  script.onerror=function(){if(!done){delete window[cbName];toast('Feedback sent! ✅',false);render();}};
-  setTimeout(function(){if(!done){delete window[cbName];try{document.head.removeChild(script);}catch(e){}toast('Feedback sent! ✅',false);render();}},10000);
-  document.head.appendChild(script);
-}
-
-// ── Login ─────────────────────────────────────────────────────────
+// ── Login ────────────────────────────────────────────────────────
 function renderLogin(){
   document.getElementById('root').innerHTML=
     '<div class="login-wrap">'+
-    logoBigSVG+
-    '<div style="font-size:24px;font-weight:800;color:var(--accent);margin-bottom:4px">Phoenix Classes</div>'+
-    '<div style="font-size:12px;color:var(--muted);margin-bottom:28px">Student Portal · Maharashtra Board</div>'+
+    '<div class="login-logo-wrap">'+logoBigSVG+
+    '<div class="login-brand">Phoenix Classes</div>'+
+    '<div class="login-sub">Student Portal · Maharashtra Board</div></div>'+
     '<div class="login-card">'+
-    '<div style="font-weight:800;font-size:16px;margin-bottom:4px;text-align:center">Welcome! 👋</div>'+
-    '<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px">Login with your registered phone number</div>'+
-    '<div class="mb"><label>Phone Number</label><input type="tel" id="login-phone" placeholder="Enter 10-digit number" maxlength="10"/></div>'+
-    '<button class="btn btn-orange" onclick="doLogin()">Login →</button>'+
-    '<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px">Use the number registered with Phoenix Classes</div>'+
+    '<div class="login-title">Welcome Back! 👋</div>'+
+    '<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:22px;font-weight:600">Login with your registered phone number</div>'+
+    '<div class="mb"><label>📱 Phone Number</label>'+
+    '<input type="tel" id="login-phone" placeholder="Enter 10-digit number" maxlength="10" style="font-size:16px;letter-spacing:2px"/></div>'+
+    '<button class="btn btn-orange" onclick="doLogin()" style="font-size:15px;padding:14px">Login  →</button>'+
+    '<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;font-weight:600">Use the number registered with Phoenix Classes<br>📍 Bahe, Walwa, Dist-Sangli</div>'+
     '</div></div>';
   applyDark();
+  setTimeout(function(){var i=document.getElementById('login-phone');if(i)i.focus();},300);
 }
 
 function doLogin(){
@@ -204,7 +715,22 @@ function doLogin(){
 }
 function doLogout(){currentStudent=null;localStorage.removeItem('pcStudentId');renderLogin();}
 
-// ── Pages ─────────────────────────────────────────────────────────
+// ── NAV ──────────────────────────────────────────────────────────
+function makeNav(activePg){
+  var navItems=[
+    {id:'home',icon:'🏠',label:'Home'},
+    {id:'schedule',icon:'📅',label:'Schedule'},
+    {id:'rankings',icon:'🏆',label:'Ranks'},
+    {id:'idcard',icon:'📱',label:'ID Card'},
+    {id:'more',icon:'☰',label:'More'}
+  ];
+  return '<div class="bottom-nav">'+navItems.map(function(n){
+    return '<div class="bn-item '+(activePg===n.id?'active':'')+'" onclick="go(\''+n.id+'\')">'+
+      '<div class="bn-icon">'+n.icon+'</div><span>'+n.label+'</span></div>';
+  }).join('')+'</div>';
+}
+
+// ── Pages ────────────────────────────────────────────────────────
 function pgHome(){
   var s=currentStudent;
   var attD=0,attP=0;
@@ -216,102 +742,116 @@ function pgHome(){
   var avgPct=totM>0?Math.round((obtM/totM)*100):0;
   var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls,s.subject),bal=fee-paid;
   var ovG=avgPct>=75?'A':avgPct>=60?'B':avgPct>=40?'C':tests.length>0?'D':'—';
-  var gc=ovG==='A'?'#22c55e':ovG==='B'?'#3b82f6':ovG==='C'?'#eab308':'#ef4444';
+  var gc=ovG==='A'?'#10b981':ovG==='B'?'#6366f1':ovG==='C'?'#f59e0b':'#ef4444';
 
-  // Badges
   var badges=[];
-  if(fee>0&&paid>=fee)badges.push({icon:'💰',label:'Fee Clear',color:'#22c55e'});
-  if(attPct===100&&attD>0)badges.push({icon:'📅',label:'Perfect Attendance',color:'#3b82f6'});
-  if(attPct>=90&&attD>0)badges.push({icon:'🌟',label:'Star Attendance',color:'#6366f1'});
+  if(fee>0&&paid>=fee)badges.push({icon:'💰',label:'Fee Clear',color:'#10b981'});
+  if(attPct===100&&attD>0)badges.push({icon:'📅',label:'Perfect Attendance',color:'#6366f1'});
+  if(attPct>=90&&attD>0)badges.push({icon:'🌟',label:'Star Attendance',color:'#8b5cf6'});
   if(avgPct>=75)badges.push({icon:'🥇',label:'Top Scorer',color:'#f59e0b'});
-  if(DB.starStudent&&String(DB.starStudent.id)===String(s.id))badges.push({icon:'⭐',label:'Star Student',color:'#eab308'});
-  var badgesHtml=badges.length?'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:10px">'+
-    badges.map(function(b){return '<span style="background:'+b.color+'22;color:'+b.color+';border:1px solid '+b.color+'44;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700">'+b.icon+' '+b.label+'</span>';}).join('')+'</div>':'';
+  if(DB.starStudent&&String(DB.starStudent.id)===String(s.id))badges.push({icon:'⭐',label:'Star Student',color:'#f59e0b'});
 
-  // Attendance warning
+  var badgesHtml=badges.length?'<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:12px">'+
+    badges.map(function(b){return '<span style="background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:800">'+b.icon+' '+b.label+'</span>';}).join('')+'</div>':'';
+
   var attWarning='';
-  if(attPct!==null&&attPct<75&&attD>0){
-    attWarning='<div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;border-radius:12px;padding:12px;margin-bottom:14px;display:flex;gap:10px;align-items:center">'+
-      '<div style="font-size:24px">⚠️</div>'+
-      '<div><div style="font-weight:800;color:#ef4444;font-size:13px">Attendance Below 75%</div>'+
-      '<div style="font-size:11px;color:var(--muted);margin-top:2px">Your attendance is '+attPct+'%. Please attend classes regularly.</div></div></div>';
+  if(attPct<75&&attD>0){
+    attWarning='<div class="att-warning anim"><div style="font-size:28px">⚠️</div>'+
+      '<div><div style="font-weight:800;color:var(--red);font-size:13px">Attendance Below 75%</div>'+
+      '<div style="font-size:11px;color:var(--muted);margin-top:2px">Your attendance is <b>'+attPct+'%</b>. Please attend classes regularly.</div></div></div>';
   }
 
   // Mini chart
   var chartBars=tests.slice(-5).map(function(t){
     var v=Number((md[t.id]||{})[s.id]||0);
     var pct=v?Math.round((v/t.maxMarks)*100):0;
-    var col=pct>=75?'#22c55e':pct>=60?'#3b82f6':pct>=40?'#eab308':'#ef4444';
-    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">'+
-      '<div style="font-size:9px;color:var(--muted);font-weight:700">'+pct+'%</div>'+
-      '<div style="width:100%;background:var(--border);border-radius:4px;height:55px;display:flex;align-items:flex-end">'+
-      '<div style="width:100%;height:'+Math.max(pct,3)+'%;background:'+col+';border-radius:4px"></div></div>'+
-      '<div style="font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:38px">'+esc(t.testName.split(' ')[0])+'</div></div>';
+    var col=pct>=75?'#10b981':pct>=60?'#6366f1':pct>=40?'#f59e0b':'#ef4444';
+    return '<div class="chart-bar-col">'+
+      '<div class="chart-bar-pct">'+pct+'%</div>'+
+      '<div class="chart-bar-bg"><div class="chart-bar-fill" style="height:'+Math.max(pct,4)+'%;background:linear-gradient(180deg,'+col+','+col+'99)"></div></div>'+
+      '<div class="chart-bar-name">'+esc(t.testName.split(' ')[0])+'</div></div>';
   }).join('');
-  var chartHtml=tests.length?'<div class="card"><div class="card-title">📊 Performance Graph</div><div style="display:flex;gap:6px;align-items:flex-end;padding:4px 0">'+chartBars+'</div></div>':'';
+  var chartHtml=tests.length?'<div class="card anim anim-d3"><div class="card-title">📊 Performance Graph</div>'+
+    '<div class="chart-bar-wrap">'+chartBars+'</div></div>':'';
 
-  // Star student banner
   var starBanner='';
   if(DB.starStudent&&String(DB.starStudent.id)===String(s.id)){
-    starBanner='<div style="background:linear-gradient(135deg,#eab308,#f59e0b);border-radius:14px;padding:16px;margin-bottom:14px;display:flex;gap:14px;align-items:center">'+
-      '<div style="font-size:40px">⭐</div>'+
-      '<div><div style="font-size:16px;font-weight:800;color:#fff">Star Student!</div>'+
+    starBanner='<div class="star-banner anim">'+
+      '<div style="font-size:42px">⭐</div>'+
+      '<div><div style="font-size:17px;font-weight:800;color:#fff;font-family:var(--font-head)">Star Student!</div>'+
       '<div style="font-size:12px;color:#fef3c7;margin-top:2px">'+esc((DB.starStudent&&DB.starStudent.reason)||'Outstanding performance!')+'</div></div></div>';
   }
-  // Upcoming tests
+
   var today=new Date().toISOString().slice(0,10);
   var upcoming=(DB.schedule||[]).filter(function(sc){return sc.cls===s.cls&&sc.date>=today;}).slice(0,3);
   var scheduleHtml=upcoming.length===0?'':
-    '<div class="card"><div class="card-title">📅 Upcoming Tests</div>'+
+    '<div class="card anim anim-d4"><div class="card-title">📅 Upcoming Tests</div>'+
     upcoming.map(function(sc){
       var daysLeft=Math.ceil((new Date(sc.date)-new Date())/(1000*60*60*24));
+      var urgBg=daysLeft<=2?'linear-gradient(135deg,#ef4444,#dc2626)':daysLeft<=7?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#10b981,#059669)';
       return '<div class="schedule-item">'+
-        '<div style="display:flex;justify-content:space-between;align-items:center">'+
-        '<div><div style="font-weight:800;font-size:13px">'+esc(sc.title)+'</div>'+
-        '<div style="font-size:11px;color:var(--muted)">'+sc.subject+' · '+fmtDate(sc.date)+'</div></div>'+
-        '<div style="text-align:center;background:var(--accent);color:#fff;border-radius:8px;padding:4px 10px">'+
-        '<div style="font-size:16px;font-weight:800">'+daysLeft+'</div>'+
-        '<div style="font-size:9px">days</div></div></div></div>';
+        '<div style="flex:1"><div style="font-weight:800;font-size:13px;font-family:var(--font-head)">'+esc(sc.title)+'</div>'+
+        '<div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600">'+sc.subject+' · '+fmtDate(sc.date)+'</div></div>'+
+        '<div class="days-badge" style="background:'+urgBg+'">'+
+        '<div style="font-size:18px;font-weight:900;color:#fff;font-family:var(--font-head)">'+daysLeft+'</div>'+
+        '<div style="font-size:9px;color:rgba(255,255,255,0.8);font-weight:800">days</div></div></div>';
     }).join('')+'</div>';
-  return starBanner+attWarning+
-    '<div class="card" style="background:linear-gradient(135deg,var(--accent),var(--accent2));border:none">'+
-    '<div style="display:flex;gap:12px;align-items:center">'+logoSVG+'<div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0">'+esc(s.name[0])+'</div>'+
-    '<div><div style="font-size:17px;font-weight:800;color:#fff">'+esc(s.name)+'</div>'+
-    '<div style="font-size:11px;color:#fed7aa">'+s.cls+' · '+s.subject+' · Phoenix Classes</div></div></div>'+
-    badgesHtml+'</div>'+
-    '<div class="grid3">'+sc(attPct+'%','Attendance',attPct<75?'#ef4444':'#22c55e')+sc(ovG,'Grade',gc)+sc(bal<=0?'✓ Clear':'₹'+bal,bal<=0?'Fee OK':'Due',bal<=0?'#22c55e':'#ef4444')+'</div>'+
-    '<div class="card"><div class="card-title">📈 Overview</div>'+
-    bar('Attendance',attP,attD||1,attPct<75?'#ef4444':'#22c55e')+
-    bar('Academic Score',obtM,totM||1,gc)+'</div>'+
-    chartHtml;
+
+  // Hero card
+  var heroHtml='<div class="hero-card anim">'+
+    '<div style="display:flex;gap:12px;align-items:center;position:relative;z-index:1">'+logoSVG+
+    '<div class="hero-avatar">'+esc(s.name[0])+'</div>'+
+    '<div><div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:#fff">'+esc(s.name)+'</div>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600">'+s.cls+' · '+s.subject+' · Phoenix Classes</div></div></div>'+
+    badgesHtml+'</div>';
+
+  // Stat row
+  var attBg=attPct<75?'linear-gradient(135deg,#ef4444,#dc2626)':'linear-gradient(135deg,#10b981,#059669)';
+  var grBg=ovG==='A'?'linear-gradient(135deg,#10b981,#059669)':ovG==='B'?'linear-gradient(135deg,#6366f1,#4f46e5)':ovG==='C'?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#ef4444,#dc2626)';
+  var feeBg=bal<=0?'linear-gradient(135deg,#10b981,#059669)':'linear-gradient(135deg,#ef4444,#dc2626)';
+  var statRow='<div class="grid3 anim anim-d1">'+
+    sc(attPct+'%','Attendance',attBg)+
+    sc(ovG,'Grade',grBg)+
+    sc(bal<=0?'✓':'₹'+bal,bal<=0?'Fee OK':'Due',feeBg)+'</div>';
+
+  var overviewCard='<div class="card anim anim-d2"><div class="card-title">📈 Overview</div>'+
+    bar('Attendance',attP,attD||1,attPct<75?'#ef4444':'#10b981')+
+    bar('Academic Score',obtM,totM||1,gc)+'</div>';
+
+  return starBanner+attWarning+heroHtml+statRow+overviewCard+chartHtml+scheduleHtml;
 }
 
-function pgIDCard(){
+function pgSchedule(){
   var s=currentStudent;
-  var photo=s.photo?'<img src="'+s.photo+'" style="width:70px;height:70px;border-radius:50%;border:3px solid rgba(255,255,255,.5);object-fit:cover"/>':
-    '<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff">'+esc(s.name[0])+'</div>';
-  return '<div class="id-card" id="id-card-el">'+
-    '<div style="font-size:11px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:1px;margin-bottom:12px">PHOENIX CLASSES · STUDENT ID</div>'+
-    '<div style="display:flex;gap:14px;align-items:center">'+
-    photo+
-    '<div><div style="font-size:18px;font-weight:800;color:#fff">'+esc(s.name)+'</div>'+
-    '<div style="font-size:12px;color:#fed7aa;margin-top:3px">'+s.cls+' · '+s.subject+'</div>'+
-    '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:3px">ID: PC'+s.id.toString().slice(-6)+'</div></div></div>'+
-    '<div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.2);display:flex;justify-content:space-between">'+
-    '<div style="font-size:10px;color:rgba(255,255,255,.7)">Maharashtra Board<br>Academic Year 2025-26</div>'+
-    '<div style="font-size:24px">🔥</div></div></div>'+
-    '<button class="btn btn-orange no-print" onclick="printID()">🖨️ Print / Save ID Card</button>'+
-    '<div class="card"><div class="card-title">ℹ️ Student Info</div>'+
-    '<table><tbody>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Name</td><td style="font-weight:700">'+esc(s.name)+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Class</td><td style="font-weight:700">'+s.cls+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Subject</td><td style="font-weight:700">'+s.subject+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Phone</td><td style="font-weight:700">'+esc(s.phone||'—')+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Student ID</td><td style="font-weight:700">PC'+s.id.toString().slice(-6)+'</td></tr>'+
-    '</tbody></table></div>';
-}
+  var today=new Date().toISOString().slice(0,10);
+  var mySchedule=(DB.schedule||[]).filter(function(sc){return sc.cls===s.cls||sc.cls==='All';});
+  var upcoming=mySchedule.filter(function(sc){return sc.date>=today;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var past=mySchedule.filter(function(sc){return sc.date<today;}).sort(function(a,b){return b.date.localeCompare(a.date);});
 
-function printID(){window.print();}
+  var upHtml=upcoming.length===0?'<div class="empty">📭 No upcoming tests scheduled.</div>':
+    upcoming.map(function(sc){
+      var daysLeft=Math.ceil((new Date(sc.date)-new Date())/(1000*60*60*24));
+      var urgColor=daysLeft<=2?'#ef4444':daysLeft<=7?'#f59e0b':'#10b981';
+      return '<div class="schedule-item">'+
+        '<div style="flex:1"><div style="font-weight:800;font-size:13px;font-family:var(--font-head)">'+esc(sc.title)+'</div>'+
+        '<div style="font-size:11px;color:var(--muted);margin-top:3px;font-weight:600">'+esc(sc.subject)+' · '+fmtDate(sc.date)+'</div>'+
+        (sc.notes?'<div style="font-size:11px;color:var(--muted);margin-top:3px">📝 '+esc(sc.notes)+'</div>':'')+'</div>'+
+        '<div class="days-badge" style="background:'+urgColor+'20;border:1px solid '+urgColor+'40">'+
+        '<div style="font-size:18px;font-weight:900;color:'+urgColor+';font-family:var(--font-head)">'+daysLeft+'</div>'+
+        '<div style="font-size:9px;color:'+urgColor+';font-weight:800">days</div></div></div>';
+    }).join('');
+
+  var pastHtml=past.length===0?'':
+    past.slice(0,5).map(function(sc){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'+
+        '<div><div style="font-weight:700;font-size:12px">'+esc(sc.title)+'</div>'+
+        '<div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">'+esc(sc.subject)+' · '+fmtDate(sc.date)+'</div></div>'+
+        bdg('Done','#6b7280')+'</div>';
+    }).join('');
+
+  return '<div class="card anim"><div class="card-title">📅 Upcoming ('+upcoming.length+')</div>'+upHtml+'</div>'+
+    (past.length>0?'<div class="card anim anim-d1"><div class="card-title">✅ Past Tests</div>'+pastHtml+'</div>':'');
+}
 
 function pgRankings(){
   var s=currentStudent;
@@ -324,52 +864,171 @@ function pgRankings(){
     return{id:x.id,name:x.name,subject:x.subject,pct:tot>0?Math.round((obt/tot)*100):0,obt:obt,tot:tot};
   }).sort(function(a,b){return b.pct-a.pct;});
   var myRank=1;for(var i=0;i<ranked.length;i++){if(String(ranked[i].id)===String(s.id)){myRank=i+1;break;}}
-  var medalColors=['#f59e0b','#94a3b8','#cd7f32'];
+  var medalBg=['linear-gradient(135deg,#f59e0b,#d97706)','linear-gradient(135deg,#94a3b8,#64748b)','linear-gradient(135deg,#cd7f32,#a0522d)'];
   var rows=ranked.map(function(r,i){
     var isMe=String(r.id)===String(s.id);
     var medal=i<3?['🥇','🥈','🥉'][i]:(i+1)+'';
-    var bgColor=isMe?'rgba(249,115,22,.08)':'transparent';
-    return '<div class="rank-item" style="background:'+bgColor+';border-radius:8px;padding:8px 6px">'+
-      '<div class="rank-num" style="background:'+(i<3?medalColors[i]:'var(--border)')+';color:'+(i<3?'#fff':'var(--muted)')+'">'+medal+'</div>'+
-      '<div style="flex:1"><div style="font-weight:'+(isMe?'800':'600')+';font-size:13px;color:'+(isMe?'var(--accent)':'var(--text)')+'">'+esc(r.name)+(isMe?' (You)':'')+'</div>'+
-      '<div style="font-size:10px;color:var(--muted)">'+r.subject+'</div></div>'+
-      '<div style="text-align:right"><div style="font-weight:800;color:'+(r.pct>=75?'#22c55e':r.pct>=60?'#3b82f6':r.pct>=40?'#eab308':'#ef4444')+'">'+r.pct+'%</div>'+
-      '<div style="font-size:10px;color:var(--muted)">'+r.obt+'/'+r.tot+'</div></div></div>';
+    var pctColor=r.pct>=75?'#10b981':r.pct>=60?'#6366f1':r.pct>=40?'#f59e0b':'#ef4444';
+    return '<div class="rank-item" style="background:'+(isMe?'var(--accentLight)':'transparent')+'">'+
+      '<div class="rank-num" style="background:'+(i<3?medalBg[i]:'var(--bg2)')+';color:'+(i<3?'#fff':'var(--muted)')+'">'+medal+'</div>'+
+      '<div style="flex:1"><div style="font-weight:'+(isMe?'900':'700')+';font-size:13px;color:'+(isMe?'var(--accent)':'var(--text)')+';font-family:var(--font-head)">'+esc(r.name)+(isMe?' 👈':'')+'</div>'+
+      '<div style="font-size:10px;color:var(--muted);font-weight:600">'+r.subject+'</div></div>'+
+      '<div style="text-align:right"><div style="font-weight:900;font-size:15px;color:'+pctColor+';font-family:var(--font-head)">'+r.pct+'%</div>'+
+      '<div style="font-size:10px;color:var(--muted);font-weight:600">'+r.obt+'/'+r.tot+'</div></div></div>';
   }).join('');
-  return '<div class="grid2">'+
-    sc('#'+myRank,'Your Rank','#f97316')+
-    sc(ranked.length,'Total Students','#3b82f6')+'</div>'+
-    '<div class="card"><div class="card-title">🏆 '+s.cls+' Rankings</div>'+rows+'</div>';
+  return '<div class="grid2 anim">'+
+    sc('#'+myRank,'Your Rank','linear-gradient(135deg,#f97316,#ea580c)')+
+    sc(ranked.length,'Total Students','linear-gradient(135deg,#6366f1,#4f46e5)')+'</div>'+
+    '<div class="card anim anim-d1"><div class="card-title">🏆 '+s.cls+' Rankings</div>'+rows+'</div>';
 }
 
-function pgSchedule(){
+function pgIDCard(){
   var s=currentStudent;
-  var today=new Date().toISOString().slice(0,10);
-  var mySchedule=(DB.schedule||[]).filter(function(sc){return sc.cls===s.cls||sc.cls==='All';});
-  var upcoming=mySchedule.filter(function(sc){return sc.date>=today;}).sort(function(a,b){return a.date.localeCompare(b.date);});
-  var past=mySchedule.filter(function(sc){return sc.date<today;}).sort(function(a,b){return b.date.localeCompare(a.date);});
-  var upHtml=upcoming.length===0?'<div class="empty">No upcoming tests scheduled.</div>':
-    upcoming.map(function(sc){
-      var daysLeft=Math.ceil((new Date(sc.date)-new Date())/(1000*60*60*24));
-      var urgency=daysLeft<=2?'#ef4444':daysLeft<=7?'#eab308':'#22c55e';
-      return '<div class="schedule-item" style="border-left-color:'+urgency+'">'+
-        '<div style="display:flex;justify-content:space-between;align-items:center">'+
-        '<div><div style="font-weight:800;font-size:13px">'+esc(sc.title)+'</div>'+
-        '<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(sc.subject)+' · '+fmtDate(sc.date)+'</div>'+
-        (sc.notes?'<div style="font-size:11px;color:var(--muted);margin-top:2px">📝 '+esc(sc.notes)+'</div>':'')+'</div>'+
-        '<div style="background:'+urgency+';color:#fff;border-radius:8px;padding:4px 10px;text-align:center">'+
-        '<div style="font-size:18px;font-weight:800">'+daysLeft+'</div>'+
-        '<div style="font-size:9px">days</div></div></div></div>';
+  var today=new Date();
+  var yr=today.getFullYear()+'-'+(today.getFullYear()+1);
+  var photo=s.photo?
+    '<img src="'+s.photo+'" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,.6);object-fit:cover"/>':
+    '<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;font-family:var(--font-head)">'+esc(s.name[0])+'</div>';
+  return '<style>@media print{.no-print{display:none!important;}body{background:#fff!important;}.main{padding:0!important;}}</style>'+
+    '<div id="id-card-print" class="id-card anim">'+
+    '<div style="position:relative;z-index:1">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
+    '<div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase">Phoenix Classes · Student ID</div>'+
+    '<div style="font-size:10px;color:rgba(255,255,255,.5);font-weight:700">'+yr+'</div></div>'+
+    '<div style="display:flex;gap:16px;align-items:center">'+photo+
+    '<div><div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">'+esc(s.name)+'</div>'+
+    '<div style="font-size:12px;color:#fed7aa;font-weight:700">'+s.cls+' · '+s.subject+'</div>'+
+    '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600">ID: PC-'+String(s.id).slice(-6).padStart(6,'0')+'</div></div></div>'+
+    '<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);display:flex;justify-content:space-between;align-items:center">'+
+    '<div><div style="font-size:10px;color:rgba(255,255,255,.65);font-weight:600">Bahe, Walwa, Dist-Sangli</div>'+
+    '<div style="font-size:10px;color:rgba(255,255,255,.65);font-weight:600">📞 9503949009 · 9096815310</div></div>'+
+    '<div style="text-align:right"><div style="font-size:10px;color:rgba(255,255,255,.65);font-weight:600">Maharashtra Board</div>'+
+    '<div style="font-size:10px;color:rgba(255,255,255,.65);font-weight:600">Learn · Think · Grow 🔥</div></div></div></div></div>'+
+    '<button class="btn btn-orange no-print" onclick="window.print()" style="margin-top:0">🖨️ Print / Save ID Card</button>'+
+    '<div class="card no-print anim anim-d1"><div class="card-title">ℹ️ Student Details</div>'+
+    '<table><tbody>'+
+    '<tr><td style="color:var(--muted);font-size:12px;font-weight:700;width:100px">Name</td><td style="font-weight:800;font-family:var(--font-head)">'+esc(s.name)+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px;font-weight:700">Class</td><td style="font-weight:800">'+s.cls+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px;font-weight:700">Subject</td><td style="font-weight:800">'+s.subject+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px;font-weight:700">Phone</td><td style="font-weight:800">'+esc(s.phone||'—')+'</td></tr>'+
+    '<tr><td style="color:var(--muted);font-size:12px;font-weight:700">Student ID</td><td style="font-weight:800;color:var(--accent)">PC-'+String(s.id).slice(-6).padStart(6,'0')+'</td></tr>'+
+    '</tbody></table></div>';
+}
+
+function pgMore(){
+  var items=[
+    {page:'home',icon:'🏠',label:'Dashboard',color:'#f97316'},
+    {page:'report',icon:'📈',label:'Progress Report',color:'#6366f1'},
+    {page:'attendance',icon:'📋',label:'Attendance',color:'#10b981'},
+    {page:'marks',icon:'📊',label:'My Marks',color:'#8b5cf6'},
+    {page:'fees',icon:'💰',label:'Fee Status',color:'#f59e0b'},
+    {page:'notices',icon:'📢',label:'Notices',color:'#ef4444'},
+    {page:'materials',icon:'📝',label:'Study Materials',color:'#06b6d4'},
+    {page:'feedback',icon:'💬',label:'Feedback',color:'#ec4899'},
+  ];
+  return '<div class="grid2">'+items.map(function(it){
+    return '<div class="more-item anim" onclick="go(\''+it.page+'\')" style="border-top:3px solid '+it.color+'">'+
+      '<div class="more-item-icon">'+it.icon+'</div>'+
+      '<div class="more-item-label" style="color:'+it.color+'">'+it.label+'</div></div>';
+  }).join('')+'</div>';
+}
+
+function pgAttendance(){
+  var s=currentStudent,records=[];
+  for(var k in DB.attendance){if(k.indexOf('_'+s.cls)>=0){var r=DB.attendance[k];if(r[s.id])records.push({date:k.replace('_'+s.cls,''),status:r[s.id]});}}
+  records.sort(function(a,b){return b.date.localeCompare(a.date);});
+  var pr=records.filter(function(r){return r.status==='P';}).length,ab=records.length-pr;
+  var pct=records.length>0?Math.round((pr/records.length)*100):0;
+  return '<div class="grid3 anim">'+
+    sc(pr,'Present','linear-gradient(135deg,#10b981,#059669)')+
+    sc(ab,'Absent','linear-gradient(135deg,#ef4444,#dc2626)')+
+    sc(pct+'%','%','linear-gradient(135deg,#6366f1,#4f46e5)')+'</div>'+
+    '<div class="card anim anim-d1"><div class="card-title">📋 Attendance Log</div>'+
+    (records.length===0?'<div class="empty">No records yet.</div>':
+    '<table><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>'+
+    records.map(function(r){return '<tr><td style="font-weight:700">'+fmtDate(r.date)+'</td><td>'+(r.status==='P'?bdg('Present','#10b981'):bdg('Absent','#ef4444'))+'</td></tr>';}).join('')+
+    '</tbody></table>')+'</div>';
+}
+
+function pgMarks(){
+  var s=currentStudent,tests=(DB.marks.tests||[]).filter(function(t){return t.cls===s.cls&&(t.subject===s.subject||s.subject==='Both');});
+  var md=DB.marks.data||{},totM=0,obtM=0;
+  var rows=tests.length===0?'<tr><td colspan="5" class="empty">No test results yet.</td></tr>':
+    tests.map(function(t){
+      var v=Number((md[t.id]||{})[s.id]||0);var pct=v?Math.round((v/t.maxMarks)*100):0;
+      var g=!v?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+      var gc=g==='A'?'#10b981':g==='B'?'#6366f1':g==='C'?'#f59e0b':g==='D'?'#ef4444':'var(--muted)';
+      if(v){totM+=t.maxMarks;obtM+=v;}
+      return '<tr><td style="font-weight:800;font-family:var(--font-head)">'+esc(t.testName)+'</td><td style="font-weight:600">'+t.subject+'</td>'+
+        '<td style="font-weight:700">'+v+'/'+t.maxMarks+'</td><td style="font-weight:700">'+pct+'%</td><td>'+bdg(g,gc)+'</td></tr>';
     }).join('');
-  var pastHtml=past.length===0?'':
-    past.slice(0,5).map(function(sc){
-      return '<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">'+
-        '<div><div style="font-weight:600;font-size:12px">'+esc(sc.title)+'</div>'+
-        '<div style="font-size:10px;color:var(--muted)">'+esc(sc.subject)+' · '+fmtDate(sc.date)+'</div></div>'+
-        bdg('Done','#64748b')+'</div>';
-    }).join('');
-  return '<div class="card"><div class="card-title">📅 Upcoming Tests ('+upcoming.length+')</div>'+upHtml+'</div>'+
-    (past.length>0?'<div class="card"><div class="card-title">✅ Past Tests</div>'+pastHtml+'</div>':'');
+  var avg=totM>0?Math.round((obtM/totM)*100):0;
+  var ovG=avg>=75?'A':avg>=60?'B':avg>=40?'C':tests.length>0?'D':'—';
+  var gc2=ovG==='A'?'#10b981':ovG==='B'?'#6366f1':ovG==='C'?'#f59e0b':'#ef4444';
+  var gradBg=ovG==='A'?'linear-gradient(135deg,#10b981,#059669)':ovG==='B'?'linear-gradient(135deg,#6366f1,#4f46e5)':ovG==='C'?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#ef4444,#dc2626)';
+  return '<div class="grid2 anim">'+sc(avg+'%','Average',gradBg)+sc(ovG,'Grade',gradBg)+'</div>'+
+    '<div class="card anim anim-d1"><div class="card-title">📝 Test Results</div>'+
+    '<table><thead><tr><th>Test</th><th>Sub</th><th>Marks</th><th>%</th><th>Grade</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+function pgFees(){
+  var s=currentStudent,pays=DB.fees.payments[s.id]||[];
+  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls,s.subject),bal=fee-paid;
+  var upiUrl='upi://pay?pa=9503949009%40ybl&pn=Phoenix%20Classes&am='+Math.max(bal,0)+'&cu=INR&tn=Fee%20Payment%20'+encodeURIComponent(s.name);
+  return '<div class="grid3 anim">'+
+    sc('₹'+fee,'Total Fee','linear-gradient(135deg,#6366f1,#4f46e5)')+
+    sc('₹'+paid,'Paid','linear-gradient(135deg,#10b981,#059669)')+
+    sc(bal<=0?'₹0':'₹'+bal,bal<=0?'Cleared':'Balance',bal<=0?'linear-gradient(135deg,#10b981,#059669)':'linear-gradient(135deg,#ef4444,#dc2626)')+'</div>'+
+    (bal>0?'<button class="upi-btn" onclick="window.open(\''+upiUrl+'\',\'_blank\')">📱 Pay ₹'+bal+' via UPI (PhonePe / GPay)</button>':
+    '<div style="background:var(--greenLight);border:1px solid var(--green);border-radius:var(--radius-sm);padding:14px;text-align:center;margin-bottom:12px;font-weight:800;color:var(--green);font-size:15px">✅ All Fees Cleared!</div>')+
+    '<div class="card anim anim-d1"><div class="card-title">💳 Payment History</div>'+
+    (pays.length===0?'<div class="empty">No payments recorded yet.</div>':
+    pays.slice().reverse().map(function(p){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'+
+        '<div><div style="font-weight:800;font-size:15px;color:var(--green)">₹'+p.amount+'</div>'+
+        '<div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">'+fmtDate(p.date)+(p.note?' · '+esc(p.note):'')+'</div></div>'+
+        bdg('Paid','#10b981')+'</div>';
+    }).join(''))+'</div>';
+}
+
+function pgNotices(){
+  var s=currentStudent;
+  var notices=(DB.notices||[]).filter(function(n){return n.cls==='All'||n.cls===s.cls;});
+  if(notices.length===0)return '<div class="card anim"><div class="empty" style="padding:40px">📢<br><br>No notices yet.<br>Check back later!</div></div>';
+  return '<div class="card anim"><div class="card-title">📢 Notices ('+notices.length+')</div>'+
+    notices.slice().reverse().map(function(n){
+      return '<div class="notice-item">'+
+        '<div style="font-weight:800;font-size:13px;font-family:var(--font-head)">'+esc(n.title)+'</div>'+
+        '<div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:700">📅 '+fmtDate(n.date)+' · '+(n.cls==='All'?'All Students':n.cls)+'</div>'+
+        '<div style="font-size:12px;color:var(--muted);margin-top:7px;line-height:1.6;font-weight:600">'+esc(n.message)+'</div></div>';
+    }).join('')+'</div>';
+}
+
+function pgMaterials(){
+  var s=currentStudent;
+  var mats=(DB.materials||[]).filter(function(m){return m.cls==='All'||m.cls===s.cls;});
+  var typeIcon={'PDF':'📄','Video':'🎥','Image':'🖼️','Link':'🔗'};
+  var typeColor={'PDF':'#ef4444','Video':'#8b5cf6','Image':'#10b981','Link':'#6366f1'};
+  if(mats.length===0){
+    return '<div class="card anim"><div class="empty" style="padding:40px">📝<br><br>No study materials yet.<br>Check back later!</div></div>';
+  }
+  var grouped={};
+  mats.forEach(function(m){var key=m.subject||'General';if(!grouped[key])grouped[key]=[];grouped[key].push(m);});
+  var html='';
+  Object.keys(grouped).forEach(function(sub){
+    html+='<div class="card anim"><div class="card-title">📚 '+esc(sub)+'</div>'+
+      grouped[sub].map(function(m){
+        var icon=typeIcon[m.type]||'🔗';
+        var color=typeColor[m.type]||'#6366f1';
+        return '<div class="material-item">'+
+          '<div class="mat-icon" style="background:'+color+'18">'+icon+'</div>'+
+          '<div style="flex:1"><div style="font-weight:800;font-size:13px;font-family:var(--font-head)">'+esc(m.title)+'</div>'+
+          '<div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:2px">'+m.type+(m.desc?' · '+esc(m.desc):'')+'</div></div>'+
+          '<a href="'+esc(m.link)+'" target="_blank" style="background:'+color+';color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:800;text-decoration:none;flex-shrink:0;font-family:var(--font)">Open ↗</a>'+
+          '</div>';
+      }).join('')+'</div>';
+  });
+  return html;
 }
 
 function pgReport(){
@@ -384,40 +1043,40 @@ function pgReport(){
     var pct=v?Math.round((v/t.maxMarks)*100):0;
     var g=!v?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
     if(v){totM+=t.maxMarks;obtM+=v;}
-    return '<tr><td style="padding:6px 4px;font-size:12px;border-bottom:1px solid #eee">'+esc(t.testName)+'</td>'+
-      '<td style="padding:6px 4px;font-size:12px;border-bottom:1px solid #eee">'+t.subject+'</td>'+
-      '<td style="padding:6px 4px;font-size:12px;border-bottom:1px solid #eee;text-align:center">'+v+'/'+t.maxMarks+'</td>'+
-      '<td style="padding:6px 4px;font-size:12px;border-bottom:1px solid #eee;text-align:center;font-weight:800">'+g+'</td></tr>';
+    return '<tr><td style="font-weight:700">'+esc(t.testName)+'</td><td>'+t.subject+'</td>'+
+      '<td style="text-align:center;font-weight:800">'+v+'/'+t.maxMarks+'</td>'+
+      '<td style="text-align:center;font-weight:900;color:'+(g==='A'?'#10b981':g==='B'?'#6366f1':g==='C'?'#f59e0b':'#ef4444')+'">'+g+'</td></tr>';
   }).join('');
   var avgPct=totM>0?Math.round((obtM/totM)*100):0;
   var ovG=avgPct>=75?'A':avgPct>=60?'B':avgPct>=40?'C':tests.length>0?'D':'—';
-  // Teacher remark
   var remark=DB.remarks&&DB.remarks[s.id]?DB.remarks[s.id]:'Keep working hard and stay consistent!';
   var today=new Date();
   var dateStr=today.getDate()+'/'+(today.getMonth()+1)+'/'+today.getFullYear();
   return '<div id="report-content">'+
-    '<div style="background:linear-gradient(135deg,#f97316,#ea580c);padding:20px;border-radius:14px;color:#fff;margin-bottom:14px">'+
+    '<div style="background:linear-gradient(135deg,#f97316,#ea580c);padding:20px;border-radius:var(--radius);color:#fff;margin-bottom:12px;box-shadow:0 8px 32px rgba(249,115,22,0.35)">'+
     '<div style="display:flex;justify-content:space-between;align-items:center">'+
-    '<div><div style="font-size:20px;font-weight:800">🔥 Phoenix Classes</div>'+
-    '<div style="font-size:11px;color:#fed7aa">Progress Report · Maharashtra Board</div></div>'+
-    '<div style="font-size:11px;color:#fed7aa;text-align:right">Date: '+dateStr+'</div></div></div>'+
+    '<div><div style="font-family:var(--font-head);font-size:20px;font-weight:800">🔥 Phoenix Classes</div>'+
+    '<div style="font-size:11px;color:#fed7aa;font-weight:600">Progress Report · Maharashtra Board</div></div>'+
+    '<div style="font-size:11px;color:#fed7aa;text-align:right;font-weight:600">Date: '+dateStr+'</div></div></div>'+
     '<div class="card">'+
     '<div style="display:flex;gap:12px;align-items:center">'+
-    '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0">'+esc(s.name[0])+'</div>'+
-    '<div><div style="font-size:16px;font-weight:800">'+esc(s.name)+'</div>'+
-    '<div style="font-size:12px;color:var(--muted)">'+s.cls+' · '+s.subject+' · ID: PC'+s.id.toString().slice(-6)+'</div></div>'+
-    '<div style="margin-left:auto;text-align:center;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:10px;padding:8px 14px">'+
-    '<div style="font-size:28px;font-weight:800;color:#fff">'+ovG+'</div>'+
-    '<div style="font-size:9px;color:#fed7aa">GRADE</div></div></div></div>'+
+    '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--font-head)">'+esc(s.name[0])+'</div>'+
+    '<div><div style="font-family:var(--font-head);font-size:16px;font-weight:800">'+esc(s.name)+'</div>'+
+    '<div style="font-size:12px;color:var(--muted);font-weight:600">'+s.cls+' · '+s.subject+' · ID: PC'+s.id.toString().slice(-6)+'</div></div>'+
+    '<div style="margin-left:auto;text-align:center;background:linear-gradient(135deg,#f97316,#ea580c);border-radius:12px;padding:10px 16px">'+
+    '<div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:#fff">'+ovG+'</div>'+
+    '<div style="font-size:9px;color:#fed7aa;font-weight:800">GRADE</div></div></div></div>'+
     '<div class="grid3">'+
-    sc(attPct+'%','Attendance','#22c55e')+sc(avgPct+'%','Avg Score','#3b82f6')+sc(obtM+'/'+totM,'Total Marks','#8b5cf6')+'</div>'+
-    '<div class="card"><div class="card-title">📈 Attendance</div>'+bar('Present',attP,attD||1,'#22c55e')+'</div>'+
+    sc(attPct+'%','Attendance','linear-gradient(135deg,#10b981,#059669)')+
+    sc(avgPct+'%','Avg Score','linear-gradient(135deg,#6366f1,#4f46e5)')+
+    sc(obtM+'/'+totM,'Total Marks','linear-gradient(135deg,#8b5cf6,#7c3aed)')+'</div>'+
+    '<div class="card"><div class="card-title">📈 Attendance</div>'+bar('Present',attP,attD||1,'#10b981')+'</div>'+
     '<div class="card"><div class="card-title">📝 Test Results</div>'+
     (tests.length===0?'<div class="empty">No tests recorded yet.</div>':
     '<table><thead><tr><th>Test</th><th>Subject</th><th style="text-align:center">Marks</th><th style="text-align:center">Grade</th></tr></thead><tbody>'+testRows+'</tbody></table>')+'</div>'+
     '<div class="card"><div class="card-title">💬 Teacher\'s Remark</div>'+
-    '<div style="font-size:13px;color:var(--text);line-height:1.7;font-style:italic">"'+esc(remark)+'"</div>'+
-    '<div style="font-size:11px;color:var(--muted);margin-top:8px">— Phoenix Classes Teacher</div></div>'+
+    '<div style="font-size:13px;color:var(--text);line-height:1.7;font-style:italic;font-weight:600">"'+esc(remark)+'"</div>'+
+    '<div style="font-size:11px;color:var(--muted);margin-top:8px;font-weight:700">— Phoenix Classes Teacher</div></div>'+
     '</div>'+
     '<button class="btn btn-orange no-print" onclick="window.print()" style="margin-top:4px">🖨️ Print / Save as PDF</button>';
 }
@@ -425,19 +1084,22 @@ function pgReport(){
 function pgFeedback(){
   var sent=localStorage.getItem('pcFbSent');
   if(sent){
-    return '<div class="card"><div class="feedback-sent">'+
-      '<div style="font-size:40px;margin-bottom:8px">🙏</div>'+
-      '<div style="font-weight:800;font-size:15px;margin-bottom:4px">Thank you!</div>'+
-      '<div style="font-size:12px;color:var(--muted)">Your feedback has been sent to the teacher.</div>'+
-      '<button class="btn btn-gray no-print" style="margin-top:12px;width:auto;padding:8px 20px" onclick="localStorage.removeItem(\'pcFbSent\');render()">Send Again</button></div></div>';
+    return '<div class="card anim"><div class="feedback-sent">'+
+      '<div style="font-size:48px;margin-bottom:12px">🙏</div>'+
+      '<div style="font-family:var(--font-head);font-weight:800;font-size:17px;margin-bottom:6px">Thank you!</div>'+
+      '<div style="font-size:12px;color:var(--muted);font-weight:600">Your feedback has been sent to the teacher.</div>'+
+      '<button class="btn btn-gray no-print" style="margin-top:16px;width:auto;padding:10px 24px;font-size:13px" onclick="localStorage.removeItem(\'pcFbSent\');render()">Send Again</button></div></div>';
   }
-  return '<div class="card"><div class="card-title">💬 Send Feedback to Teacher</div>'+
-    '<div style="font-size:12px;color:var(--muted);margin-bottom:14px">Share your thoughts, suggestions or any issues with your teacher.</div>'+
-    '<div class="mb"><label>Rating</label>'+
-    '<div style="display:flex;gap:12px;margin-top:4px">'+
-    [5,4,3,2,1].map(function(r){return '<label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">'+
-      '<input type="radio" name="rating" value="'+r+'" style="width:auto">'+'<span style="font-size:18px">'+['⭐','⭐','⭐','⭐','⭐'].slice(0,r).join('')+'</span>'+
-      '<span style="font-size:10px;color:var(--muted)">'+r+'</span></label>';}).join('')+
+  return '<div class="card anim"><div class="card-title">💬 Share Your Feedback</div>'+
+    '<div style="font-size:12px;color:var(--muted);margin-bottom:16px;font-weight:600">Share your thoughts, suggestions or issues with your teacher.</div>'+
+    '<div class="mb"><label>Rating ⭐</label>'+
+    '<div style="display:flex;gap:8px;margin-top:6px">'+
+    [1,2,3,4,5].map(function(r){
+      return '<label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;flex:1">'+
+        '<input type="radio" name="rating" value="'+r+'" style="width:auto" '+(r===5?'checked':'')+'/>'+
+        '<span style="font-size:26px">⭐</span>'+
+        '<span style="font-size:10px;color:var(--muted);font-weight:700">'+r+'</span></label>';
+    }).join('')+
     '</div></div>'+
     '<div class="mb"><label>Your Message</label>'+
     '<textarea id="fb-msg" rows="4" placeholder="Write your feedback here..."></textarea></div>'+
@@ -452,182 +1114,57 @@ function submitFeedback(){
   render();
 }
 
-function pgNotices(){
-  var s=currentStudent;
-  var notices=(DB.notices||[]).filter(function(n){return n.cls==='All'||n.cls===s.cls;});
-  if(notices.length===0)return '<div class="card"><div class="empty" style="padding:40px">📢<br><br>No notices yet.<br>Check back later!</div></div>';
-  return '<div class="card"><div class="card-title">📢 Notices ('+notices.length+')</div>'+
-    notices.slice().reverse().map(function(n){
-      return '<div class="notice-item">'+
-        '<div style="font-weight:800;font-size:13px">'+esc(n.title)+'</div>'+
-        '<div style="font-size:10px;color:var(--muted);margin-top:2px">📅 '+fmtDate(n.date)+' · '+(n.cls==='All'?'All Students':n.cls)+'</div>'+
-        '<div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5">'+esc(n.message)+'</div></div>';
-    }).join('')+'</div>';
-}
+function render(){renderApp();}
 
-// ── Render ────────────────────────────────────────────────────────
+function go(p){
+  pg=p;
+  var extraPages=['attendance','marks','fees','notices','report','feedback','materials'];
+  var mainPages=['home','schedule','rankings','idcard','more'];
 
-function pgMaterials(){
-  var s=currentStudent;
-  var mats=(DB.materials||[]).filter(function(m){return m.cls==='All'||m.cls===s.cls;});
-  var typeIcon={'PDF':'📄','Video':'🎥','Image':'🖼️','Link':'🔗'};
-  var typeColor={'PDF':'#ef4444','Video':'#8b5cf6','Image':'#22c55e','Link':'#3b82f6'};
-  if(mats.length===0){
-    return '<div class="card"><div class="empty" style="padding:40px">📝<br><br>No study materials yet.<br>Check back later!</div></div>';
+  var content='',title='',activeNav=p;
+  if(p==='attendance'){content=pgAttendance();title='📋 My Attendance';activeNav='more';}
+  else if(p==='marks'){content=pgMarks();title='📊 My Results';activeNav='more';}
+  else if(p==='fees'){content=pgFees();title='💰 Fee Status';activeNav='more';}
+  else if(p==='notices'){content=pgNotices();title='📢 Notices';activeNav='more';}
+  else if(p==='report'){content=pgReport();title='📈 Progress Report';activeNav='more';}
+  else if(p==='feedback'){content=pgFeedback();title='💬 Feedback';activeNav='more';}
+  else if(p==='materials'){content=pgMaterials();title='📝 Study Materials';activeNav='more';}
+  else if(p==='home'){content=pgHome();title='';}
+  else if(p==='schedule'){content=pgSchedule();title='📅 Test Schedule';}
+  else if(p==='rankings'){content=pgRankings();title='🏆 Class Rankings';}
+  else if(p==='idcard'){content=pgIDCard();title='📱 Student ID Card';}
+  else if(p==='more'){content=pgMore();title='Menu';}
+
+  var isExtra=extraPages.indexOf(p)>=0;
+  var header='';
+  if(p==='home'){
+    header='';
+  } else if(isExtra){
+    header='<div class="page-header">'+
+      '<button onclick="go(\'more\')" class="top-btn no-print" style="font-size:12px;padding:6px 12px">← Back</button>'+
+      '<div class="page-title">'+title+'</div>'+
+      '<button onclick="refreshData()" class="top-btn no-print">🔄</button></div>';
+  } else {
+    header='<div class="page-header">'+
+      '<div class="page-title">'+title+'</div>'+
+      '<button onclick="refreshData()" class="top-btn no-print">🔄</button></div>';
   }
-  // Group by subject
-  var grouped={};
-  mats.forEach(function(m){
-    var key=m.subject||'General';
-    if(!grouped[key])grouped[key]=[];
-    grouped[key].push(m);
-  });
-  var html='';
-  Object.keys(grouped).forEach(function(sub){
-    html+='<div class="card"><div class="card-title">📚 '+esc(sub)+'</div>'+
-      grouped[sub].map(function(m){
-        var icon=typeIcon[m.type]||'🔗';
-        var color=typeColor[m.type]||'#3b82f6';
-        return '<div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'+
-          '<div style="width:40px;height:40px;border-radius:10px;background:'+color+'22;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+icon+'</div>'+
-          '<div style="flex:1"><div style="font-weight:700;font-size:13px">'+esc(m.title)+'</div>'+
-          '<div style="font-size:11px;color:var(--muted)">'+m.type+(m.desc?' · '+esc(m.desc):'')+'</div></div>'+
-          '<a href="'+esc(m.link)+'" target="_blank" style="background:'+color+';color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;text-decoration:none;flex-shrink:0">Open</a>'+
-          '</div>';
-      }).join('')+'</div>';
-  });
-  return html;
-}
 
-function pgIDCard(){
-  var s=currentStudent;
-  var today=new Date();
-  var yr=today.getFullYear()+'-'+(today.getFullYear()+1);
-  var photo=s.photo?
-    '<img src="'+s.photo+'" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,.6);object-fit:cover"/>':
-    '<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;border:3px solid rgba(255,255,255,.4)">'+esc(s.name[0])+'</div>';
-  return '<style>@media print{.no-print{display:none!important;}body{background:#fff!important;}.main{padding:0!important;}}</style>'+
-    '<div id="id-card-print" style="background:linear-gradient(135deg,#f97316,#c2410c);border-radius:20px;padding:24px;color:#fff;position:relative;overflow:hidden;margin-bottom:14px">'+
-    '<div style="position:absolute;right:-20px;bottom:-30px;font-size:120px;opacity:0.06">🔥</div>'+
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
-    '<div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:2px">PHOENIX CLASSES · STUDENT ID</div>'+
-    '<div style="font-size:9px;color:rgba(255,255,255,.5)">'+yr+'</div></div>'+
-    '<div style="display:flex;gap:16px;align-items:center">'+photo+
-    '<div><div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:4px">'+esc(s.name)+'</div>'+
-    '<div style="font-size:12px;color:#fed7aa">'+s.cls+' · '+s.subject+'</div>'+
-    '<div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px">ID: PC-'+String(s.id).slice(-6).padStart(6,'0')+'</div></div></div>'+
-    '<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.2);display:flex;justify-content:space-between;align-items:center">'+
-    '<div><div style="font-size:10px;color:rgba(255,255,255,.6)">Bahe, Walwa, Dist-Sangli</div>'+
-    '<div style="font-size:10px;color:rgba(255,255,255,.6)">9503949009 · 9096815310</div></div>'+
-    '<div style="font-size:10px;color:rgba(255,255,255,.6);text-align:right">Maharashtra Board<br>Learn · Think · Grow</div></div></div>'+
-    '<button class="btn btn-orange no-print" onclick="window.print()">🖨️ Print / Save ID Card</button>'+
-    '<div class="card no-print"><div class="card-title">ℹ️ Student Details</div>'+
-    '<table><tbody>'+
-    '<tr><td style="color:var(--muted);font-size:12px;width:100px">Name</td><td style="font-weight:700">'+esc(s.name)+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Class</td><td style="font-weight:700">'+s.cls+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Subject</td><td style="font-weight:700">'+s.subject+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Phone</td><td style="font-weight:700">'+esc(s.phone||'—')+'</td></tr>'+
-    '<tr><td style="color:var(--muted);font-size:12px">Student ID</td><td style="font-weight:700">PC-'+String(s.id).slice(-6).padStart(6,'0')+'</td></tr>'+
-    '</tbody></table></div>';
-}
-
-function go(p){pg=p;renderApp();window.scrollTo(0,0);}
-
-function renderApp(){
-  var navItems=[
-    {id:'home',icon:'🏠',label:'Home'},
-    {id:'schedule',icon:'📅',label:'Schedule'},
-    {id:'rankings',icon:'🏆',label:'Ranks'},
-    {id:'idcard',icon:'📱',label:'ID Card'},
-    {id:'more',icon:'📋',label:'More'}
-  ];
-  var nav='<div class="bottom-nav">'+navItems.map(function(n){
-    return '<div class="bn-item '+(pg===n.id?'active':'')+'" onclick="go(\''+n.id+'\')"><div class="bn-icon">'+n.icon+'</div><span>'+n.label+'</span></div>';
-  }).join('')+'</div>';
-  var content='',title='';
-  if(pg==='home'){content=pgHome();title='';}
-  else if(pg==='schedule'){content=pgSchedule();title='📅 Test Schedule';}
-  else if(pg==='rankings'){content=pgRankings();title='🏆 Class Rankings';}
-  else if(pg==='idcard'){content=pgIDCard();title='📱 Student ID Card';}
-  else if(pg==='more'){content=pgMore();title='More';}
-  var header=title?'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
-    '<div style="font-size:17px;font-weight:800;color:var(--accent)">'+title+'</div>'+
-    '<button onclick="refreshData()" class="top-btn no-print">🔄</button></div>':'';
   document.getElementById('root').innerHTML=
-    '<div class="main">'+header+content+'</div>'+nav+
+    '<div class="main">'+header+content+'</div>'+
+    makeNav(activeNav)+
     '<div class="top-btns no-print">'+
     '<button class="top-btn" id="theme-btn" onclick="toggleDark()">🌙</button>'+
-    '<button class="top-btn" onclick="doLogout()" style="font-size:11px;color:var(--muted)">Logout</button></div>';
+    (p==='home'?'<button class="top-btn" onclick="doLogout()" style="font-size:11px">Logout</button>':'')+'</div>';
   applyDark();
+  window.scrollTo(0,0);
 }
 
-function pgMore(){
-  return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px">'+
-    '<div class="card" onclick="go(\'home\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">🏠</div><div style="font-weight:700;margin-top:6px;font-size:13px">Dashboard</div></div>'+
-    '<div class="card" onclick="go(\'report\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">📈</div><div style="font-weight:700;margin-top:6px;font-size:13px">Progress Report</div></div>'+
-    '<div class="card" onclick="go(\'attendance\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">📋</div><div style="font-weight:700;margin-top:6px;font-size:13px">Attendance</div></div>'+
-    '<div class="card" onclick="go(\'marks\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">📊</div><div style="font-weight:700;margin-top:6px;font-size:13px">My Marks</div></div>'+
-    '<div class="card" onclick="go(\'fees\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">💰</div><div style="font-weight:700;margin-top:6px;font-size:13px">Fee Status</div></div>'+
-    '<div class="card" onclick="go(\'notices\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">📢</div><div style="font-weight:700;margin-top:6px;font-size:13px">Notices</div></div>'+
-    '<div class="card" onclick="go(\'feedback\')" style="cursor:pointer;text-align:center;padding:20px">'+
-    '<div style="font-size:32px">💬</div><div style="font-weight:700;margin-top:6px;font-size:13px">Feedback</div></div>'+
-    '</div>';
-}
-
-function pgAttendance(){
-  var s=currentStudent,records=[];
-  for(var k in DB.attendance){if(k.indexOf('_'+s.cls)>=0){var r=DB.attendance[k];if(r[s.id])records.push({date:k.replace('_'+s.cls,''),status:r[s.id]});}}
-  records.sort(function(a,b){return b.date.localeCompare(a.date);});
-  var pr=records.filter(function(r){return r.status==='P';}).length,ab=records.length-pr;
-  var pct=records.length>0?Math.round((pr/records.length)*100):0;
-  return '<div class="grid3">'+sc(pr,'Present','#22c55e')+sc(ab,'Absent','#ef4444')+sc(pct+'%','%','#3b82f6')+'</div>'+
-    '<div class="card"><div class="card-title">📋 Attendance Log</div>'+
-    (records.length===0?'<div class="empty">No records yet.</div>':
-    '<table><thead><tr><th>Date</th><th>Status</th></tr></thead><tbody>'+
-    records.map(function(r){return '<tr><td>'+fmtDate(r.date)+'</td><td>'+(r.status==='P'?bdg('Present','#22c55e'):bdg('Absent','#ef4444'))+'</td></tr>';}).join('')+
-    '</tbody></table>')+'</div>';
-}
-
-function pgMarks(){
-  var s=currentStudent,tests=(DB.marks.tests||[]).filter(function(t){return t.cls===s.cls&&(t.subject===s.subject||s.subject==='Both');});
-  var md=DB.marks.data||{},totM=0,obtM=0;
-  var rows=tests.length===0?'<tr><td colspan="5" class="empty">No test results yet.</td></tr>':
-    tests.map(function(t){var v=Number((md[t.id]||{})[s.id]||0);var pct=v?Math.round((v/t.maxMarks)*100):0;
-      var g=!v?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';var gc=g==='A'?'#22c55e':g==='B'?'#3b82f6':g==='C'?'#eab308':g==='D'?'#ef4444':'var(--muted)';
-      if(v){totM+=t.maxMarks;obtM+=v;}
-      return '<tr><td style="font-weight:700">'+esc(t.testName)+'</td><td>'+t.subject+'</td><td>'+v+'/'+t.maxMarks+'</td><td>'+pct+'%</td><td>'+bdg(g,gc)+'</td></tr>';
-    }).join('');
-  var avg=totM>0?Math.round((obtM/totM)*100):0;
-  var ovG=avg>=75?'A':avg>=60?'B':avg>=40?'C':tests.length>0?'D':'—';
-  var gc2=ovG==='A'?'#22c55e':ovG==='B'?'#3b82f6':ovG==='C'?'#eab308':'#ef4444';
-  return '<div class="grid2">'+sc(avg+'%','Average',gc2)+sc(ovG,'Grade',gc2)+'</div>'+
-    '<div class="card"><div class="card-title">📝 Test Results</div>'+
-    '<table><thead><tr><th>Test</th><th>Sub</th><th>Marks</th><th>%</th><th>Grade</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
-}
-
-function pgFees(){
-  var s=currentStudent,pays=DB.fees.payments[s.id]||[];
-  var paid=getTotalPaid(s.id),fee=getYearlyFee(s.cls,s.subject),bal=fee-paid;
-  var upiUrl='upi://pay?pa=9503949009%40ybl&pn=Phoenix%20Classes&am='+Math.max(bal,0)+'&cu=INR&tn=Fee%20Payment%20'+encodeURIComponent(s.name);
-  return '<div class="grid3">'+sc('₹'+fee,'Total Fee','#3b82f6')+sc('₹'+paid,'Paid','#22c55e')+sc(bal<=0?'₹0':'₹'+bal,bal<=0?'Cleared':'Balance',bal<=0?'#22c55e':'#ef4444')+'</div>'+
-    (bal>0?'<button class="btn" style="background:#5f259f;margin-bottom:12px" onclick="window.open(\''+upiUrl+'\',\'_blank\')">📱 Pay ₹'+bal+' via UPI (PhonePe / GPay)</button>':
-    '<div style="background:rgba(34,197,94,0.1);border:1px solid #22c55e;border-radius:10px;padding:12px;text-align:center;margin-bottom:12px;font-weight:700;color:#22c55e">✅ All Fees Cleared!</div>')+
-    '<div class="card"><div class="card-title">💳 Payments</div>'+
-    (pays.length===0?'<div class="empty">No payments yet.</div>':
-    pays.slice().reverse().map(function(p){return '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)">'+
-      '<div><div style="font-weight:700;color:#22c55e">₹'+p.amount+'</div><div style="font-size:10px;color:var(--muted)">'+fmtDate(p.date)+(p.note?' · '+esc(p.note):'')+'</div></div>'+bdg('Paid','#22c55e')+'</div>';}).join(''))+'</div>';
-}
+function renderApp(){go(pg);}
 
 function refreshData(){
   toast('🔄 Refreshing...',false);
   loadDB(function(){
-    // Update currentStudent data
     if(currentStudent){
       for(var i=0;i<DB.students.length;i++){
         if(String(DB.students[i].id)===String(currentStudent.id)){currentStudent=DB.students[i];break;}
@@ -637,34 +1174,12 @@ function refreshData(){
   });
 }
 
-// Handle extra pages in go()
-var _origGo=go;
-go=function(p){
-  pg=p;
-  if(p==='attendance'||p==='marks'||p==='fees'||p==='notices'||p==='report'||p==='feedback'||p==='materials'||p==='idcard'){
-    var content='',title='';
-    if(p==='attendance'){content=pgAttendance();title='📋 My Attendance';}
-    else if(p==='marks'){content=pgMarks();title='📊 My Results';}
-    else if(p==='fees'){content=pgFees();title='💰 Fee Status';}
-    else if(p==='notices'){content=pgNotices();title='📢 Notices';}
-    else if(p==='report'){content=pgReport();title='📈 Progress Report';}
-    else if(p==='feedback'){content=pgFeedback();title='💬 Feedback';}
-    else if(p==='materials'){content=pgMaterials();title='📝 Study Materials';}
-    else if(p==='idcard'){content=pgIDCard();title='📱 Student ID Card';}
-    var navItems=[{id:'home',icon:'🏠',label:'Home'},{id:'schedule',icon:'📅',label:'Schedule'},{id:'rankings',icon:'🏆',label:'Ranks'},{id:'idcard',icon:'📱',label:'ID Card'},{id:'more',icon:'📋',label:'More'}];
-    var nav='<div class="bottom-nav">'+navItems.map(function(n){return '<div class="bn-item" onclick="go(\''+n.id+'\')"><div class="bn-icon">'+n.icon+'</div><span>'+n.label+'</span></div>';}).join('')+'</div>';
-    document.getElementById('root').innerHTML=
-      '<div class="main"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
-      '<button onclick="go(\'more\')" class="top-btn no-print" style="font-size:11px">← Back</button>'+
-      '<div style="font-size:16px;font-weight:800;color:var(--accent)">'+title+'</div>'+
-      '<button onclick="refreshData()" class="top-btn no-print">🔄</button></div>'+content+'</div>'+nav+
-      '<div class="top-btns no-print"><button class="top-btn" id="theme-btn" onclick="toggleDark()">🌙</button></div>';
-    applyDark();window.scrollTo(0,0);
-  } else {renderApp();}
-};
-
 function init(){
-  document.getElementById('root').innerHTML='<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center">'+logoBigSVG+'<div style="color:var(--muted);font-size:13px;margin-top:8px">Loading Phoenix Classes...</div></div>';
+  document.getElementById('root').innerHTML=
+    '<div class="loading-screen">'+logoBigSVG+
+    '<div style="font-family:var(--font-head);font-weight:800;font-size:18px;color:var(--accent);margin-top:4px">Phoenix Classes</div>'+
+    '<div class="loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>'+
+    '</div>';
   applyDark();
   loadDB(function(){
     var savedId=localStorage.getItem('pcStudentId');

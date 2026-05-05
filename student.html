@@ -841,17 +841,27 @@ function pgHome(){
   var hwSt2='';
   if(DB.homework){
     var allHWKeys=Object.keys(DB.homework);
+    // Debug: log all keys
+    console.log('HW keys:', allHWKeys, 'today:', today2, 'cls:', s.cls, 'id:', s.id);
     for(var hi=0;hi<allHWKeys.length;hi++){
       var hk=allHWKeys[hi];
       // Key format: 2026-05-05_Class 10 Semi-English
-      if(hk.indexOf(today2)===0 && hk.indexOf(s.cls)>=0){
+      // Also try with full class name variations
+      var clsMatch = hk.indexOf(s.cls)>=0 ||
+                     hk.toLowerCase().indexOf(s.cls.toLowerCase())>=0;
+      if(hk.indexOf(today2)===0 && clsMatch){
         var hwRec=DB.homework[hk];
-        // Try both Number and String id
+        console.log('Found HW key:', hk, 'rec:', hwRec);
+        // Try all ID formats
+        var idStr=String(s.id), idNum=Number(s.id);
         if(hwRec[s.id]){hwSt2=hwRec[s.id];break;}
-        if(hwRec[String(s.id)]){hwSt2=hwRec[String(s.id)];break;}
-        if(hwRec[Number(s.id)]){hwSt2=hwRec[Number(s.id)];break;}
+        if(hwRec[idStr]){hwSt2=hwRec[idStr];break;}
+        if(hwRec[idNum]){hwSt2=hwRec[idNum];break;}
       }
     }
+    console.log('HW status:', hwSt2);
+  } else {
+    console.log('DB.homework is empty/undefined');
   }
   var hwCard='<div class="card anim anim-d3" style="display:flex;align-items:center;gap:12px">'+
     '<div style="font-size:32px">📝</div>'+

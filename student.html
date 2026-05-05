@@ -837,8 +837,22 @@ function pgHome(){
 
   // ── Homework status today ───────────────────
   var today2=new Date().toISOString().slice(0,10);
-  var hwKey2=today2+'_'+s.cls;
-  var hwSt2=DB.homework&&DB.homework[hwKey2]?DB.homework[hwKey2][s.id]:'';
+  // Search all homework keys for today + student's class (flexible match)
+  var hwSt2='';
+  if(DB.homework){
+    var allHWKeys=Object.keys(DB.homework);
+    for(var hi=0;hi<allHWKeys.length;hi++){
+      var hk=allHWKeys[hi];
+      // Key format: 2026-05-05_Class 10 Semi-English
+      if(hk.indexOf(today2)===0 && hk.indexOf(s.cls)>=0){
+        var hwRec=DB.homework[hk];
+        // Try both Number and String id
+        if(hwRec[s.id]){hwSt2=hwRec[s.id];break;}
+        if(hwRec[String(s.id)]){hwSt2=hwRec[String(s.id)];break;}
+        if(hwRec[Number(s.id)]){hwSt2=hwRec[Number(s.id)];break;}
+      }
+    }
+  }
   var hwCard='<div class="card anim anim-d3" style="display:flex;align-items:center;gap:12px">'+
     '<div style="font-size:32px">📝</div>'+
     '<div><div style="font-weight:800;font-size:15px">आजचा गृहपाठ</div>'+
@@ -1062,11 +1076,27 @@ function pgAttendance(){
     // Monthly list
     '<div class="card anim anim-d2"><div class="card-title">📋 '+mNames[attCalMonth]+' नोंदी</div>'+
     (monRecs.length===0?'<div class="empty">या महिन्यात नोंद नाही.</div>':
-    '<table><thead><tr><th>दिनांक</th><th>स्थिती</th></tr></thead><tbody>'+
+    '<table><thead><tr><th>दिनांक</th><th>स्थिती</th><th>गृहपाठ</th></tr></thead><tbody>'+
     monRecs.map(function(r){
       var d=new Date(r.date);
       var days=['रवि','सोम','मंगळ','बुध','गुरू','शुक्र','शनि'];
-      return '<tr><td style="font-weight:700">'+days[d.getDay()]+', '+fmtDate(r.date)+'</td><td>'+(r.status==='P'?bdg('उपस्थित','#10b981'):bdg('अनुपस्थित','#ef4444'))+'</td></tr>';
+      // Find homework for this date
+      var hwS='';
+      if(DB.homework){
+        var hKeys=Object.keys(DB.homework);
+        for(var hi=0;hi<hKeys.length;hi++){
+          if(hKeys[hi].indexOf(r.date)===0&&hKeys[hi].indexOf(s.cls)>=0){
+            var hr=DB.homework[hKeys[hi]];
+            hwS=hr[s.id]||hr[String(s.id)]||'';
+            break;
+          }
+        }
+      }
+      return '<tr>'+
+        '<td style="font-weight:700">'+days[d.getDay()]+', '+fmtDate(r.date)+'</td>'+
+        '<td>'+(r.status==='P'?bdg('उपस्थित','#10b981'):bdg('अनुपस्थित','#ef4444'))+'</td>'+
+        '<td>'+(hwS==='Y'?'✅':hwS==='N'?'❌':'—')+'</td>'+
+      '</tr>';
     }).join('')+
     '</tbody></table>')+'</div>';
 }

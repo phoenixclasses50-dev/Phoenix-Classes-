@@ -600,7 +600,7 @@ var logoSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" w
 
 var logoBigSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" width="90" height="68"><defs><linearGradient id="lb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#fde68a"/><stop offset="50%" style="stop-color:#f59e0b"/><stop offset="100%" style="stop-color:#b45309"/></linearGradient><linearGradient id="lb2" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#9a3412"/><stop offset="40%" style="stop-color:#ea580c"/><stop offset="75%" style="stop-color:#f97316"/><stop offset="100%" style="stop-color:#fbbf24"/></linearGradient><linearGradient id="lb3" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#f97316"/><stop offset="60%" style="stop-color:#fde68a"/><stop offset="100%" style="stop-color:#fff"/></linearGradient></defs><polygon points="340,240 298,278 312,208" fill="url(#lb1)"/><polygon points="340,240 272,270 290,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 248,258 270,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 226,244 252,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 208,232 236,162" fill="#92400e" opacity="0.35"/><polygon points="340,240 382,278 368,208" fill="url(#lb1)"/><polygon points="340,240 408,270 390,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 432,258 410,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 454,244 428,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 472,232 444,162" fill="#92400e" opacity="0.35"/><path d="M340,240 C329,220 323,198 328,174 C332,188 335,200 338,192 C340,178 342,158 336,140 C344,154 349,172 346,188 C350,174 354,158 352,143 C358,158 356,178 350,192 C355,178 360,162 358,148 C364,164 360,186 352,200 C357,188 362,174 360,160 C365,178 360,200 351,212 C347,220 343,230 340,240Z" fill="url(#lb2)"/><path d="M340,234 C333,216 330,197 334,178 C337,190 340,200 340,194 C342,182 343,165 339,150 C345,162 349,178 346,192 C349,180 352,166 351,154 C355,168 352,186 347,198 C351,186 355,172 353,160 C357,175 353,196 347,208 C344,216 342,225 340,234Z" fill="url(#lb3)" opacity="0.9"/></svg>';
 
-var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[],schedule:[],starStudent:null,feedback:[],materials:[]};
+var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[],schedule:[],starStudent:null,feedback:[],materials:[],homework:{}};
 var currentStudent=null;
 var pg='home';
 var loaded=false;
@@ -671,6 +671,7 @@ function loadDB(cb){
       if(ld.starStudent!==undefined)DB.starStudent=ld.starStudent;
       if(ld.feedback)DB.feedback=ld.feedback;
       if(ld.materials)DB.materials=ld.materials;
+        if(ld.homework)DB.homework=ld.homework||{};
     }
     loaded=true;if(cb)cb();
   };
@@ -818,7 +819,62 @@ function pgHome(){
     bar('Attendance',attP,attD||1,attPct<75?'#ef4444':'#10b981')+
     bar('Academic Score',obtM,totM||1,gc)+'</div>';
 
-  return starBanner+attWarning+heroHtml+statRow+overviewCard+chartHtml+scheduleHtml;
+  // ── Rank in class ──────────────────────────────
+  var classStudents=DB.students.filter(function(st){return st.cls===s.cls;});
+  var rankData=classStudents.map(function(st){
+    var stTests=(DB.marks.tests||[]).filter(function(t){return t.cls===st.cls&&(t.subject===st.subject||st.subject==='Both');});
+    var stObt=0,stTot=0;
+    stTests.forEach(function(t){var v=Number((DB.marks.data[t.id]||{})[st.id]||0);if(v){stObt+=v;stTot+=t.maxMarks;}});
+    return {id:st.id,pct:stTot>0?Math.round((stObt/stTot)*100):0};
+  }).sort(function(a,b){return b.pct-a.pct;});
+  var myRank=1;for(var ri=0;ri<rankData.length;ri++){if(rankData[ri].id===s.id){myRank=ri+1;break;}}
+  var rankCard=classStudents.length>1&&totM>0?
+    '<div class="card anim anim-d3" style="text-align:center;padding:16px">'+
+      '<div style="font-size:28px font-weight:900;background:linear-gradient(135deg,#f97316,#ea580c);-webkit-background-clip:text;-webkit-text-fill-color:transparent">🏆 वर्गातील क्रमांक</div>'+
+      '<div style="font-size:48px;font-weight:900;color:#f97316;line-height:1.1">'+myRank+'<span style="font-size:20px">वा</span></div>'+
+      '<div style="color:var(--muted);font-size:13px">'+classStudents.length+' विद्यार्थ्यांपैकी</div>'+
+    '</div>':''
+
+  // ── Homework status today ───────────────────
+  var today2=new Date().toISOString().slice(0,10);
+  var hwKey2=today2+'_'+s.cls;
+  var hwSt2=DB.homework&&DB.homework[hwKey2]?DB.homework[hwKey2][s.id]:'';
+  var hwCard='<div class="card anim anim-d3" style="display:flex;align-items:center;gap:12px">'+
+    '<div style="font-size:32px">📝</div>'+
+    '<div><div style="font-weight:800;font-size:15px">आजचा गृहपाठ</div>'+
+    '<div style="font-size:13px;color:'+(hwSt2==='Y'?'#10b981':hwSt2==='N'?'#ef4444':'var(--muted)')+'">'+(hwSt2==='Y'?'✅ पूर्ण केला':hwSt2==='N'?'❌ पूर्ण केला नाही':'— नोंद नाही')+'</div></div>'+
+  '</div>';
+
+  // ── Monthly attendance chart ─────────────────
+  var mnths=['जाने','फेब्रु','मार्च','एप्रिल','मे','जून','जुलै','ऑगस्ट','सप्टें','ऑक्टो','नोव्हे','डिसें'];
+  var monthlyBars='';
+  for(var mi=0;mi<12;mi++){
+    var mP=0,mT=0;
+    for(var mk in DB.attendance){
+      if(mk.indexOf('_'+s.cls)>=0){
+        var mDate=mk.replace('_'+s.cls,'').replace(/_.*$/,'');
+        if(mDate&&mDate.split('-')[1]===(mi+1<10?'0':'')+(mi+1)){
+          var mr=DB.attendance[mk];
+          if(mr[s.id]){mT++;if(mr[s.id]==='P')mP++;}
+        }
+      }
+    }
+    if(mT>0){
+      var mPct=Math.round((mP/mT)*100);
+      var mC=mPct>=75?'#10b981':mPct>=50?'#f59e0b':'#ef4444';
+      monthlyBars+='<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">'+
+        '<div style="width:100%;display:flex;align-items:flex-end;height:60px">'+
+          '<div style="width:100%;background:'+mC+';height:'+(mPct*60/100)+'px;border-radius:4px 4px 0 0;transition:height 0.5s"></div>'+
+        '</div>'+
+        '<div style="font-size:9px;color:var(--muted);font-weight:700">'+mnths[mi]+'</div>'+
+        '<div style="font-size:10px;font-weight:800;color:'+mC+'">'+mPct+'%</div>'+
+      '</div>';
+    }
+  }
+  var monthChartCard=monthlyBars?'<div class="card anim anim-d4"><div class="card-title">📊 मासिक हजेरी</div>'+
+    '<div style="display:flex;gap:4px;align-items:flex-end;overflow-x:auto;padding-bottom:4px">'+monthlyBars+'</div></div>':'';
+
+  return starBanner+attWarning+heroHtml+statRow+overviewCard+rankCard+hwCard+chartHtml+monthChartCard+scheduleHtml;
 }
 
 function pgSchedule(){
@@ -920,17 +976,29 @@ function pgMore(){
     {page:'home',icon:'🏠',label:'Dashboard',color:'#f97316'},
     {page:'report',icon:'📈',label:'Progress Report',color:'#6366f1'},
     {page:'attendance',icon:'📋',label:'Attendance',color:'#10b981'},
-    {page:'marks',icon:'📊',label:'My Marks',color:'#8b5cf6'},
-    {page:'fees',icon:'💰',label:'Fee Status',color:'#f59e0b'},
-    {page:'notices',icon:'📢',label:'Notices',color:'#ef4444'},
-    {page:'materials',icon:'📝',label:'Study Materials',color:'#06b6d4'},
-    {page:'feedback',icon:'💬',label:'Feedback',color:'#ec4899'},
+    {page:'marks',icon:'📊',label:'माझे गुण',color:'#8b5cf6'},
+    {page:'fees',icon:'💰',label:'फी स्थिती',color:'#f59e0b'},
+    {page:'notices',icon:'📢',label:'सूचना',color:'#ef4444'},
+    {page:'materials',icon:'📝',label:'अभ्यास साहित्य',color:'#06b6d4'},
+    {page:'feedback',icon:'💬',label:'अभिप्राय',color:'#ec4899'},
   ];
   return '<div class="grid2">'+items.map(function(it){
     return '<div class="more-item anim" onclick="go(\''+it.page+'\')" style="border-top:3px solid '+it.color+'">'+
       '<div class="more-item-icon">'+it.icon+'</div>'+
       '<div class="more-item-label" style="color:'+it.color+'">'+it.label+'</div></div>';
-  }).join('')+'</div>';
+  }).join('')+'</div>'+
+  // Teacher contact card
+  '<div class="card" style="margin-top:16px;text-align:center">'+
+    '<div class="card-title">📞 शिक्षकांशी संपर्क</div>'+
+    '<div style="display:flex;gap:10px;justify-content:center;margin-top:8px">'+
+      '<a href="https://wa.me/919503949009" target="_blank" style="display:flex;align-items:center;gap:6px;background:#25d366;color:#fff;padding:10px 18px;border-radius:12px;text-decoration:none;font-weight:700">'+
+        '💬 WhatsApp करा'+
+      '</a>'+
+      '<a href="tel:9503949009" style="display:flex;align-items:center;gap:6px;background:var(--accent,#f97316);color:#fff;padding:10px 18px;border-radius:12px;text-decoration:none;font-weight:700">'+
+        '📞 फोन करा'+
+      '</a>'+
+    '</div>'+
+  '</div>';
 }
 
 var attCalMonth=new Date().getMonth(),attCalYear=new Date().getFullYear(),attView='cal';
@@ -969,7 +1037,7 @@ function pgAttendance(){
   return '<div class="grid3 anim">'+
     sc(pr,'उपस्थित','linear-gradient(135deg,#10b981,#059669)')+
     sc(ab,'अनुपस्थित','linear-gradient(135deg,#ef4444,#dc2626)')+
-    sc(pct+'%','हाजेरी %','linear-gradient(135deg,#6366f1,#4f46e5)')+'</div>'+
+    sc(pct+'%','हजेरी %','linear-gradient(135deg,#6366f1,#4f46e5)')+'</div>'+
     // Calendar card
     '<div class="card anim anim-d1" style="margin-bottom:12px">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
@@ -1040,9 +1108,27 @@ function pgMarks(){
   var ovG=avg>=75?'A':avg>=60?'B':avg>=40?'C':tests.length>0?'D':'—';
   var gc2=ovG==='A'?'#10b981':ovG==='B'?'#6366f1':ovG==='C'?'#f59e0b':'#ef4444';
   var gradBg=ovG==='A'?'linear-gradient(135deg,#10b981,#059669)':ovG==='B'?'linear-gradient(135deg,#6366f1,#4f46e5)':ovG==='C'?'linear-gradient(135deg,#f59e0b,#d97706)':'linear-gradient(135deg,#ef4444,#dc2626)';
-  return '<div class="grid2 anim">'+sc(avg+'%','Average',gradBg)+sc(ovG,'Grade',gradBg)+'</div>'+
-    '<div class="card anim anim-d1"><div class="card-title">📝 Test Results</div>'+
-    '<table><thead><tr><th>Test</th><th>Sub</th><th>Marks</th><th>%</th><th>Grade</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  // Marks bar chart
+  var chartBars=tests.length===0?'<div class="empty">चाचण्या नाहीत.</div>':
+    tests.map(function(t){
+      var v=Number((md[t.id]||{})[s.id]||0);
+      var pct=v?Math.round((v/t.maxMarks)*100):0;
+      var gc=pct>=75?'#10b981':pct>=60?'#6366f1':pct>=40?'#f59e0b':'#ef4444';
+      return '<div style="margin-bottom:10px">'+
+        '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">'+
+          '<span style="font-weight:700">'+esc(t.testName)+'</span>'+
+          '<span style="font-weight:800;color:'+gc+'">'+pct+'%</span>'+
+        '</div>'+
+        '<div style="background:var(--border,#333);border-radius:20px;height:10px">'+
+          '<div style="background:'+gc+';width:'+pct+'%;height:10px;border-radius:20px;transition:width 0.6s ease"></div>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+
+  return '<div class="grid2 anim">'+sc(avg+'%','सरासरी',gradBg)+sc(ovG,'श्रेणी',gradBg)+'</div>'+
+    '<div class="card anim anim-d1"><div class="card-title">📈 प्रगती आलेख</div>'+chartBars+'</div>'+
+    '<div class="card anim anim-d2"><div class="card-title">📝 चाचणी निकाल</div>'+
+    '<table><thead><tr><th>चाचणी</th><th>विषय</th><th>गुण</th><th>%</th><th>श्रेणी</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
 function pgFees(){
@@ -1051,7 +1137,7 @@ function pgFees(){
   var upiUrl='upi://pay?pa=9503949009%40ybl&pn=Phoenix%20Classes&am='+Math.max(bal,0)+'&cu=INR&tn=Fee%20Payment%20'+encodeURIComponent(s.name);
   return '<div class="grid3 anim">'+
     sc('₹'+fee,'Total Fee','linear-gradient(135deg,#6366f1,#4f46e5)')+
-    sc('₹'+paid,'Paid','linear-gradient(135deg,#10b981,#059669)')+
+    sc('₹'+paid,'भरले','linear-gradient(135deg,#10b981,#059669)')+
     sc(bal<=0?'₹0':'₹'+bal,bal<=0?'Cleared':'Balance',bal<=0?'linear-gradient(135deg,#10b981,#059669)':'linear-gradient(135deg,#ef4444,#dc2626)')+'</div>'+
     (bal>0?'<button class="upi-btn" onclick="window.open(\''+upiUrl+'\',\'_blank\')">📱 Pay ₹'+bal+' via UPI (PhonePe / GPay)</button>':
     '<div style="background:var(--greenLight);border:1px solid var(--green);border-radius:var(--radius-sm);padding:14px;text-align:center;margin-bottom:12px;font-weight:800;color:var(--green);font-size:15px">✅ All Fees Cleared!</div>')+
@@ -1061,7 +1147,7 @@ function pgFees(){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">'+
         '<div><div style="font-weight:800;font-size:15px;color:var(--green)">₹'+p.amount+'</div>'+
         '<div style="font-size:10px;color:var(--muted);margin-top:2px;font-weight:600">'+fmtDate(p.date)+(p.note?' · '+esc(p.note):'')+'</div></div>'+
-        bdg('Paid','#10b981')+'</div>';
+        bdg('भरले','#10b981')+'</div>';
     }).join(''))+'</div>';
 }
 

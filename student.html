@@ -839,7 +839,7 @@ function pgHome(){
   var rankData=classStudents.map(function(st){
     var stTests=(DB.marks.tests||[]).filter(function(t){return t.cls===st.cls&&(t.subject===st.subject||st.subject==='Both');});
     var stObt=0,stTot=0;
-    stTests.forEach(function(t){var v=Number((DB.marks.data[t.id]||{})[st.id]||0);if(v){stObt+=v;stTot+=t.maxMarks;}});
+    stTests.forEach(function(t){var v=Number(((DB.marks.data||{})[t.id]||{})[st.id]||0);if(v){stObt+=v;stTot+=t.maxMarks;}});
     return {id:st.id,pct:stTot>0?Math.round((stObt/stTot)*100):0};
   }).sort(function(a,b){return b.pct-a.pct;});
   var myRank=1;for(var ri=0;ri<rankData.length;ri++){if(rankData[ri].id===s.id){myRank=ri+1;break;}}

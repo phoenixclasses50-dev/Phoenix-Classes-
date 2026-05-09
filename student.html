@@ -600,7 +600,7 @@ var logoSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" w
 
 var logoBigSVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 130 480 160" width="90" height="68"><defs><linearGradient id="lb1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#fde68a"/><stop offset="50%" style="stop-color:#f59e0b"/><stop offset="100%" style="stop-color:#b45309"/></linearGradient><linearGradient id="lb2" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#9a3412"/><stop offset="40%" style="stop-color:#ea580c"/><stop offset="75%" style="stop-color:#f97316"/><stop offset="100%" style="stop-color:#fbbf24"/></linearGradient><linearGradient id="lb3" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#f97316"/><stop offset="60%" style="stop-color:#fde68a"/><stop offset="100%" style="stop-color:#fff"/></linearGradient></defs><polygon points="340,240 298,278 312,208" fill="url(#lb1)"/><polygon points="340,240 272,270 290,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 248,258 270,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 226,244 252,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 208,232 236,162" fill="#92400e" opacity="0.35"/><polygon points="340,240 382,278 368,208" fill="url(#lb1)"/><polygon points="340,240 408,270 390,195" fill="#fbbf24" opacity="0.88"/><polygon points="340,240 432,258 410,182" fill="#f59e0b" opacity="0.72"/><polygon points="340,240 454,244 428,170" fill="#b45309" opacity="0.55"/><polygon points="340,240 472,232 444,162" fill="#92400e" opacity="0.35"/><path d="M340,240 C329,220 323,198 328,174 C332,188 335,200 338,192 C340,178 342,158 336,140 C344,154 349,172 346,188 C350,174 354,158 352,143 C358,158 356,178 350,192 C355,178 360,162 358,148 C364,164 360,186 352,200 C357,188 362,174 360,160 C365,178 360,200 351,212 C347,220 343,230 340,240Z" fill="url(#lb2)"/><path d="M340,234 C333,216 330,197 334,178 C337,190 340,200 340,194 C342,182 343,165 339,150 C345,162 349,178 346,192 C349,180 352,166 351,154 C355,168 352,186 347,198 C351,186 355,172 353,160 C357,175 353,196 347,208 C344,216 342,225 340,234Z" fill="url(#lb3)" opacity="0.9"/></svg>';
 
-var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[],schedule:[],starStudent:null,feedback:[],materials:[],homework:{}};
+var DB={students:[],attendance:{},marks:{tests:[],data:{}},fees:{classFee:{},payments:{}},notices:[],schedule:[],starStudent:null,feedback:[],materials:[],homework:{},photos:{},remarks:{}};
 var currentStudent=null;
 var pg='home';
 var loaded=false;
@@ -679,6 +679,8 @@ function loadDB(cb){
         if(ld.homework)DB.homework=ld.homework||{};
         else if(!DB.homework)DB.homework={};
         if(ld.feedback)DB.feedback=ld.feedback;
+        if(ld.photos)DB.photos=ld.photos||{};
+        else if(!DB.photos)DB.photos={};
       }
       loaded=true;
       if(cb)cb();
@@ -806,9 +808,13 @@ function pgHome(){
     }).join('')+'</div>';
 
   // Hero card
+  var heroPhotoSrc=(DB.photos&&DB.photos[s.id])?DB.photos[s.id]:null;
+  var heroAvatar=heroPhotoSrc?
+    '<img src="'+heroPhotoSrc+'" style="width:48px;height:48px;border-radius:50%;border:2.5px solid rgba(255,255,255,.5);object-fit:cover;flex-shrink:0"/>':
+    '<div class="hero-avatar">'+esc(s.name[0])+'</div>';
   var heroHtml='<div class="hero-card anim">'+
     '<div style="display:flex;gap:12px;align-items:center;position:relative;z-index:1">'+logoSVG+
-    '<div class="hero-avatar">'+esc(s.name[0])+'</div>'+
+    heroAvatar+
     '<div><div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:#fff">'+esc(s.name)+'</div>'+
     '<div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:2px;font-weight:600">'+s.cls+' · '+s.subject+' · Phoenix Classes</div></div></div>'+
     badgesHtml+'</div>';
@@ -973,8 +979,9 @@ function pgIDCard(){
   var s=currentStudent;
   var today=new Date();
   var yr=today.getFullYear()+'-'+(today.getFullYear()+1);
-  var photo=s.photo?
-    '<img src="'+s.photo+'" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,.6);object-fit:cover"/>':
+  var photoSrc=(DB.photos&&DB.photos[s.id])?DB.photos[s.id]:null;
+  var photo=photoSrc?
+    '<img src="'+photoSrc+'" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,.6);object-fit:cover"/>':
     '<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;font-family:var(--font-head)">'+esc(s.name[0])+'</div>';
   return '<style>@media print{.no-print{display:none!important;}body{background:#fff!important;}.main{padding:0!important;}}</style>'+
     '<div id="id-card-print" class="id-card anim">'+

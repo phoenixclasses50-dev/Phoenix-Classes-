@@ -911,7 +911,30 @@ function pgHome(){
   var monthChartCard=monthlyBars?'<div class="card anim anim-d4"><div class="card-title">📊 मासिक हाजेरी</div>'+
     '<div style="display:flex;gap:4px;align-items:flex-end;overflow-x:auto;padding-bottom:4px">'+monthlyBars+'</div></div>':'';
 
-  return starBanner+attWarning+heroHtml+statRow+overviewCard+rankCard+hwCard+chartHtml+monthChartCard+scheduleHtml;
+  // Board Results banner on home — if results exist
+  var brBanner='';
+  var brResults=DB.boardResults||[];
+  brResults=brResults.filter(function(r){return r&&r.name;});
+  if(brResults.length>0){
+    var topR=brResults.slice().sort(function(a,b){return parseFloat(b.percentage)-parseFloat(a.percentage);}).slice(0,3);
+    var topPhotos=topR.map(function(r){
+      return r.photo?
+        '<img src="'+r.photo+'" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #fff;margin-left:-8px"/>':
+        '<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.3);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-left:-8px">'+esc((r.name||'?')[0].toUpperCase())+'</div>';
+    }).join('');
+    brBanner='<div class="card anim" onclick="go(\'boardresults\')" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;cursor:pointer;margin-bottom:0">'+
+      '<div style="display:flex;align-items:center;gap:12px">'+
+      '<div style="font-size:32px">🏆</div>'+
+      '<div style="flex:1">'+
+      '<div style="font-family:var(--font-head);font-size:14px;font-weight:900;color:#fff">Board Result 2025 जाहीर!</div>'+
+      '<div style="font-size:12px;color:#fed7aa;margin-top:2px;font-weight:600">'+brResults.length+' विद्यार्थ्यांनी मिळवले उत्कृष्ट यश 🎉</div>'+
+      '</div>'+
+      '<div style="display:flex;align-items:center;margin-left:4px">'+topPhotos+'</div>'+
+      '<div style="font-size:18px;color:rgba(255,255,255,0.7)">›</div>'+
+      '</div></div>';
+  }
+
+  return starBanner+attWarning+heroHtml+statRow+brBanner+overviewCard+rankCard+hwCard+chartHtml+monthChartCard+scheduleHtml;
 }
 
 function pgSchedule(){
@@ -1017,6 +1040,7 @@ function pgMore(){
     {page:'marks',icon:'📊',label:'माझे गुण',color:'#8b5cf6'},
     {page:'fees',icon:'💰',label:'फी स्थिती',color:'#f59e0b'},
     {page:'notices',icon:'📢',label:'सूचना',color:'#ef4444'},
+    {page:'boardresults',icon:'🏆',label:'Board Result 2025',color:'#f97316'},
     {page:'materials',icon:'📝',label:'अभ्यास साहित्य',color:'#06b6d4'},
     {page:'feedback',icon:'💬',label:'अभिप्राय',color:'#ec4899'},
   ];
@@ -1330,9 +1354,83 @@ function submitFeedback(){
 
 function render(){renderApp();}
 
+// ── BOARD RESULTS PAGE ───────────────────────────────────────────
+function pgBoardResults(){
+  var results=DB.boardResults||[];
+  results=results.filter(function(r){return r&&r.name;});
+  if(results.length===0){
+    return '<div class="card anim" style="text-align:center;padding:40px">'+
+      '<div style="font-size:48px;margin-bottom:12px">🏆</div>'+
+      '<div style="font-family:var(--font-head);font-weight:800;font-size:16px;margin-bottom:8px">Board Result 2025</div>'+
+      '<div style="font-size:13px;color:var(--muted);font-weight:600">Results लवकरच जाहीर होतील!</div></div>';
+  }
+
+  var gradeColor=function(pct){return pct>=90?'#10b981':pct>=75?'#6366f1':pct>=60?'#f59e0b':'#f97316';};
+  var gradeLabel=function(pct){return pct>=90?'Distinction':pct>=75?'First Class':pct>=60?'Second Class':'Pass';};
+
+  // Sort by percentage
+  results=results.slice().sort(function(a,b){return parseFloat(b.percentage)-parseFloat(a.percentage);});
+
+  // Top 3 podium
+  var podiumHtml='';
+  if(results.length>=1){
+    var podiumOrder=results.length===1?[0]:results.length===2?[0,1]:[1,0,2];
+    var heights=['80px','100px','65px'];
+    var medals=['🥈','🥇','🥉'];
+    var podiumItems=podiumOrder.map(function(idx,pi){
+      var s=results[idx];if(!s)return '';
+      var pct=parseFloat(s.percentage)||0;
+      var gc=gradeColor(pct);
+      var photoHtml=s.photo?
+        '<img src="'+s.photo+'" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid '+gc+';margin:0 auto 6px;display:block"/>':
+        '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,'+gc+','+gc+'88);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 6px;font-family:var(--font-head)">'+esc((s.name||'?')[0].toUpperCase())+'</div>';
+      return '<div style="flex:1;text-align:center">'+
+        '<div style="font-size:22px;margin-bottom:4px">'+medals[pi]+'</div>'+
+        photoHtml+
+        '<div style="font-size:11px;font-weight:800;margin-bottom:4px">'+esc(s.name)+'</div>'+
+        '<div style="font-size:20px;font-weight:900;color:'+gc+'">'+pct+'%</div>'+
+        '<div style="background:var(--card);border-radius:0 0 12px 12px;height:'+heights[pi]+';display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;border:1px solid var(--border);border-top:3px solid '+gc+'">'+
+        '<span style="font-size:10px;font-weight:700;color:'+gc+'">'+gradeLabel(pct)+'</span></div>'+
+        '</div>';
+    }).join('');
+    podiumHtml='<div class="card anim" style="background:linear-gradient(135deg,rgba(249,115,22,0.08),rgba(99,102,241,0.08));border-color:var(--accentLight)">'+
+      '<div class="card-title">🏆 Top Performers</div>'+
+      '<div style="display:flex;gap:10px;align-items:flex-end;padding:8px 0">'+podiumItems+'</div></div>';
+  }
+
+  // All results list
+  var listHtml=results.map(function(s,i){
+    var pct=parseFloat(s.percentage)||0;
+    var gc=gradeColor(pct);
+    var photoHtml=s.photo?
+      '<img src="'+s.photo+'" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2.5px solid '+gc+';flex-shrink:0"/>':
+      '<div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,'+gc+','+gc+'88);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--font-head)">'+esc((s.name||'?')[0].toUpperCase())+'</div>';
+    var medal=i===0?'🥇 ':i===1?'🥈 ':i===2?'🥉 ':'';
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)">'+
+      '<div style="width:24px;font-size:14px;font-weight:800;color:var(--muted);text-align:center;flex-shrink:0">'+(medal||'#'+(i+1))+'</div>'+
+      photoHtml+
+      '<div style="flex:1">'+
+      '<div style="font-family:var(--font-head);font-weight:800;font-size:14px">'+esc(s.name)+'</div>'+
+      '<div style="font-size:11px;color:var(--muted);margin-top:2px;font-weight:600">'+esc(s.medium||'')+(s.subjects?' · '+esc(s.subjects):'')+'</div>'+
+      '</div>'+
+      '<div style="text-align:right;flex-shrink:0">'+
+      '<div style="font-size:22px;font-weight:900;color:'+gc+'">'+pct+'%</div>'+
+      '<div style="font-size:10px;font-weight:700;background:'+gc+'18;color:'+gc+';border-radius:20px;padding:2px 8px">'+gradeLabel(pct)+'</div>'+
+      '</div></div>';
+  }).join('');
+
+  return '<div class="glass-card anim" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;text-align:center;margin-bottom:16px">'+
+    '<div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.8);letter-spacing:1px;margin-bottom:4px">MAHARASHTRA BOARD SSC 2025</div>'+
+    '<div style="font-family:var(--font-head);font-size:22px;font-weight:900;color:#fff;margin-bottom:4px">🎉 अभिनंदन!</div>'+
+    '<div style="font-size:13px;color:#fed7aa;font-weight:600">Phoenix Classes च्या '+results.length+' विद्यार्थ्यांनी मिळवले उत्कृष्ट यश</div>'+
+    '</div>'+
+    podiumHtml+
+    '<div class="card anim"><div class="card-title">📋 All Results</div>'+listHtml+'</div>';
+}
+
 function go(p){
   pg=p;
-  var extraPages=['attendance','marks','fees','notices','report','feedback','materials'];
+  var extraPages=['attendance','marks','fees','notices','report','feedback','materials','boardresults'];
   var mainPages=['home','schedule','rankings','idcard','more'];
 
   var content='',title='',activeNav=p;
@@ -1343,6 +1441,7 @@ function go(p){
   else if(p==='report'){content=pgReport();title='📈 Progress Report';activeNav='more';}
   else if(p==='feedback'){content=pgFeedback();title='💬 Feedback';activeNav='more';}
   else if(p==='materials'){content=pgMaterials();title='📝 Study Materials';activeNav='more';}
+  else if(p==='boardresults'){content=pgBoardResults();title='🏆 Board Result 2025';activeNav='more';}
   else if(p==='home'){content=pgHome();title='';}
   else if(p==='schedule'){content=pgSchedule();title='📅 Test Schedule';}
   else if(p==='rankings'){content=pgRankings();title='🏆 Class Rankings';}

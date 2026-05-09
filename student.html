@@ -757,7 +757,7 @@ function pgHome(){
   }
 
   var today=new Date().toISOString().slice(0,10);
-  var upcoming=(DB.schedule||[]).filter(function(sc){return sc.cls===s.cls&&sc.date>=today;}).slice(0,3);
+  var upcoming=(DB.schedule||[]).filter(function(sc){return (sc.cls==='All'||sc.cls===s.cls||s.cls.indexOf(sc.cls)===0)&&sc.date>=today;}).slice(0,3);
   var scheduleHtml=upcoming.length===0?'':
     '<div class="card anim anim-d4"><div class="card-title">📅 Upcoming Tests</div>'+
     upcoming.map(function(sc){
@@ -904,7 +904,7 @@ function pgHome(){
 function pgSchedule(){
   var s=currentStudent;
   var today=new Date().toISOString().slice(0,10);
-  var mySchedule=(DB.schedule||[]).filter(function(sc){return sc.cls===s.cls||sc.cls==='All';});
+  var mySchedule=(DB.schedule||[]).filter(function(sc){return sc.cls==='All'||sc.cls===s.cls||s.cls.indexOf(sc.cls)===0;});
   var upcoming=mySchedule.filter(function(sc){return sc.date>=today;}).sort(function(a,b){return a.date.localeCompare(b.date);});
   var past=mySchedule.filter(function(sc){return sc.date<today;}).sort(function(a,b){return b.date.localeCompare(a.date);});
 

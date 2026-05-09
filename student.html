@@ -1177,12 +1177,17 @@ function pgMarks(){
   var md=DB.marks.data||{},totM=0,obtM=0;
   var rows=tests.length===0?'<tr><td colspan="5" class="empty">No test results yet.</td></tr>':
     tests.map(function(t){
-      var v=Number((md[t.id]||{})[s.id]||0);var pct=v?Math.round((v/t.maxMarks)*100):0;
-      var g=!v?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
-      var gc=g==='A'?'#10b981':g==='B'?'#6366f1':g==='C'?'#f59e0b':g==='D'?'#ef4444':'var(--muted)';
-      if(v){totM+=t.maxMarks;obtM+=v;}
+      var raw=(md[t.id]||{})[s.id];
+      var isAbs=(raw==='AB'||raw==='ab');
+      var v=isAbs?0:Number(raw||0);
+      var pct=v?Math.round((v/t.maxMarks)*100):0;
+      var g=isAbs?'Absent':!v?'—':pct>=75?'A':pct>=60?'B':pct>=40?'C':'D';
+      var gc=isAbs?'#94a3b8':g==='A'?'#10b981':g==='B'?'#6366f1':g==='C'?'#f59e0b':g==='D'?'#ef4444':'var(--muted)';
+      if(!isAbs&&v){totM+=t.maxMarks;obtM+=v;}
+      var marksDisplay=isAbs?'<span style="color:#94a3b8;font-weight:700">Absent</span>':(v+'/'+t.maxMarks);
+      var pctDisplay=isAbs?'—':pct+'%';
       return '<tr><td style="font-weight:800;font-family:var(--font-head)">'+esc(t.testName)+'</td><td style="font-weight:600">'+t.subject+'</td>'+
-        '<td style="font-weight:700">'+v+'/'+t.maxMarks+'</td><td style="font-weight:700">'+pct+'%</td><td>'+bdg(g,gc)+'</td></tr>';
+        '<td style="font-weight:700">'+marksDisplay+'</td><td style="font-weight:700">'+pctDisplay+'</td><td>'+bdg(g,gc)+'</td></tr>';
     }).join('');
   var avg=totM>0?Math.round((obtM/totM)*100):0;
   var ovG=avg>=75?'A':avg>=60?'B':avg>=40?'C':tests.length>0?'D':'—';
@@ -1191,16 +1196,18 @@ function pgMarks(){
   // Marks bar chart
   var chartBars=tests.length===0?'<div class="empty">चाचण्या नाहीत.</div>':
     tests.map(function(t){
-      var v=Number((md[t.id]||{})[s.id]||0);
+      var raw=(md[t.id]||{})[s.id];
+      var isAbs=(raw==='AB'||raw==='ab');
+      var v=isAbs?0:Number(raw||0);
       var pct=v?Math.round((v/t.maxMarks)*100):0;
-      var gc=pct>=75?'#10b981':pct>=60?'#6366f1':pct>=40?'#f59e0b':'#ef4444';
+      var gc=isAbs?'#94a3b8':pct>=75?'#10b981':pct>=60?'#6366f1':pct>=40?'#f59e0b':'#ef4444';
       return '<div style="margin-bottom:10px">'+
         '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">'+
           '<span style="font-weight:700">'+esc(t.testName)+'</span>'+
-          '<span style="font-weight:800;color:'+gc+'">'+pct+'%</span>'+
+          '<span style="font-weight:800;color:'+gc+'">'+(isAbs?'Absent':pct+'%')+'</span>'+
         '</div>'+
         '<div style="background:var(--border,#333);border-radius:20px;height:10px">'+
-          '<div style="background:'+gc+';width:'+pct+'%;height:10px;border-radius:20px;transition:width 0.6s ease"></div>'+
+          '<div style="background:'+(isAbs?'repeating-linear-gradient(45deg,#94a3b8,#94a3b8 4px,transparent 4px,transparent 8px)':gc)+';width:'+(isAbs?100:pct)+'%;height:10px;border-radius:20px;transition:width 0.6s ease"></div>'+
         '</div>'+
       '</div>';
     }).join('');

@@ -680,6 +680,8 @@ function loadDB(cb){
         else if(!DB.homework)DB.homework={};
         if(ld.feedback)DB.feedback=ld.feedback;
         if(ld.photos)DB.photos=ld.photos||{};
+        if(ld.boardResults)DB.boardResults=ld.boardResults||[];
+        else if(!DB.boardResults)DB.boardResults=[];
         else if(!DB.photos)DB.photos={};
       }
       loaded=true;

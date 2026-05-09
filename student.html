@@ -619,10 +619,8 @@ function applyDark(){
 // ── Load DB ────────────────────────────────────────────────
 function loadDB(cb){
   var FB_BASE='https://phoenix-classes-5050-default-rtdb.asia-southeast1.firebasedatabase.app/phoenixClasses';
-  var mainData=null, photosData=null, brPhotosData=null;
 
-  function applyData(){
-    var ld=mainData;
+  function applyData(ld, photosData, brPhotosData){
     if(ld&&ld.students){
       DB.students=ld.students||[];
       DB.attendance=ld.attendance||{};
@@ -642,9 +640,7 @@ function loadDB(cb){
       if(ld.homework)DB.homework=ld.homework||{};
       else if(!DB.homework)DB.homework={};
       if(ld.feedback)DB.feedback=ld.feedback;
-      // Photos — वेगळ्या node मधून
       DB.photos=photosData||{};
-      // boardResults — brPhotos मेर्ज करा
       if(ld.boardResults){
         DB.boardResults=ld.boardResults.map(function(r,i){
           var rc={};for(var k in r)rc[k]=r[k];
@@ -657,20 +653,33 @@ function loadDB(cb){
     if(cb)cb();
   }
 
+  // New structure: /main + /photos + /brPhotos
+  // Old structure fallback: root node madhe direct data
   fetch(FB_BASE+'/main.json')
     .then(function(r){return r.json();})
-    .then(function(d){
-      mainData=d;
-      return fetch(FB_BASE+'/photos.json');
-    }).then(function(r){return r.json();})
-    .then(function(d){
-      photosData=d||{};
-      return fetch(FB_BASE+'/brPhotos.json');
-    }).then(function(r){return r.json();})
-    .then(function(d){
-      brPhotosData=d||{};
-      applyData();
-    }).catch(function(err){
+    .then(function(mainData){
+      if(mainData&&mainData.students){
+        // New structure — /main madhe students aahet
+        return Promise.all([
+          Promise.resolve(mainData),
+          fetch(FB_BASE+'/photos.json').then(function(r){return r.json();}).catch(function(){return {};}),
+          fetch(FB_BASE+'/brPhotos.json').then(function(r){return r.json();}).catch(function(){return {};})
+        ]);
+      } else {
+        // Old structure fallback — root node try kara
+        return fetch(FB_BASE+'.json')
+          .then(function(r){return r.json();})
+          .then(function(rootData){
+            var photos=(rootData&&rootData.photos)||{};
+            var brPhotos={};
+            return [rootData, photos, brPhotos];
+          });
+      }
+    })
+    .then(function(arr){
+      applyData(arr[0], arr[1], arr[2]);
+    })
+    .catch(function(err){
       console.error('Firebase load error:',err);
       loaded=true;
       if(cb)cb();

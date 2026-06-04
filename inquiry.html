@@ -192,7 +192,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>पालकाचे नाव <span class="req">*</span></label>
-          <input type="text" id="f_parentName" placeholder="आई / वडिलांचे  नाव">
+          <input type="text" id="f_parentName" placeholder="आई / वडिलांचे नाव">
         </div>
         <div class="form-group">
           <label>मोबाईल नंबर <span class="req">*</span></label>
@@ -221,7 +221,7 @@
         Rohit Sir लवकरच तुमच्याशी संपर्क करतील. 🙏<br>
         <small>पुन्हा संपर्कासाठी: 📞 9503949009</small>
       </div>
-      <p class="disclaimer">Phoenix Classes | Class 7, 8 9 & 10 | Maharashtra Board<br>📞 9503949009 &nbsp;|&nbsp; 💬 WhatsApp: 9096815310</p>
+      <p class="disclaimer">Phoenix Classes | Class 7,8,9 & 10 | Maharashtra Board<br>📞 9503949009 &nbsp;|&nbsp; 💬 WhatsApp: 9096815310</p>
     </div>
   </div>
 </div>
@@ -316,6 +316,7 @@
 // ══════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════
+const ADMIN_PASS  = 'phoenix2014';
 const SUBMITTED_KEY = 'px_submitted_phones';
 function getSubmittedPhones() { try { return JSON.parse(localStorage.getItem(SUBMITTED_KEY)||'[]'); } catch { return []; } }
 function markPhoneSubmitted(phone) { const arr=getSubmittedPhones(); if(!arr.includes(phone)){arr.push(phone);localStorage.setItem(SUBMITTED_KEY,JSON.stringify(arr));} }

@@ -311,18 +311,15 @@
 //  CONFIG
 // ══════════════════════════════════
 const ADMIN_PASS  = 'phoenix2014';
-const URL_KEY     = 'px_inq_script_url';
 const CACHE_KEY   = 'px_inq_cache';
 
 let allInquiries  = [];
 
-function getScriptUrl() { return localStorage.getItem(URL_KEY) || ''; }
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydNFXItpPal2SlvUi8tsa-5S_9xhIL2R5ee9gCoAoNrHzBvxA-nJRD1SRqbfyAYpg/exec';
+function getScriptUrl() { return SCRIPT_URL; }
 function saveScriptUrl() {
-  const url = document.getElementById('scriptUrlInput').value.trim();
-  if (!url.startsWith('https://script.google.com')) { showToast('❗ Valid URL paste करा'); return; }
-  localStorage.setItem(URL_KEY, url);
   document.getElementById('setupBox').style.display = 'none';
-  showToast('✅ URL save झाला!');
+  showToast('✅ Connected!');
   loadInquiries();
 }
 
@@ -390,10 +387,8 @@ function doAdminLogin() {
   if (document.getElementById('adminPwd').value === ADMIN_PASS) {
     document.getElementById('adminLogin').style.display='none';
     document.getElementById('adminDashboard').style.display='block';
-    const url = getScriptUrl();
-    document.getElementById('setupBox').style.display = url ? 'none' : 'block';
-    if (url) { document.getElementById('scriptUrlInput').value=url; loadInquiries(); }
-    else renderEmpty();
+    document.getElementById('setupBox').style.display='none';
+    loadInquiries();
   } else {
     document.getElementById('loginError').style.display='block';
     document.getElementById('adminPwd').value='';

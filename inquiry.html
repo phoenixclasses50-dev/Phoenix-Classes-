@@ -171,7 +171,7 @@
   <div class="form-card">
     <div class="form-card-header">
       <h2>📝 Admission Inquiry Form</h2>
-      <p>Class 7,8 व 9 साठी प्रवेश inquiry नोंदवा. आम्ही लवकरच तुमच्याशी संपर्क करू.</p>
+      <p>Class 6,7,8 व 9 साठी प्रवेश inquiry नोंदवा. आम्ही लवकरच तुमच्याशी संपर्क करू.</p>
     </div>
     <div class="form-body">
       <div class="form-row">
@@ -183,6 +183,7 @@
           <label>इयत्ता <span class="req">*</span></label>
           <select id="f_class">
             <option value="">-- निवडा --</option>
+            <option value="6">इयत्ता 6 वी</option>
             <option value="7">इयत्ता 7 वी</option>
             <option value="8">इयत्ता 8 वी</option>
             <option value="9">इयत्ता 9 वी</option>
@@ -192,7 +193,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>पालकाचे नाव <span class="req">*</span></label>
-          <input type="text" id="f_parentName" placeholder="आई / वडिलांचे नाव">
+          <input type="text" id="f_parentName" placeholder="आई /वडिलांचे नाव">
         </div>
         <div class="form-group">
           <label>मोबाईल नंबर <span class="req">*</span></label>
@@ -221,7 +222,7 @@
         Rohit Sir लवकरच तुमच्याशी संपर्क करतील. 🙏<br>
         <small>पुन्हा संपर्कासाठी: 📞 9503949009</small>
       </div>
-      <p class="disclaimer">Phoenix Classes | Class 7,8,9 & 10 | Maharashtra Board<br>📞 9503949009 &nbsp;|&nbsp; 💬 WhatsApp: 9096815310</p>
+      <p class="disclaimer">Phoenix Classes | Class 6,7,8,9 & 10| Maharashtra Board<br>📞 9503949009 &nbsp;|&nbsp; 💬 WhatsApp: 9096815310</p>
     </div>
   </div>
 </div>
@@ -268,6 +269,7 @@
       <input type="text" id="searchInput" placeholder="🔍 नाव / फोन शोधा..." oninput="filterAndRender()">
       <select id="filterClass" onchange="filterAndRender()">
         <option value="">सर्व Classes</option>
+        <option value="6">6 वी</option>
         <option value="7">7 वी</option>
         <option value="8">8 वी</option>
         <option value="9">9 वी</option>
@@ -299,7 +301,7 @@
     <div style="padding:20px;">
       <div class="form-row">
         <div class="form-group"><label>विद्यार्थ्याचे नाव <span class="req">*</span></label><input type="text" id="m_name" placeholder="पूर्ण नाव"></div>
-        <div class="form-group"><label>इयत्ता <span class="req">*</span></label><select id="m_class"><option value="">-- निवडा --</option><option value="7">7 वी</option><option value="8">8 वी</option><option value="9">9 वी</option></select></div>
+        <div class="form-group"><label>इयत्ता <span class="req">*</span></label><select id="m_class"><option value="">-- निवडा --</option><option value="6">6 वी</option><option value="7">7 वी</option><option value="8">8 वी</option><option value="9">9 वी</option></select></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label>पालकाचे नाव <span class="req">*</span></label><input type="text" id="m_parent" placeholder="पालकाचे नाव"></div>
@@ -457,7 +459,7 @@ async function loadInquiries() {
 // ══════════════════════════════════
 //  RENDER
 // ══════════════════════════════════
-const clsLabel = {'7':'7 वी','8':'8 वी','9':'9 वी'};
+const clsLabel = {'6':'6 वी','7':'7 वी','8':'8 वी','9':'9 वी'};
 const stLabels = {new:{t:'New',c:'badge-new'},called:{t:'Called',c:'badge-called'},followup:{t:'Follow-up',c:'badge-followup'},admitted:{t:'Admitted ✅',c:'badge-admitted'},dropped:{t:'Dropped',c:'badge-dropped'}};
 
 function filterAndRender() {
